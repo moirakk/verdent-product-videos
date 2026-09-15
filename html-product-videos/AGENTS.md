@@ -1,0 +1,7 @@
+# Version preservation
+
+- Before changing an episode, verify its current HTML and assets are preserved in a version snapshot. If not, save a new numbered snapshot first.
+- After completing and verifying a user-visible revision, save a new numbered snapshot with `node save-version.cjs vNNN "Description"`.
+- Never overwrite or edit files inside `versions/`. Each version contains its own HTML and assets.
+- Preview version snapshots using their distinct URLs; a query string on the live HTML is not a saved version.
+- Keep the user's existing work and unrelated repository files untouched.
