@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verdent Product Film EP01 - Manager</title>
+  <style>
+    :root {
+      --sage: #d9e6dc;
+      --moss: #e6ecd9;
+      --paper: #eef5ee;
+      --deep-green: #0f2a1e;
+      --brand-green: #1f9d6c;
+      --coral: #d9663f;
+      --ink: #0f2a1e;
+      --muted: rgba(15, 42, 30, 0.5);
+      --line: rgba(15, 42, 30, 0.13);
+      --shadow: 0 28px 90px rgba(15, 42, 30, 0.15);
+      --soft-shadow: 0 14px 42px rgba(15, 42, 30, 0.11);
+      --t: 24s;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #d7ded7;
+      color: var(--ink);
+      font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .phone {
+      position: relative;
+      width: min(100vw, 430px);
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(31, 157, 108, 0.1), transparent 34%),
+        linear-gradient(180deg, #fbfdfb 0%, var(--paper) 100%);
+      box-shadow: 0 34px 90px rgba(15, 42, 30, 0.22);
+      isolation: isolate;
+    }
+
+    .grain {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(15, 42, 30, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 42, 30, 0.025) 1px, transparent 1px);
+      background-size: 38px 38px;
+      opacity: 0.55;
+      transform: translateY(0);
+      animation: gridDrift var(--t) linear infinite;
+      z-index: 0;
+    }
+
+    .safe-top {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      top: 38px;
+      height: 210px;
+      z-index: 12;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font: 700 11px/1.2 "IBM Plex Mono", "SFMono-Regular", Consolas, Menlo, monospace;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--brand-green);
+      opacity: 0;
+      animation: eyebrow var(--t) linear infinite;
+    }
+
+    .headline {
+      margin-top: 12px;
+      font-family: Fraunces, Georgia, serif;
+      font-size: 42px;
+      line-height: 0.98;
+      max-width: 350px;
+      letter-spacing: 0;
+      color: var(--deep-green);
+      opacity: 0;
+      transform: translateY(14px);
+      animation: headline var(--t) linear infinite;
+    }
+
+    .subline {
+      margin-top: 14px;
+      max-width: 330px;
+      font-size: 14px;
+      line-height: 1.45;
+      color: rgba(15, 42, 30, 0.62);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: subline var(--t) linear infinite;
+    }
+
+    .stage {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+
+    .brand-dot {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      left: 30px;
+      bottom: 32px;
+      border-radius: 50%;
+      background: var(--brand-green);
+      box-shadow: 0 0 0 12px rgba(31, 157, 108, 0.11);
+      animation: brandDot var(--t) linear infinite;
+      z-index: 11;
+    }
+
+    .prompt-card {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      bottom: 130px;
+      height: 150px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(15, 42, 30, 0.1);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      animation: promptCard var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+      z-index: 4;
+    }
+
+    .prompt-row {
+      height: 10px;
+      border-radius: 99px;
+      background: rgba(15, 42, 30, 0.14);
+      margin-bottom: 12px;
+    }
+
+    .prompt-row:nth-child(1) { width: 88%; }
+    .prompt-row:nth-child(2) { width: 58%; }
+    .prompt-row:nth-child(3) { width: 34%; opacity: 0.55; }
+
+    .prompt-actions {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 18px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-chip {
+      height: 30px;
+      min-width: 78px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 42, 30, 0.12);
+      background: rgba(238, 245, 238, 0.76);
+    }
+
+    .action-chip:last-child {
+      min-width: 42px;
+      margin-left: auto;
+      background: var(--brand-green);
+      border-color: transparent;
+    }
+
+    .loose-card {
+      position: absolute;
+      width: 150px;
+      height: 74px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(15, 42, 30, 0.09);
+      box-shadow: var(--soft-shadow);
+      padding: 16px;
+      animation: loose var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+      z-index: 3;
+    }
+
+    .loose-card::before,
+    .loose-card::after {
+      content: "";
+      display: block;
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(15, 42, 30, 0.14);
+    }
+
+    .loose-card::before { width: 78%; margin-bottom: 10px; }
+    .loose-card::after { width: 46%; }
+
+    .l1 { left: 36px; top: 330px; transform: rotate(-6deg); --dx: 126px; --dy: 114px; }
+    .l2 { right: 32px; top: 370px; transform: rotate(5deg); --dx: -112px; --dy: 76px; }
+    .l3 { left: 56px; top: 475px; transform: rotate(4deg); --dx: 96px; --dy: -16px; }
+    .l4 { right: 54px; top: 510px; transform: rotate(-5deg); --dx: -90px; --dy: -46px; }
+
+    .manager {
+      position: absolute;
+      left: 82px;
+      top: 314px;
+      width: 266px;
+      min-height: 178px;
+      border-radius: 28px;
+      background: var(--deep-green);
+      box-shadow: 0 28px 90px rgba(15, 42, 30, 0.32);
+      color: var(--paper);
+      padding: 22px;
+      opacity: 0;
+      transform: translateY(28px) scale(0.76);
+      animation: managerCard var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+      z-index: 5;
+    }
+
+    .manager::before {
+      content: "";
+      position: absolute;
+      inset: -44px;
+      border-radius: 50%;
+      border: 1px solid rgba(31, 157, 108, 0.24);
+      opacity: 0;
+      transform: scale(0.45);
+      animation: managerHalo var(--t) ease-out infinite;
+      z-index: -1;
+    }
+
+    .manager-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 58% 36%, #fbfdfb 0 12%, transparent 13%),
+        radial-gradient(circle at 39% 40%, #fbfdfb 0 8%, transparent 9%),
+        radial-gradient(circle at 45% 72%, var(--coral) 0 13%, transparent 14%),
+        linear-gradient(135deg, var(--brand-green), var(--sage));
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,0.5);
+    }
+
+    .manager-title {
+      flex: 1;
+    }
+
+    .manager-title span {
+      display: block;
+      height: 9px;
+      border-radius: 99px;
+      background: rgba(238, 245, 238, 0.72);
+      margin-bottom: 9px;
+    }
+
+    .manager-title span:nth-child(1) { width: 82%; }
+    .manager-title span:nth-child(2) { width: 48%; opacity: 0.5; }
+
+    .manager-lines {
+      margin-top: 22px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .manager-lines span {
+      display: block;
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(238, 245, 238, 0.38);
+    }
+
+    .manager-lines span:nth-child(1) { width: 100%; }
+    .manager-lines span:nth-child(2) { width: 76%; }
+
+    .modules {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+    }
+
+    .module {
+      position: absolute;
+      width: 150px;
+      height: 92px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(15, 42, 30, 0.1);
+      box-shadow: var(--soft-shadow);
+      padding: 16px;
+      opacity: 0;
+      animation: moduleIn var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+    }
+
+    .module .icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 9px;
+      margin-bottom: 14px;
+      border: 2px solid var(--brand-green);
+      opacity: 0.9;
+    }
+
+    .module span {
+      display: block;
+      height: 7px;
+      border-radius: 99px;
+      background: rgba(15, 42, 30, 0.15);
+      margin-bottom: 8px;
+    }
+
+    .module span:nth-child(2) { width: 82%; }
+    .module span:nth-child(3) { width: 52%; }
+
+    .m1 { left: 34px; top: 300px; --sx: -36px; --sy: 14px; animation-delay: 0s; }
+    .m2 { right: 34px; top: 300px; --sx: 36px; --sy: 14px; animation-delay: 0s; }
+    .m3 { left: 34px; top: 524px; --sx: -36px; --sy: -10px; animation-delay: 0s; }
+    .m4 { right: 34px; top: 524px; --sx: 36px; --sy: -10px; animation-delay: 0s; }
+
+    .connector {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--brand-green), transparent);
+      opacity: 0;
+      transform-origin: left center;
+      animation: connector var(--t) linear infinite;
+      z-index: 4;
+    }
+
+    .c1 { left: 146px; top: 415px; width: 86px; transform: rotate(25deg); }
+    .c2 { left: 204px; top: 415px; width: 86px; transform: rotate(-25deg); }
+    .c3 { left: 146px; top: 545px; width: 86px; transform: rotate(-24deg); }
+    .c4 { left: 204px; top: 545px; width: 86px; transform: rotate(24deg); }
+
+    .work-card {
+      position: absolute;
+      width: 122px;
+      height: 96px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(15, 42, 30, 0.1);
+      box-shadow: var(--soft-shadow);
+      padding: 14px;
+      opacity: 0;
+      transform: translateY(28px) scale(0.9);
+      animation: workCards var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+      z-index: 4;
+    }
+
+    .work-card::before {
+      content: "";
+      display: block;
+      width: 34px;
+      height: 26px;
+      border-radius: 8px;
+      border: 2px solid var(--brand-green);
+      margin-bottom: 16px;
+    }
+
+    .work-card span {
+      display: block;
+      height: 7px;
+      border-radius: 99px;
+      background: rgba(15, 42, 30, 0.14);
+      margin-bottom: 8px;
+    }
+
+    .w1 { left: 32px; top: 390px; }
+    .w2 { left: 154px; top: 560px; animation-delay: 0.12s; }
+    .w3 { right: 32px; top: 390px; animation-delay: 0.24s; }
+
+    .profile {
+      position: absolute;
+      left: 42px;
+      right: 42px;
+      top: 288px;
+      height: 360px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(15, 42, 30, 0.1);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      opacity: 0;
+      transform: translateY(44px) scale(0.9);
+      animation: profile var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+      z-index: 7;
+    }
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .profile .avatar { width: 62px; height: 62px; flex: 0 0 auto; }
+
+    .profile-bars { flex: 1; }
+
+    .profile-bars span,
+    .profile-section span {
+      display: block;
+      height: 9px;
+      border-radius: 99px;
+      background: rgba(15, 42, 30, 0.14);
+      margin-bottom: 11px;
+    }
+
+    .profile-bars span:nth-child(1) { width: 74%; height: 12px; background: rgba(15, 42, 30, 0.22); }
+    .profile-bars span:nth-child(2) { width: 50%; }
+
+    .profile-section {
+      padding-top: 22px;
+    }
+
+    .profile-section span:nth-child(1) { width: 100%; }
+    .profile-section span:nth-child(2) { width: 84%; }
+    .profile-section span:nth-child(3) { width: 66%; }
+
+    .capabilities {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .cap {
+      height: 40px;
+      border-radius: 14px;
+      background: var(--paper);
+      border: 1px solid rgba(15, 42, 30, 0.09);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cap::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      top: 13px;
+      width: 16px;
+      height: 16px;
+      border-radius: 7px;
+      border: 2px solid var(--brand-green);
+    }
+
+    .cap::after {
+      content: "";
+      position: absolute;
+      left: 40px;
+      top: 16px;
+      width: 54%;
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(15, 42, 30, 0.16);
+    }
+
+    .check {
+      position: absolute;
+      left: 50%;
+      top: 666px;
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      transform: translateX(-50%) scale(0.5);
+      background: var(--brand-green);
+      opacity: 0;
+      box-shadow: 0 24px 60px rgba(31, 157, 108, 0.32);
+      animation: check var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+      z-index: 8;
+    }
+
+    .check::after {
+      content: "";
+      position: absolute;
+      left: 23px;
+      top: 18px;
+      width: 24px;
+      height: 34px;
+      border-right: 5px solid white;
+      border-bottom: 5px solid white;
+      transform: rotate(42deg);
+      border-radius: 2px;
+    }
+
+    .logo-mark {
+      position: absolute;
+      left: 50%;
+      top: 350px;
+      width: 210px;
+      height: 80px;
+      transform: translateX(-50%) translateY(30px);
+      opacity: 0;
+      background: var(--deep-green);
+      -webkit-mask: url("assets/verdent-logo-ink.svg") center / contain no-repeat;
+      mask: url("assets/verdent-logo-ink.svg") center / contain no-repeat;
+      animation: logo var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+      z-index: 14;
+    }
+
+    .endline {
+      position: absolute;
+      left: 42px;
+      right: 42px;
+      top: 454px;
+      text-align: center;
+      font: 700 15px/1.4 "IBM Plex Mono", "SFMono-Regular", Consolas, Menlo, monospace;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--brand-green);
+      opacity: 0;
+      transform: translateY(22px);
+      animation: endline var(--t) cubic-bezier(.2,.8,.2,1) infinite;
+      z-index: 14;
+    }
+
+    .sweep {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0 44%, rgba(31, 157, 108, 0.12) 50%, transparent 56% 100%);
+      transform: translateX(-120%);
+      animation: sweep var(--t) ease-in-out infinite;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    @keyframes gridDrift {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes eyebrow {
+      0%, 4% { opacity: 0; transform: translateY(8px); }
+      7%, 15% { opacity: 1; transform: translateY(0); }
+      18%, 61% { opacity: 0; transform: translateY(-8px); }
+      63%, 82% { opacity: 1; transform: translateY(0); }
+      86%, 100% { opacity: 0; transform: translateY(-8px); }
+    }
+
+    @keyframes headline {
+      0%, 4% { opacity: 0; transform: translateY(16px); }
+      7%, 15% { opacity: 1; transform: translateY(0); }
+      18%, 61% { opacity: 0; transform: translateY(-12px); }
+      63%, 82% { opacity: 1; transform: translateY(0); }
+      86%, 100% { opacity: 0; transform: translateY(-10px); }
+    }
+
+    @keyframes subline {
+      0%, 7% { opacity: 0; transform: translateY(10px); }
+      9%, 16% { opacity: 1; transform: translateY(0); }
+      19%, 62% { opacity: 0; transform: translateY(-8px); }
+      65%, 82% { opacity: 1; transform: translateY(0); }
+      86%, 100% { opacity: 0; transform: translateY(-8px); }
+    }
+
+    @keyframes brandDot {
+      0%, 7% { opacity: 0; transform: scale(0.8); }
+      9%, 86% { opacity: 1; transform: scale(1); }
+      91%, 100% { opacity: 0; transform: scale(0.75); }
+    }
+
+    @keyframes promptCard {
+      0%, 2% { opacity: 0; transform: translateY(34px) scale(0.96); }
+      6%, 18% { opacity: 1; transform: translateY(0) scale(1); }
+      23%, 100% { opacity: 0; transform: translateY(-130px) scale(0.66); }
+    }
+
+    @keyframes loose {
+      0%, 4% { opacity: 0; }
+      6%, 16% { opacity: 1; }
+      22%, 100% {
+        opacity: 0;
+        transform: translate(var(--dx), var(--dy)) rotate(0deg) scale(0.52);
+      }
+    }
+
+    @keyframes managerCard {
+      0%, 15% { opacity: 0; transform: translateY(32px) scale(0.72); }
+      20%, 26% { opacity: 1; transform: translateY(0) scale(1); }
+      30%, 38% { opacity: 1; transform: translateY(0) scale(0.92); }
+      43%, 60% { opacity: 1; transform: translateY(12px) scale(0.78); }
+      64%, 100% { opacity: 0; transform: translateY(-10px) scale(0.6); }
+    }
+
+    @keyframes managerHalo {
+      0%, 17% { opacity: 0; transform: scale(0.45); }
+      20% { opacity: 0.5; transform: scale(0.55); }
+      28%, 100% { opacity: 0; transform: scale(1.18); }
+    }
+
+    @keyframes moduleIn {
+      0%, 25% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0.9); }
+      31%, 44% { opacity: 1; transform: translate(0,0) scale(1); }
+      55%, 100% { opacity: 0; transform: translate(calc(var(--sx) * -0.4), calc(var(--sy) * -0.4)) scale(0.72); }
+    }
+
+    @keyframes connector {
+      0%, 30% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      36%, 45% { opacity: 0.75; clip-path: inset(0 0 0 0); }
+      55%, 100% { opacity: 0; clip-path: inset(0 0 0 100%); }
+    }
+
+    @keyframes workCards {
+      0%, 48% { opacity: 0; transform: translateY(28px) scale(0.9); }
+      55%, 67% { opacity: 1; transform: translateY(0) scale(1); }
+      74%, 100% { opacity: 0; transform: translateY(-28px) scale(0.82); }
+    }
+
+    @keyframes profile {
+      0%, 61% { opacity: 0; transform: translateY(44px) scale(0.9); }
+      70%, 84% { opacity: 1; transform: translateY(0) scale(1); }
+      89%, 100% { opacity: 0; transform: translateY(-22px) scale(0.94); }
+    }
+
+    @keyframes check {
+      0%, 71% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+      76%, 84% { opacity: 1; transform: translateX(-50%) scale(1); }
+      90%, 100% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+    }
+
+    @keyframes logo {
+      0%, 89% { opacity: 0; transform: translateX(-50%) translateY(30px); }
+      93%, 99% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(0); }
+    }
+
+    @keyframes endline {
+      0%, 90% { opacity: 0; transform: translateY(22px); }
+      94%, 99% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(0); }
+    }
+
+    @keyframes sweep {
+      0%, 19% { transform: translateX(-120%); opacity: 0; }
+      22% { opacity: 1; }
+      27%, 100% { transform: translateX(120%); opacity: 0; }
+    }
+
+    @media (max-width: 430px) {
+      .phone { width: 100vw; height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone" aria-label="Verdent Manager animated product video">
+    <div class="grain"></div>
+    <section class="safe-top">
+      <div class="eyebrow">VERDENT MANAGER</div>
+      <div class="headline">Don’t start from scratch every time.</div>
+      <div class="subline">Create a reusable manager with identity, skills, connectors, and memory.</div>
+    </section>
+
+    <div class="stage">
+      <div class="loose-card l1"></div>
+      <div class="loose-card l2"></div>
+      <div class="loose-card l3"></div>
+      <div class="loose-card l4"></div>
+
+      <div class="prompt-card">
+        <div class="prompt-row"></div>
+        <div class="prompt-row"></div>
+        <div class="prompt-row"></div>
+        <div class="prompt-actions">
+          <div class="action-chip"></div>
+          <div class="action-chip"></div>
+          <div class="action-chip"></div>
+        </div>
+      </div>
+
+      <article class="manager">
+        <div class="manager-top">
+          <div class="avatar"></div>
+          <div class="manager-title">
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <div class="manager-lines">
+          <span></span>
+          <span></span>
+        </div>
+      </article>
+
+      <div class="modules">
+        <div class="module m1"><div class="icon"></div><span></span><span></span></div>
+        <div class="module m2"><div class="icon"></div><span></span><span></span></div>
+        <div class="module m3"><div class="icon"></div><span></span><span></span></div>
+        <div class="module m4"><div class="icon"></div><span></span><span></span></div>
+      </div>
+
+      <div class="connector c1"></div>
+      <div class="connector c2"></div>
+      <div class="connector c3"></div>
+      <div class="connector c4"></div>
+
+      <div class="work-card w1"><span></span><span></span></div>
+      <div class="work-card w2"><span></span><span></span></div>
+      <div class="work-card w3"><span></span><span></span></div>
+
+      <article class="profile">
+        <div class="profile-head">
+          <div class="avatar"></div>
+          <div class="profile-bars">
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <div class="profile-section">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="capabilities">
+          <div class="cap"></div>
+          <div class="cap"></div>
+          <div class="cap"></div>
+          <div class="cap"></div>
+        </div>
+      </article>
+
+      <div class="check"></div>
+      <div class="brand-dot"></div>
+      <div class="sweep"></div>
+      <div class="logo-mark" aria-label="Verdent"></div>
+      <div class="endline">CUSTOM MANAGER</div>
+    </div>
+  </main>
+</body>
+</html>
