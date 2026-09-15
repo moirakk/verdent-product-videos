@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+A business question meets a dataset. Verdent turns raw rows into a chart, highlights the change, forms insight chips, and delivers a clear answer with a suggested next action.
+
+Scene 1, 0-3s, raw data:
+A dense but clean dataset card fills the lower center. Use many gray rows and columns, no readable numbers. The top 20% remains empty for the question overlay.
+
+Scene 2, 3-6s, activation:
+The question bubble flows into the deep green activation card. It pulses once. A horizontal green scan passes across the dataset, and irrelevant rows subtly fade back.
+
+Scene 3, 6-10s, data reshapes:
+Rows group and columns narrow. The dataset card folds upward into a chart surface. A line chart draws itself from left to right, smooth and precise.
+
+Scene 4, 10-14s, anomaly found:
+The line dips at one clear point. A green ring circles the drop. The camera pushes in slightly. Keep the highlighted point below the caption-safe area.
+
+Scene 5, 14-18s, explanation forms:
+Three unlabeled insight chips emerge from the highlighted point with abstract alert or cause icons. A confidence bar fills below them. The chart, chips, and confidence bar rearrange into a structured insight layout.
+
+Scene 6, 18-22s, answer delivered:
+A result card lands with one large conclusion placeholder bar, three supporting insight rows, a green action-button placeholder, and one large green checkmark. Make the card feel like an answer, not just a dashboard.
+
+Scene 7, 22-24s, end frame:
+The result card fades down. Leave clean white logo-safe space with soft green accent.
+
+Post-production text to add:
+0-3s: Data is useful when it becomes a reason.
+3-6s: Verdent analyzes the question.
+6-18s: Chart. Signal. Explanation.
+18-22s: From messy data to a clear answer.
+22-24s: Data Analysis in Verdent

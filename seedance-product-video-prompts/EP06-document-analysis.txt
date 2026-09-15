@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+A long document becomes a clear readout. Verdent scans pages, extracts key sections, marks what needs attention, and returns a summary the user can ask about. Keep it careful and trustworthy, not alarmist.
+
+Scene 1, 0-3s, long document:
+A thick stack of white document pages lands gently in the center-lower frame. Page edges are visible. Inside pages, use gray placeholder bars only. Top 20% remains clean.
+
+Scene 2, 3-6s, activation:
+The input bubble flows into the deep green activation card. It pulses once. A soft green scan line moves down the document stack.
+
+Scene 3, 6-10s, page scan:
+Pages flip rapidly but elegantly. A small page-counter-like visual can move as gray blocks only, no numbers. The scan line pauses at important sections.
+
+Scene 4, 10-15s, extraction:
+Key section cards lift out from the document stack and arrange into three clean groups. Use section divider lines, gray bars, and abstract document icons. Do not use readable legal terms.
+
+Scene 5, 15-18s, attention markers:
+Two extracted cards receive green outline emphasis markers and small abstract alert icons. Do not use red, warning triangles, or legal danger imagery. The feeling should be precise and calm.
+
+Scene 6, 18-22s, summary handoff:
+The extracted cards compress into a one-screen summary result card with a summary area, key-point rows, two subtle attention markers, a question-input placeholder, and one large green checkmark.
+
+Scene 7, 22-24s, end frame:
+The summary card slides down. Leave clean logo-safe white frame with soft green accent.
+
+Post-production text to add:
+0-3s: Long documents should not hide what matters.
+3-6s: Verdent reads the structure.
+6-18s: Extract. Summarize. Flag.
+18-22s: From long document to clear readout.
+22-24s: Document Analysis in Verdent

@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+A vague product idea needs visual direction before building. Verdent explores design directions first, helps one direction get selected, then turns it into a build-ready UI preview. Do not make this look like a Figma-to-code plugin.
+
+Scene 1, 0-3s, undecided direction:
+Start with a blank white product page frame and a simple input bubble, both in the center-lower area. The page frame has only gray skeleton bars. It should feel undecided, not broken. Top 20% remains clean for captions.
+
+Scene 2, 3-6s, activation:
+The input bubble flows into the deep green activation card. It pulses once. A soft green scan passes across the unfinished page frame, revealing layout guides and spacing rails.
+
+Scene 3, 6-11s, design exploration:
+The unfinished page separates into design ingredients: layout blocks, image placeholders, component outlines, spacing rails, and small green swatches. These pieces glide apart smoothly, then recompose into three distinct design direction cards side by side. No readable labels.
+
+Scene 4, 11-15s, direction selection:
+The camera tracks gently across the three design cards. The center card receives a deep green selection frame and moves forward. The other two cards fade slightly into the background without disappearing. Token chips with abstract icons attach around the selected card, representing visual system choices.
+
+Scene 5, 15-19s, build-ready preview:
+The selected direction expands into a polished landing page preview. Show hero block, section cards, button shapes, image placeholder, and responsive component stack. The movement should feel like design direction becoming buildable structure, not code generation.
+
+Scene 6, 19-22s, approved design handoff:
+The final design preview lands on a white result card with a green approval badge placeholder, a small stack of screen thumbnails behind it, and one large green checkmark.
+
+Scene 7, 22-24s, end frame:
+The result card settles down. Leave clean white logo-safe space with a soft green accent.
+
+Post-production text to add:
+0-3s: Start with the direction.
+3-6s: Verdent explores the design first.
+6-19s: Variants. Tokens. Build-ready UI.
+19-22s: From brief to approved direction.
+22-24s: Design First in Verdent

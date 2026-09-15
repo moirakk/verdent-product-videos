@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+Scattered material becomes a polished presentation. Verdent organizes the story, extracts an outline, builds slide layouts, and returns a complete deck preview.
+
+Scene 1, 0-3s, scattered brief:
+A loose stack of white note cards floats in the center-lower area. Some cards show gray paragraph bars, some show tiny chart placeholders, some show image placeholders. Keep the top 20% empty.
+
+Scene 2, 3-6s, activation:
+The notes pull inward and compress into the deep green activation card. It pulses once. The notes then align into one neat source stack beside the card.
+
+Scene 3, 6-10s, outline extraction:
+Thin green lines pull key gray bars out of the source stack. The bars become a clean vertical outline. The outline rows arrive one by one with smooth spacing and soft shadows. No readable text.
+
+Scene 4, 10-16s, slide generation:
+The outline rows fan rightward into a 2 by 5 grid of slide thumbnails. Each thumbnail builds with a different layout rhythm: title bar, visual block, chart block, body bars, closing bar. Use a calm cascading animation, one slide after another, not a chaotic shuffle.
+
+Scene 5, 16-19s, polish pass:
+A soft green sweep crosses the slide grid. Margins align, shadows deepen, the cover slide grows larger, and the remaining thumbnails tuck behind it as a neat deck stack. Small green checkmarks appear across the grid.
+
+Scene 6, 19-22s, finished deck:
+A completed deck preview card lands with one enlarged cover slide, a strip of thumbnails, a green ready-state pill placeholder, and one large green checkmark.
+
+Scene 7, 22-24s, end frame:
+The deck card slides down gently. Leave a clean logo-safe white frame with soft green accent.
+
+Post-production text to add:
+0-3s: A brief can become the whole deck.
+3-6s: Verdent finds the story.
+6-19s: Outline. Layout. Polish.
+19-22s: Presentation-ready.
+22-24s: Create Slides in Verdent

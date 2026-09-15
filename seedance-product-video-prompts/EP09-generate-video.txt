@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+A video request becomes a short generated video asset. Verdent turns the request into a storyboard and timeline, generates scene cards, opens a preview, and returns a download-ready result.
+
+Scene 1, 0-3s, empty timeline:
+A clean empty video timeline sits in the center-lower frame. Above it is an input bubble with gray placeholder bars. Use no readable text. Keep top 20% empty.
+
+Scene 2, 3-6s, activation:
+The input bubble compresses into the deep green activation card. It pulses once. A soft green scan activates the blank timeline.
+
+Scene 3, 6-10s, storyboard forms:
+Three scene cards rise above the timeline as abstract thumbnails. Each scene card contains simple shapes only, no realistic footage, no readable titles, no people.
+
+Scene 4, 10-14s, generation progress:
+Timeline segments light up one by one from left to right. A progress ring fills smoothly beside the timeline. The scene cards gently animate as if being generated, then snap into sequence.
+
+Scene 5, 14-18s, preview opens:
+A video preview card expands forward with a simple play triangle. Inside the preview, use soft moving abstract shapes to suggest generated video motion. Do not show fake platform UI or real logos.
+
+Scene 6, 18-22s, download-ready handoff:
+The preview card lands as a result card with a green export-ready pill placeholder, a download-button shape, a timeline strip, and one large green checkmark. The result should feel ready to preview and download directly from chat.
+
+Scene 7, 22-24s, end frame:
+The video card fades down. Leave clean white logo-safe space with soft green accent.
+
+Post-production text to add:
+0-3s: The request becomes the timeline.
+3-6s: Verdent builds the video flow.
+6-18s: Storyboard. Generate. Preview.
+18-22s: Generate, preview, download from chat.
+22-24s: Generate Video in Verdent

@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+A normal AI chat starts as scattered requests. Verdent Manager activates. The scattered request becomes structured work. Multiple worker cards run in parallel. Finished work moves through review. A clean final result is handed back.
+
+Scene 1, 0-3s, scattered chat:
+Start on a wide white canvas. Show 5-7 small white chat bubbles and task cards floating loosely in the center-lower area. Each card contains only gray placeholder bars. The cards drift slightly out of alignment, suggesting unfinished requests and unclear next steps. The top 20% of the frame stays empty.
+
+Scene 2, 3-6s, manager activation:
+The loose cards gently pull toward the center. They compress into one deep green rounded Manager card. The Manager card rises slightly forward with soft shadow. It pulses once with a calm green glow. A thin green circular field expands behind the card and fades.
+
+Scene 3, 6-10s, task decomposition:
+The Manager card opens like a product panel. Five small white task cards slide out from it in a clean arc. No labels, only gray bars and abstract icons. The five cards align into a neat horizontal row, then prepare to move into structure. The camera slowly pushes in.
+
+Scene 4, 10-14s, structured board:
+The five task cards glide into a clean four-column work board. Column headers are short gray bars only. The board sits in the middle of the frame, below the caption-safe area. The final-before-complete column should visually feel like a review lane, but without readable labels. Use subtle green dividers and soft shadows.
+
+Scene 5, 14-18s, parallel workers and context:
+Three small worker cards move in parallel along thin green paths. Some cards pause in the review lane, receive small green checkmarks, then continue to the completed area. Around the board, briefly show small secondary chips with abstract icons for memory, tools, messaging, and schedule. These chips appear softly, connect with thin green lines, then fade back.
+
+Scene 6, 18-22s, result handoff:
+The board smoothly compresses into one polished result card. The result card contains a large preview rectangle, a few gray status rows, a URL-shaped gray bar, a small review/status area, and one large green checkmark. The result card lands centered with a satisfying final snap.
+
+Scene 7, 22-24s, end frame:
+All UI elements fade or slide down gently. Leave a clean white frame with a soft green accent shape. Reserve clear centered space for the official Verdent logo and end caption to be added in post-production. Do not generate any logo or text.
+
+Post-production text to add:
+0-3s: Your AI chat is not a project manager.
+3-6s: Verdent turns goals into managed work.
+6-18s: Plan. Run. Review.
+18-22s: One sentence in. Structured execution out.
+22-24s: Verdent Manager

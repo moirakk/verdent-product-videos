@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+A user describes an app idea. Verdent turns it into an app-shaped build: project shell, UI modules, live preview, and publish-ready result. This should feel like a real product can be opened and tested, not just a mockup.
+
+Scene 1, 0-3s, app idea:
+Start with a clean white canvas and a large rounded input bubble in the lower-middle area. Inside the bubble, show two gray placeholder lines only. Behind it, a faint empty app frame waits as a soft outline. Keep the top 20% empty for the hook.
+
+Scene 2, 3-6s, activation:
+The input bubble stretches and folds into the deep green activation card. It pulses once. From the card, a project shell expands outward: a sidebar strip, central canvas, and preview pane, all unlabeled and minimal.
+
+Scene 3, 6-10s, app structure appears:
+Three small page cards rise from the activation card and arrange as a simple app map. The map then slides into the preview pane. The central canvas starts assembling: navigation bar, main content area, side panel, and footer-like control strip. Use gray bars and abstract icons only.
+
+Scene 4, 10-15s, UI modules build:
+A calendar or booking grid grows from thin lines into a clean card. A form panel unfolds beside it. A confirmation card slides in with a small green check. Three tiny worker chips orbit the project shell and deposit these modules one by one. The preview pane refreshes with a soft green sweep after each module lands.
+
+Scene 5, 15-19s, live preview feeling:
+The assembled app zooms forward into a polished browser-like preview card with no browser brand. Show a top URL-shaped gray bar, a green status pill placeholder, and a clean interactive layout. Do not show real code or terminal output.
+
+Scene 6, 19-22s, publish-ready handoff:
+The preview card locks into place. A small share/live indicator shape appears, the URL bar glows softly, and one large green checkmark lands. The result should feel ready to test, share, or publish.
+
+Scene 7, 22-24s, end frame:
+The preview card slides down gently. Leave a clean white end frame with soft green accent and centered logo-safe space.
+
+Post-production text to add:
+0-3s: Describe the app you want.
+3-6s: Verdent shapes the build.
+6-19s: Project shell. UI modules. Live preview.
+19-22s: From idea to app preview.
+22-24s: Create App in Verdent

@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+A research question becomes a structured brief. Verdent gathers generic source cards, checks evidence, compares findings, adds citation markers, and delivers a research report. This should feel deeper than simple search.
+
+Scene 1, 0-3s, unanswered question:
+A clean input bubble floats in the lower-middle area. Around it are empty source-card outlines, spaced widely. No website names, no logos, no readable text. Top 20% remains empty.
+
+Scene 2, 3-6s, activation:
+The input bubble folds into the deep green activation card. It pulses once. The empty source outlines activate with a subtle green edge glow.
+
+Scene 3, 6-11s, source gathering:
+Multiple generic source cards flow in from different directions. They look like neutral browser cards, papers, and data cards, but contain only gray bars and abstract icons. Cards travel along smooth green paths into the center.
+
+Scene 4, 11-15s, evidence checking:
+Each source card is scanned by a soft green line, receives a small green checkmark, and compresses into an evidence chip. The chips orbit briefly around the activation card, then align into a comparison matrix.
+
+Scene 5, 15-18s, synthesis:
+The comparison matrix forms three columns with gray row bars. Tiny citation dots appear beside rows. A green highlight line traces across one key insight row.
+
+Scene 6, 18-22s, report delivered:
+A structured research report card lands with source chips, matrix preview, citation marker dots, highlighted insight row, and one large green checkmark. The report card should feel polished and ready to read.
+
+Scene 7, 22-24s, end frame:
+The report card settles down. Leave clean white end frame with soft green accent and official logo-safe area.
+
+Post-production text to add:
+0-3s: Search is not the same as research.
+3-6s: Verdent gathers the sources.
+6-18s: Read. Compare. Synthesize.
+18-22s: From question to research brief.
+22-24s: Deep Research in Verdent

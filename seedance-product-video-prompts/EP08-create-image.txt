@@ -1,0 +1,48 @@
+Create a premium vertical 9:16 product commercial animation for Verdent, around 22-26 seconds.
+
+This is a fully animated product film, not a real screen recording, not a tutorial, and not a feature list.
+
+Use a pure white background, one deep Verdent green accent color (#144835), rounded white UI cards, soft long shadows, generous whitespace, subtle depth, minimal gray placeholder text bars, and abstract line icons only.
+
+Important text rule:
+Do not generate readable words, captions, UI labels, brand names, third-party logos, or random text anywhere in the video. Use only gray placeholder text bars and abstract icons. All real text and the official Verdent logo will be added later in post-production.
+
+Important layout rule:
+Keep the top 20% of the frame clean for post-production captions. Keep the final 2 seconds clean for the Verdent logo and end caption. Do not let cards, icons, lines, charts, checkmarks, thumbnails, or motion paths cross those safe areas. No overlapping UI elements. No text over graphics. No crowded layouts.
+
+Avoid:
+People, faces, hands, laptops, phones, hardware, fake app logos, readable text, misspelled text, terminal walls, code walls, dark sci-fi interfaces, neon effects, busy dashboards, shaking, glitching, chaotic motion.
+
+Series motion language:
+A normal input starts as a simple white bubble. It flows into one deep green Verdent activation card. The activation card pulses once, then the episode-specific workflow unfolds. UI objects morph, split, glide, dock, stack, and snap into place. Lines draw themselves gently. The camera uses subtle push-ins and soft parallax. The final result card lands with one satisfying green checkmark.
+
+Overall story:
+A visual request becomes a usable product asset. Verdent explores visual directions, selects one, refines it, and saves the final image into an organized project asset area.
+
+Scene 1, 0-3s, blank artboard:
+A blank white artboard floats in the center-lower area. Around it are faint empty asset slots. The space feels ready for a visual direction. Top 20% remains empty for captions.
+
+Scene 2, 3-6s, activation:
+The input bubble flows into the deep green activation card. It pulses once. Abstract style chips orbit the artboard, using only gray bars and line icons.
+
+Scene 3, 6-11s, variations:
+The blank artboard generates three visual direction thumbnails in a row. Keep them abstract and brand-safe: minimal green shapes, white space, image placeholders, no readable poster text, no people.
+
+Scene 4, 11-15s, selection:
+One thumbnail receives a green outline and expands into the main artboard. The other two shrink into variation cards behind it. Camera pushes in gently.
+
+Scene 5, 15-18s, refinement:
+Elements refine smoothly: spacing adjusts, a green shape grows, focal image area locks in, export/save slot appears. The image should look like a clean product asset, not a random art gallery.
+
+Scene 6, 18-22s, asset delivered:
+The final image card moves into an organized asset-folder card with small thumbnail slots behind it. Show a save/download placeholder and one large green checkmark.
+
+Scene 7, 22-24s, end frame:
+The asset card slides down. Leave clean white logo-safe space with soft green accent.
+
+Post-production text to add:
+0-3s: Align on the visual before you build.
+3-6s: Verdent explores directions.
+6-18s: Variations. Selection. Refinement.
+18-22s: From prompt to product asset.
+22-24s: Create Image in Verdent
