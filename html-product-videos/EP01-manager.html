@@ -1535,9 +1535,9 @@
           const secondLine=word.parentElement===document.querySelector('.headline').lastElementChild;
           const delay=secondLine?(beat[0]===14.5?.65:.25):0;
           const p=clamp((t-beat[0]-i*.065-delay)/.6);
-          const spring=p===1?1:1-Math.exp(-7*p)*Math.cos(9*p);
+          const spring=p===1?1:1-Math.exp(-6*p)*Math.cos(10*p);
           word.style.opacity=clamp(p*4);
-          word.style.transform=`translateY(${(1-spring)*32}px) rotateX(${(1-spring)*65}deg) rotateZ(${(1-spring)*-5}deg)`;
+          word.style.transform=`translateY(${(1-spring)*40}px) rotateX(${(1-spring)*78}deg) rotateZ(${(1-spring)*-7}deg)`;
         });
         const p=ease((t-beat[0]-.25)/.55);
         document.querySelector('.subcopy').style.opacity=p;
@@ -1581,9 +1581,11 @@
         const parent=el.closest('.memory,.phases,.board');
         const shot=shots.find(s=>s.el===parent);
         if(!shot)return;
-        const progress=ease((t-shot.a-.25-(i%5)*.09)/.45);
+        const progress=ease((t-shot.a-.25-(i%5)*.12)/.55);
         el.style.opacity=progress;
-        el.style.transform=`translate3d(${(1-progress)*24}px,${(1-progress)*16}px,${(1-progress)*50}px)`;
+        const isPhase=el.classList.contains('phase');
+        const direction=i%2?1:-1;
+        el.style.transform=`translate3d(${(1-progress)*(isPhase?direction*55:32)}px,${(1-progress)*26}px,${(1-progress)*70}px) rotateY(${(1-progress)*direction*35}deg) rotateZ(${(1-progress)*direction*8}deg)`;
       });
       const press=Math.sin(clamp((t-2.1)/.42)*Math.PI);
       document.querySelector('.create-manager').style.transform=`scale(${1-press*.035})`;
@@ -1592,18 +1594,21 @@
         const picked=i===1&&t>=4.65;
         el.classList.toggle('selected',picked);
         el.style.opacity=p;
-        el.style.transform=`translateY(${(1-p)*15}px) scale(${picked?1.06:1})`;
+        const pop=Math.sin(clamp((t-4.65)/.5)*Math.PI);
+        el.style.transform=`translateY(${(1-p)*24-(picked?pop*5:0)}px) rotate(${(1-p)*(i%2?20:-20)}deg) scale(${picked?1.06+pop*.07:.85+.15*p})`;
       });
       const save=document.querySelector('.save-btn');
       save.textContent=t>=5.55?'Saved':'Save';
       save.style.transform=`scale(${1-Math.sin(clamp((t-5.35)/.35)*Math.PI)*.07})`;
+      const goalText='Launch a new landing page by Friday.';
+      document.querySelector('.goal-text').textContent=goalText.slice(0,Math.floor(goalText.length*clamp((t-18.55)/.65)));
       document.querySelectorAll('.identity-tabs .tab').forEach((el,i)=>{
         const p=ease((t-6.8-i*.4)/.6);
         el.style.opacity=p;el.style.transform=`translateX(${(1-p)*18}px)`;
       });
       document.querySelectorAll('.result-tile').forEach((el,i)=>{
         const p=ease((t-26.05-i*.12)/.45);
-        el.style.opacity=p;el.style.transform=`translateY(${(1-p)*16}px)`;
+        el.style.opacity=p;el.style.transform=`translateY(${(1-p)*25}px) rotateX(${(1-p)*32}deg) scale(${.92+.08*p})`;
       });
       let ready=0;
       flowTasks.forEach((el,i)=>{
