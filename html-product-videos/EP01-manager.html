@@ -1271,6 +1271,14 @@
     .chip { justify-content:space-between; font-size:12px; border-radius:12px; }
     .chip::before { display:none; }
     .chip small { font-size:10px; font-weight:500; color:#526c5e; }
+    .copy { top:34px; height:162px; }
+    .headline { font-size:42px; line-height:1.06; margin-top:16px; max-width:none; }
+    .headline .title-line { display:block; white-space:nowrap; }
+    .headline .word { margin-right:.19em; }
+    .headline .word:last-child { margin-right:0; color:inherit; }
+    .headline .title-line:last-child { color:var(--brand-green); }
+    .subcopy { display:none; }
+    .scene-label { font:600 12px/1.2 Inter,Arial,sans-serif; color:#526c5e; }
   </style>
 </head>
 <body>
@@ -1447,7 +1455,7 @@
 
     <section class="endcard">
       <img class="logo" src="assets/verdent-logo.png" alt="Verdent" />
-      <div class="endline">Your Manager.<br>Your way of working.</div>
+      <div class="endline">Your Manager.<br>Your way.</div>
     </section>
   </main>
   <script>
@@ -1460,14 +1468,14 @@
     const clamp = x => Math.max(0, Math.min(1, x));
     const ease = x => 1 - Math.pow(1 - clamp(x), 3);
     const beats = [
-      [0,3.2,'A Manager for every role.','Create a dedicated Manager for each kind of work.','01 / CREATE'],
-      [3.2,6.3,'Make it yours.','Choose an avatar. Give your Manager an identity.','02 / IDENTITY'],
-      [6.3,10.5,'Define its role.','Set the name, responsibilities, and skills.','03 / CUSTOMIZE'],
-      [10.5,14.5,'A memory of its own.','Keep preferences and working context with this Manager.','04 / MEMORY'],
-      [14.5,18,'Connect its tools.','Give your Manager access to the tools your work needs.','05 / CONNECT'],
-      [18,21.6,'Give it the goal.','Your Manager turns an outcome into a plan.','06 / PLAN'],
-      [21.6,25.6,'Work moves forward.','Coordinate tasks and bring completed work to review.','07 / EXECUTE'],
-      [25.6,28.6,'Ready for your review.','See the work, check the result, decide what comes next.','08 / REVIEW']
+      [0,3.2,'Meet your|Manager.','','A Manager for each kind of work'],
+      [3.2,6.3,'Make it|yours.','','Choose an avatar'],
+      [6.3,10.5,'Your Manager.|Your rules.','','Name it. Define its role.'],
+      [10.5,14.5,'Your preferences.|Remembered.','','Memory and soul'],
+      [14.5,18,'Your tools.|Connected.','','Connect the tools you work with'],
+      [18,21.6,'One goal.|A clear plan.','','From outcome to structured work'],
+      [21.6,25.6,'Work in motion.|You in control.','','Track progress. Review the work.'],
+      [25.6,28.6,'Ready for|your review.','','Your decision comes next']
     ];
     // Incoming cards rotate from depth; outgoing cards clear before the next reading hold.
     const shots = [
@@ -1511,8 +1519,11 @@
       if(beat){
         if(activeHeadline!==beat[2]){
           activeHeadline=beat[2];
-          document.querySelector('.headline').replaceChildren(...beat[2].split(' ').map(word=>{
-            const span=document.createElement('span');span.className='word';span.textContent=word;return span;
+          document.querySelector('.headline').replaceChildren(...beat[2].split('|').map(line=>{
+            const row=document.createElement('span');row.className='title-line';
+            row.replaceChildren(...line.split(' ').map(word=>{
+              const span=document.createElement('span');span.className='word';span.textContent=word;return span;
+            }));return row;
           }));
         }
         document.querySelector('.subcopy').textContent=beat[3];
@@ -1521,7 +1532,9 @@
       document.querySelectorAll('.kicker,.headline,.subcopy').forEach(el=>{el.style.opacity=1;el.style.transform='none';});
       if(beat){
         document.querySelectorAll('.headline .word').forEach((word,i)=>{
-          const p=clamp((t-beat[0]-i*.075)/.65);
+          const secondLine=word.parentElement===document.querySelector('.headline').lastElementChild;
+          const delay=secondLine?(beat[0]===14.5?.65:.25):0;
+          const p=clamp((t-beat[0]-i*.065-delay)/.6);
           const spring=p===1?1:1-Math.exp(-7*p)*Math.cos(9*p);
           word.style.opacity=clamp(p*4);
           word.style.transform=`translateY(${(1-spring)*32}px) rotateX(${(1-spring)*65}deg) rotateZ(${(1-spring)*-5}deg)`;
