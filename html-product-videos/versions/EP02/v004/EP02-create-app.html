@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdent Create App</title>
+<style>
+:root{--ink:#0f2a1e;--green:#1f9d6c;--sage:#d9e6dc;--paper:#eef5ee}
+*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#e9ecea;font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+.film{position:absolute;left:50%;top:50%;width:430px;height:764px;overflow:hidden;transform-origin:center;background:#fbfdfb;isolation:isolate;perspective:1000px;box-shadow:0 36px 100px #0f2a1e22}
+.copy{position:absolute;left:28px;right:28px;top:34px;height:156px;z-index:20;pointer-events:none}
+.kicker{font:700 11px/1.2 monospace;color:var(--green)}h1{font-size:42px;line-height:1.06;font-weight:800;letter-spacing:0;margin:16px 0 0;perspective:650px}
+.line{display:block;white-space:nowrap}.line:last-child{color:var(--green)}.word{display:inline-block;margin-right:.19em;transform-origin:50% 90%}.word:last-child{margin:0}
+.volume{position:absolute;top:200px;width:430px;height:490px;z-index:2}.volume canvas{display:block;width:100%;height:100%}
+.caption{position:absolute;bottom:28px;left:28px;font-size:12px;font-weight:600;color:#526c5e;z-index:10}
+.prompt{position:absolute;top:320px;left:44px;width:342px;min-height:138px;padding:22px;border:1px solid var(--sage);border-radius:20px;background:white;box-shadow:0 6px 0 var(--sage),0 22px 45px #0f2a1e18;z-index:5;transform-origin:50% 50%;visibility:hidden}
+.prompt-label{font-size:10px;color:#526c5e;font-weight:700;margin-bottom:12px}.prompt-text{font-size:21px;line-height:1.25;font-weight:650;height:54px}.prompt-foot{margin-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#526c5e}.send{width:28px;height:28px;border-radius:50%;background:var(--ink);color:white;display:grid;place-items:center;font-size:20px}
+.app{position:absolute;left:44px;top:236px;width:342px;height:430px;background:white;border:1px solid var(--sage);border-radius:19px;padding:16px;box-shadow:0 5px 0 #d1ddd5,0 20px 35px #0f2a1e15;z-index:4;visibility:hidden;transform-origin:center;will-change:transform}
+.app-nav{height:30px;display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;font-weight:800;border-bottom:1px solid var(--sage)}.preview-tag{font-size:9px;color:var(--green);font-weight:600}
+.app h2{font-size:23px;margin:15px 0 5px;line-height:1.15}.app-sub{font-size:11px;color:#526c5e;margin:0 0 16px}
+.booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.calendar,.slots{background:#f2f6f3;border:1px solid #e1e9e3;border-radius:8px;height:150px;padding:11px}
+.section-title{font-size:10px;font-weight:750;margin-bottom:13px}.days{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.day{height:27px;display:grid;place-items:center;font-size:10px;border-radius:5px;border:0;background:white;color:var(--ink)}.day.selected{color:white;background:var(--green);box-shadow:0 3px 7px #1f9d6c33}
+.slot{height:25px;font-size:10px;display:grid;place-items:center;background:white;border:1px solid transparent;border-radius:4px;margin:0 0 6px}.slot.selected{border-color:var(--green);color:var(--green);background:#e0f2e7}
+.summary{height:38px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#526c5e;margin-top:12px;border-bottom:1px solid #e1e9e3}.summary strong{color:var(--ink);font-size:11px}
+.book{margin-top:13px;height:39px;border-radius:7px;background:var(--ink);color:white;display:grid;place-items:center;font-size:12px;font-weight:700}
+.confirmation{position:absolute;inset:48px 16px 16px;background:white;display:grid;align-content:center;justify-items:center;text-align:center;visibility:hidden}
+.check{width:62px;height:62px;background:var(--green);border-radius:50%;margin-bottom:19px;position:relative;box-shadow:0 10px 20px #1f9d6c22}.check:after{content:"";position:absolute;width:15px;height:27px;border-right:4px solid white;border-bottom:4px solid white;transform:rotate(42deg);top:13px;left:23px}
+.confirmation h3{font-size:25px;margin:0 0 10px}.confirmation p{font-size:12px;line-height:1.8;color:#526c5e;margin:0}.receipt{margin-top:22px;padding:14px 22px;background:var(--paper);border-radius:8px;font-size:11px}
+.pointer{position:absolute;width:12px;height:12px;border-radius:50%;background:#ffffff;border:2px solid var(--green);pointer-events:none;z-index:8;visibility:hidden;box-shadow:0 0 0 4px #1f9d6c11}
+.endcard{position:absolute;inset:0;background:white;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center;color:var(--ink)}
+</style>
+</head>
+<body>
+<main class="film" aria-label="Verdent Create App animated product film">
+ <header class="copy"><div class="kicker">VERDENT / CREATE APP</div><h1></h1></header>
+ <div class="volume" aria-hidden="true"></div>
+ <article class="prompt"><div class="prompt-label">WHAT WOULD YOU LIKE TO BUILD?</div><div class="prompt-text"></div><div class="prompt-foot"><span>One idea. Start here.</span><span class="send">↑</span></div></article>
+ <article class="app" aria-label="Illustrative studio booking app preview">
+  <div class="app-nav"><span>STUDIO / BOOKING</span><span class="preview-tag">Live preview</span></div>
+  <div class="booking-content"><h2>Make time for you.</h2><p class="app-sub">Book your next studio session.</p>
+   <div class="booking-grid"><div class="calendar"><div class="section-title">Choose a date</div><div class="days"></div></div>
+   <div class="slots"><div class="section-title">Available times</div><div class="slot">09:00</div><div class="slot">10:30</div><div class="slot">14:00</div></div></div>
+   <div class="summary"><span>Studio session</span><strong class="selection">Select a date and time</strong></div><div class="book">Book session</div>
+  </div>
+  <div class="confirmation"><div class="check"></div><h3>You're booked.</h3><p>September 18 · 10:30<br>Studio session · 60 minutes</p><div class="receipt">Your next session is on the calendar.</div></div>
+ </article>
+ <div class="pointer"></div><div class="caption"></div>
+ <footer class="endcard"><img class="logo" src="assets/verdent-logo.png" alt="Verdent"><div class="endline">Your idea.<br>A working app.</div></footer>
+</main>
+<script type="module">
+import * as THREE from './assets/three.module.min.js';
+const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x));
+const ease=x=>1-Math.pow(1-clamp(x),3),smooth=x=>{x=clamp(x);return x*x*(3-2*x)},mix=(a,b,p)=>a+(b-a)*p;
+const film=$('.film'),duration=32;
+function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}
+addEventListener('resize',fit);fit();
+for(let n=14;n<=25;n++){const day=document.createElement('div');day.className='day';day.textContent=n;$('.days').append(day)}
+const beats=[
+ [0,3,'Your next idea.|An app.','Create something people can use'],
+ [3,6.5,'Say what|you need.','A booking app for your studio'],
+ [6.5,10,'A few pieces.|One experience.','Calendar. Availability. Booking.'],
+ [10,17,'Watch it|come together.','From your brief to an application'],
+ [17,22.5,'See it.|Try it.','Pick a date. Choose a time.'],
+ [22.5,26,'More than|a mockup.','Complete a booking in the preview'],
+ [26,29,'Your idea.|Working.','A working flow, ready to explore']
+];
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});
+renderer.setSize(430,490);renderer.setPixelRatio(Math.min(devicePixelRatio,2));$('.volume').append(renderer.domElement);
+renderer.setClearColor(0xffffff,0);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,430/490,1,3000);
+camera.position.set(0,0,777);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0x829a8a,2.8));
+const key=new THREE.DirectionalLight(0xffffff,2.8);key.position.set(-260,350,700);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-380,right:380,top:430,bottom:-430,near:1,far:1600});key.shadow.bias=-.0003;key.shadow.normalBias=.6;key.shadow.radius=4;scene.add(key);
+const fill=new THREE.DirectionalLight(0xd9e6dc,1.2);fill.position.set(400,-100,100);scene.add(fill);
+const rig=new THREE.Group();scene.add(rig);
+function shape(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+function panel(w,h,color,paint){
+ const group=new THREE.Group();
+ const body=new THREE.Mesh(new THREE.ExtrudeGeometry(shape(w,h,9),{depth:9,bevelEnabled:true,bevelSize:2,bevelThickness:2,bevelSegments:3,curveSegments:12}),new THREE.MeshStandardMaterial({color,roughness:.38,metalness:.08}));body.castShadow=true;body.receiveShadow=true;group.add(body);
+ if(paint){const c=document.createElement('canvas');c.width=w*3;c.height=h*3;const ctx=c.getContext('2d');ctx.scale(3,3);paint(ctx,w,h);const map=new THREE.CanvasTexture(c);map.colorSpace=THREE.SRGBColorSpace;const face=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map,transparent:true,depthWrite:false}));face.position.z=11.2;group.add(face)}
+ rig.add(group);return group;
+}
+function text(c,str,x,y,size=12,color='#0f2a1e',bold=true){c.fillStyle=color;c.font=`${bold?700:400} ${size}px Arial`;c.fillText(str,x,y)}
+function rect(c,x,y,w,h,color,r=4){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+const base=panel(342,418,0xffffff);
+const nav=panel(310,35,0xffffff,c=>{text(c,'STUDIO / BOOKING',10,23,12);text(c,'Preview',252,23,9,'#1f9d6c')});
+const hero=panel(310,65,0xffffff,c=>{text(c,'Make time for you.',10,29,23);text(c,'Book your next studio session.',10,50,11,'#526c5e',false)});
+const calendar=panel(145,150,0xeef5ee,c=>{text(c,'Choose a date',10,22,11);for(let i=0;i<12;i++){const x=10+i%4*32,y=35+Math.floor(i/4)*33;rect(c,x,y,27,27,'#ffffff');text(c,String(14+i),x+7,y+18,10)}});
+const slots=panel(145,150,0xeef5ee,c=>{text(c,'Available times',10,22,11);['09:00','10:30','14:00'].forEach((v,i)=>{rect(c,10,36+i*33,125,27,'#ffffff');text(c,v,56,54+i*33,10)})});
+const action=panel(310,76,0x144835,c=>{text(c,'A date. A time. Your next session.',17,23,11,'#d9e6dc',false);text(c,'Book session',105,52,16,'#ffffff')});
+const parts=[nav,hero,calendar,slots,action];
+const target=[[0,170,13],[0,111,15],[-82,-8,18],[82,-8,20],[0,-140,23]];
+const spread=[[-16,185,26],[18,117,55],[-92,-5,86],[92,-16,104],[6,-171,135]];
+let active='',start=performance.now(),frozen=null;
+window.seek=t=>{frozen=Math.max(0,Math.min(31.999,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};
+function show(el,visible,opacity=1){el.style.visibility=visible?'visible':'hidden';el.style.opacity=opacity}
+function render(t){
+ window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1]);show($('.copy'),!!beat);
+ if(beat){if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(line=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...line.split(' ').map(word=>{const el=document.createElement('span');el.className='word';el.textContent=word;return el}));return row}))}
+  document.querySelectorAll('.word').forEach((el,i)=>{const second=el.parentElement===$('h1').lastElementChild,p=clamp((t-beat[0]-i*.065-(second?.23:0))/.65);const spring=p===1?1:1-Math.exp(-6*p)*Math.cos(10*p);el.style.opacity=clamp(p*4);el.style.transform=`translateY(${(1-spring)*38}px) rotateX(${(1-spring)*75}deg)`});$('.caption').textContent=beat[3];}
+ show($('.caption'),!!beat);
+ const promptIn=ease((t-3)/.6),promptOut=ease((t-5.8)/.7);
+ show($('.prompt'),t>=3&&t<6.5,1-promptOut);$('.prompt').style.transform=`translateY(${(1-promptIn)*55-promptOut*35}px) rotateY(${(1-promptIn)*-22}deg) scale(${.88+.12*promptIn-.3*promptOut})`;
+ const words='Build a booking app for my studio.';$('.prompt-text').textContent=words.slice(0,Math.floor(words.length*clamp((t-3.45)/1.2)));
+ $('.send').style.transform=`scale(${1-Math.sin(clamp((t-5.4)/.3)*Math.PI)*.15})`;
+ rig.visible=t<17.5;const opening=ease(t/.9),hide=smooth((t-2.2)/.8),returning=ease((t-6.2)/.8),assemble=smooth((t-10)/4.3);
+ const initial=t<3;let scale=initial?(1-hide)*(.62+.2*opening):t<6.2?0:mix(.64,1,assemble)*returning;
+ const orbit=Math.sin(Math.max(0,t-6.5)*.85)*(1-assemble);
+ const inspection=Math.sin(clamp((t-14.3)/2.7)*Math.PI);
+ rig.scale.setScalar(Math.max(.001,scale));
+ rig.rotation.set(initial?mix(.35,.12,opening):(-.09+orbit*.09)*(1-assemble),initial?mix(1.1,-.22,opening):mix(-.36+orbit*.20,0,assemble)+inspection*.16,initial?mix(-.2,-.06,opening):mix(-.055+orbit*.035,0,assemble));
+ rig.position.y=initial?0:mix(-3,0,assemble);base.visible=t<3||t>=9.4;
+ const baseEntry=initial?1:ease((t-9.4)/1.05);base.scale.setScalar(initial?1:.94+.06*baseEntry);base.position.set(0,-45*(1-baseEntry),-120*(1-baseEntry));base.rotation.x=(1-baseEntry)*.2;
+ camera.position.set(initial?mix(-28,0,opening):0,0,initial?mix(830,777,opening):777);camera.lookAt(0,0,0);
+ parts.forEach((part,i)=>{
+  const entrance=clamp((t-6.5-i*.18)/.9),enter=ease(entrance);
+  const flight=clamp((t-10-i*.42)/1.35),settle=smooth(flight),arc=Math.sin(flight*Math.PI);
+  const landingAge=t-(11.35+i*.42),bounce=landingAge>0&&landingAge<.6?Math.sin(landingAge/.6*Math.PI*2)*Math.exp(-landingAge*7)*5:0;
+  const pos=target[i],sp=spread[i],direction=i%2?1:-1;
+  if(initial){part.position.set(...pos);part.rotation.set(0,0,0)}else{
+   part.position.set(mix(sp[0]+(1-enter)*direction*160,pos[0],settle)+arc*direction*16,mix(sp[1],pos[1],settle)+Math.sin(entrance*Math.PI)*18+arc*12,mix(sp[2],pos[2],settle)+arc*32+bounce);
+   part.rotation.set((1-settle)*.045+arc*.10,(1-enter)*direction*1.15+arc*direction*.16,(1-enter)*direction*.18+(1-settle)*Math.sin(t+i)*.035);
+  }
+ });
+ const preview=smooth((t-17)/.45);$('.volume').style.opacity=1-preview;renderer.render(scene,camera);
+ show($('.app'),t>=17&&t<29,preview);$('.app').style.transform=`scale(1)`;
+ const date=t>=19.2,time=t>=20.9,confirmed=t>=24.2;
+ document.querySelectorAll('.day').forEach(el=>{el.classList.toggle('selected',date&&el.textContent==='18');const p=clamp((t-19.2)/.42);el.style.transform=el.textContent==='18'?`scale(${1+Math.sin(p*Math.PI)*.12})`:'none'});document.querySelectorAll('.slot').forEach((el,i)=>{el.classList.toggle('selected',time&&i===1);el.style.transform=i===1?`translateY(${-Math.sin(clamp((t-20.9)/.42)*Math.PI)*3}px)`:'none'});
+ $('.selection').textContent=time?'Sep 18 / 10:30':date?'September 18':'Select a date and time';
+ $('.book').style.transform=`scale(${1-Math.sin(clamp((t-23.55)/.45)*Math.PI)*.055})`;
+ show($('.booking-content'),!confirmed);const confirm=ease((t-24.2)/.55);show($('.confirmation'),confirmed,confirm);$('.confirmation h3').style.transform=`translateY(${(1-ease((t-24.35)/.5))*12}px)`;$('.receipt').style.opacity=ease((t-24.65)/.5);$('.receipt').style.transform=`translateY(${(1-ease((t-24.65)/.5))*12}px)`;$('.check').style.transform=`scale(${.4+.6*confirm}) rotate(${(1-confirm)*-25}deg)`;
+ const pointer=$('.pointer');show(pointer,t>=18.7&&t<24.05);
+ function corner(el){const r=el.getBoundingClientRect(),f=film.getBoundingClientRect(),s=f.width/430;return [(r.right-f.left)/s-5,(r.bottom-f.top)/s-5]}
+ const d=corner(document.querySelectorAll('.day')[4]),slot=corner(document.querySelectorAll('.slot')[1]),button=corner($('.book'));
+ const points=[[18.7,...d],[19.4,...d],[20.6,...slot],[21.2,...slot],[23.3,...button],[24.05,...button]];
+ let x=points[0][1],y=points[0][2];for(let i=0;i<points.length-1;i++){if(t>=points[i][0]){const p=smooth((t-points[i][0])/(points[i+1][0]-points[i][0]));x=mix(points[i][1],points[i+1][1],p);y=mix(points[i][2],points[i+1][2],p)}}
+ pointer.style.left=(x-6)+'px';pointer.style.top=(y-6)+'px';pointer.style.transform=`scale(${1+Math.sin(t*10)*.08})`;
+ const ending=ease((t-29)/.65);show($('.endcard'),t>=29,ending);$('.logo').style.transform=`translateY(${(1-ending)*16}px)`;$('.endline').style.opacity=ease((t-29.3)/.6);
+}
+function tick(now){render(frozen===null?((now-start)/1000)%duration:frozen);requestAnimationFrame(tick)}requestAnimationFrame(tick);
+</script>
+</body>
+</html>

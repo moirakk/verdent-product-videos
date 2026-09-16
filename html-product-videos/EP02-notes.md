@@ -23,8 +23,9 @@ The booking application is an illustrative animation, not a deployed service or 
 
 ## Versions
 
+- EP02/v004: Returns to v002 composition after v003 feedback. Adds real cast shadows, a sliding backing panel, tighter staggered assembly, a short inspection turn, aligned preview transition, and selection/confirmation feedback. Runtime remains 32 seconds.
 - EP02/v003: Stronger 3D depth with thicker beveled modules, camera parallax, route lines, depth grid, clearer module surface details, and slightly safer framing.
 - EP02/v002: Stronger 3D orbit, curved module entrances, staggered assembly, and settling bounce. Same 32-second narrative.
 - EP02/v001: Initial complete film with Three.js assembly and animated booking preview.
 
-Save future revisions with `node save-version.cjs v004 "Description" EP02-create-app.html`.
+Save future revisions with `node save-version.cjs v005 "Description" EP02-create-app.html`.
