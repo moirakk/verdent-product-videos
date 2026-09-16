@@ -23,6 +23,7 @@ The booking application is an illustrative animation, not a deployed service or 
 
 ## Versions
 
+- EP02/v002: Stronger 3D orbit, curved module entrances, staggered assembly, and settling bounce. Same 32-second narrative.
 - EP02/v001: Initial complete film with Three.js assembly and animated booking preview.
 
 Save future revisions with `node save-version.cjs v002 "Description" EP02-create-app.html`.

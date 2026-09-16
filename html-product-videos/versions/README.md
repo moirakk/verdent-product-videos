@@ -4,6 +4,7 @@ Each numbered folder is a self-contained snapshot with HTML, assets, and a times
 
 ## Saved versions
 
+- EP02/v002: Stronger dimensional motion and staggered assembly. Entry: `EP02/v002/EP02-create-app.html`.
 - EP02/v001: Create App, a 32-second 3D application assembly and booking preview film. Entry: `EP02/v001/EP02-create-app.html`.
 - v009: Stronger kinetic typography, avatar selection bounce, unfolding plan cards, typed goal, and layered result reveal. Runtime: 32 seconds.
 - v008: Two-line advertising headlines, timed keyword reveals, simplified supporting text, and a shorter final brand line. Runtime: 32 seconds.

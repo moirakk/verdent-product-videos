@@ -105,11 +105,20 @@ function render(t){
  $('.send').style.transform=`scale(${1-Math.sin(clamp((t-5.4)/.3)*Math.PI)*.15})`;
  rig.visible=t<17.5;const opening=ease(t/.9),hide=smooth((t-2.2)/.8),returning=ease((t-6.2)/.8),assemble=smooth((t-10)/5.5);
  const initial=t<3;let scale=initial?(1-hide)*(.62+.2*opening):t<6.2?0:mix(.64,1,assemble)*returning;
- rig.scale.setScalar(Math.max(.001,scale));rig.rotation.set(initial?.12:-.09*(1-assemble),initial?mix(.9,-.28,opening):mix(-.46,0,assemble),initial?-.06:mix(-.08,0,assemble));
+ const orbit=Math.sin(Math.max(0,t-6.5)*1.15)*(1-assemble);
+ rig.scale.setScalar(Math.max(.001,scale));
+ rig.rotation.set(initial?mix(.35,.12,opening):(-.09+orbit*.09)*(1-assemble),initial?mix(1.3,-.28,opening):mix(-.38+orbit*.16,0,assemble),initial?mix(-.2,-.06,opening):mix(-.055+orbit*.035,0,assemble));
  rig.position.y=initial?0:mix(-3,0,assemble);base.visible=t<3||t>=9.4;
  if(t>=9.4&&t<10.2)base.scale.setScalar(ease((t-9.4)/.8));else base.scale.setScalar(1);
- parts.forEach((part,i)=>{const enter=ease((t-6.5-i*.16)/.75),settle=smooth((t-10-i*.5)/2.7),pos=target[i],sp=spread[i];
-  if(initial){part.position.set(...pos);part.rotation.set(0,0,0)}else{part.position.set(mix(sp[0]+(1-enter)*(i%2?160:-160),pos[0],settle),mix(sp[1],pos[1],settle),mix(sp[2],pos[2],settle));part.rotation.set((1-settle)*.06,(1-enter)*.9,(1-settle)*Math.sin(t+i)*.025)}
+ parts.forEach((part,i)=>{
+  const entrance=clamp((t-6.5-i*.18)/.9),enter=ease(entrance);
+  const flight=clamp((t-10-i*.55)/1.65),settle=smooth(flight),arc=Math.sin(flight*Math.PI);
+  const landingAge=t-(11.65+i*.55),bounce=landingAge>0&&landingAge<.6?Math.sin(landingAge/.6*Math.PI*2)*Math.exp(-landingAge*7)*5:0;
+  const pos=target[i],sp=spread[i],direction=i%2?1:-1;
+  if(initial){part.position.set(...pos);part.rotation.set(0,0,0)}else{
+   part.position.set(mix(sp[0]+(1-enter)*direction*160,pos[0],settle)+arc*direction*16,mix(sp[1],pos[1],settle)+Math.sin(entrance*Math.PI)*18+arc*12,mix(sp[2],pos[2],settle)+arc*44+bounce);
+   part.rotation.set((1-settle)*.06+arc*.12,(1-enter)*direction*1.15+arc*direction*.16,(1-enter)*direction*.18+(1-settle)*Math.sin(t+i)*.035);
+  }
  });
  const preview=ease((t-17)/.5);$('.volume').style.opacity=1-preview;renderer.render(scene,camera);
  show($('.app'),t>=17&&t<29,preview);$('.app').style.transform=`rotateY(${(1-preview)*-5}deg) scale(${.98+.02*preview})`;
