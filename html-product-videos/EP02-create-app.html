@@ -68,6 +68,7 @@ const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawin
 renderer.setSize(430,490);renderer.setPixelRatio(Math.min(devicePixelRatio,2));$('.volume').append(renderer.domElement);
 renderer.setClearColor(0xffffff,0);
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.localClippingEnabled=true;
 const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,430/490,1,3000);
 camera.position.set(0,0,777);camera.lookAt(0,0,0);
 scene.add(new THREE.HemisphereLight(0xffffff,0x829a8a,2.8));
@@ -92,13 +93,24 @@ const action=panel(310,76,0x144835,c=>{text(c,'A date. A time. Your next session
 const parts=[nav,hero,calendar,slots,action];
 const target=[[0,170,13],[0,111,15],[-82,-8,18],[82,-8,20],[0,-140,23]];
 const spread=[[-16,185,26],[18,117,55],[-92,-5,86],[92,-16,104],[6,-171,135]];
+// The final 3D surface uses the exact preview, allowing a pixel-aligned handoff.
+const previewTexture=await new THREE.TextureLoader().loadAsync('./assets/ep02-booking-preview.png');
+previewTexture.colorSpace=THREE.SRGBColorSpace;
+previewTexture.anisotropy=renderer.capabilities.getMaxAnisotropy();
+const finished=panel(342,430,0xffffff);
+const previewFace=new THREE.Mesh(new THREE.PlaneGeometry(342,430),new THREE.MeshBasicMaterial({map:previewTexture,transparent:true,depthWrite:false}));
+previewFace.position.z=11.25;finished.add(previewFace);finished.position.set(0,-6,-11.25);
+const revealPlane=new THREE.Plane(new THREE.Vector3(0,1,0),-260);
+const assemblyPlane=new THREE.Plane(new THREE.Vector3(0,-1,0),260);
+finished.traverse(o=>{if(o.isMesh){o.material.clippingPlanes=[revealPlane];o.material.clipShadows=true}});
+[base,...parts].forEach(group=>group.traverse(o=>{if(o.isMesh){o.material.clippingPlanes=[assemblyPlane];o.material.clipShadows=true}}));
 let active='',start=performance.now(),frozen=null;
 window.seek=t=>{frozen=Math.max(0,Math.min(31.999,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};
 function show(el,visible,opacity=1){el.style.visibility=visible?'visible':'hidden';el.style.opacity=opacity}
 function render(t){
  window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1]);show($('.copy'),!!beat);
  if(beat){if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(line=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...line.split(' ').map(word=>{const el=document.createElement('span');el.className='word';el.textContent=word;return el}));return row}))}
-  document.querySelectorAll('.word').forEach((el,i)=>{const second=el.parentElement===$('h1').lastElementChild,p=clamp((t-beat[0]-i*.065-(second?.23:0))/.65);const spring=p===1?1:1-Math.exp(-6*p)*Math.cos(10*p);el.style.opacity=clamp(p*4);el.style.transform=`translateY(${(1-spring)*38}px) rotateX(${(1-spring)*75}deg)`});$('.caption').textContent=beat[3];}
+  document.querySelectorAll('.word').forEach((el,i)=>{const second=el.parentElement===$('h1').lastElementChild,p=clamp((t-beat[0]-i*.065-(second?.23:0))/.65);const spring=p===1?1:1-Math.exp(-6*p)*Math.cos(10*p),exit=smooth((t-beat[1]+.28)/.28);el.style.opacity=clamp(p*4)*(1-exit);el.style.transform=`translateY(${(1-spring)*38-exit*12}px) rotateX(${(1-spring)*75-exit*12}deg)`});$('.caption').textContent=beat[3];}
  show($('.caption'),!!beat);
  const promptIn=ease((t-3)/.6),promptOut=ease((t-5.8)/.7);
  show($('.prompt'),t>=3&&t<6.5,1-promptOut);$('.prompt').style.transform=`translateY(${(1-promptIn)*55-promptOut*35}px) rotateY(${(1-promptIn)*-22}deg) scale(${.88+.12*promptIn-.3*promptOut})`;
@@ -107,12 +119,12 @@ function render(t){
  rig.visible=t<17.5;const opening=ease(t/.9),hide=smooth((t-2.2)/.8),returning=ease((t-6.2)/.8),assemble=smooth((t-10)/4.3);
  const initial=t<3;let scale=initial?(1-hide)*(.62+.2*opening):t<6.2?0:mix(.64,1,assemble)*returning;
  const orbit=Math.sin(Math.max(0,t-6.5)*.85)*(1-assemble);
- const inspection=Math.sin(clamp((t-14.3)/2.7)*Math.PI);
+ const inspection=Math.sin(clamp((t-13.7)/3.5)*Math.PI);
  rig.scale.setScalar(Math.max(.001,scale));
- rig.rotation.set(initial?mix(.35,.12,opening):(-.09+orbit*.09)*(1-assemble),initial?mix(1.1,-.22,opening):mix(-.36+orbit*.20,0,assemble)+inspection*.16,initial?mix(-.2,-.06,opening):mix(-.055+orbit*.035,0,assemble));
+ rig.rotation.set(initial?mix(.42,.12,opening):(-.15+orbit*.10)*(1-assemble)+inspection*.07,initial?mix(1.25,-.22,opening):mix(-.50+orbit*.24,0,assemble)+inspection*.30,initial?mix(-.2,-.06,opening):mix(-.055+orbit*.035,0,assemble));
  rig.position.y=initial?0:mix(-3,0,assemble);base.visible=t<3||t>=9.4;
  const baseEntry=initial?1:ease((t-9.4)/1.05);base.scale.setScalar(initial?1:.94+.06*baseEntry);base.position.set(0,-45*(1-baseEntry),-120*(1-baseEntry));base.rotation.x=(1-baseEntry)*.2;
- camera.position.set(initial?mix(-28,0,opening):0,0,initial?mix(830,777,opening):777);camera.lookAt(0,0,0);
+ camera.position.set(initial?mix(-28,0,opening):0,0,initial?mix(830,777,opening):777+Math.sin(clamp((t-6.2)/8.1)*Math.PI)*22);camera.lookAt(0,0,0);
  parts.forEach((part,i)=>{
   const entrance=clamp((t-6.5-i*.18)/.9),enter=ease(entrance);
   const flight=clamp((t-10-i*.42)/1.35),settle=smooth(flight),arc=Math.sin(flight*Math.PI);
@@ -120,11 +132,13 @@ function render(t){
   const pos=target[i],sp=spread[i],direction=i%2?1:-1;
   if(initial){part.position.set(...pos);part.rotation.set(0,0,0)}else{
    part.position.set(mix(sp[0]+(1-enter)*direction*160,pos[0],settle)+arc*direction*16,mix(sp[1],pos[1],settle)+Math.sin(entrance*Math.PI)*18+arc*12,mix(sp[2],pos[2],settle)+arc*32+bounce);
-   part.rotation.set((1-settle)*.045+arc*.10,(1-enter)*direction*1.15+arc*direction*.16,(1-enter)*direction*.18+(1-settle)*Math.sin(t+i)*.035);
+   part.rotation.set((1-settle)*.09+arc*.15,(1-enter)*direction*1.15+arc*direction*.24,(1-enter)*direction*.18+(1-settle)*Math.sin(t+i)*.035);
   }
+  part.visible=t<16.18;
  });
- const preview=smooth((t-17)/.45);$('.volume').style.opacity=1-preview;renderer.render(scene,camera);
- show($('.app'),t>=17&&t<29,preview);$('.app').style.transform=`scale(1)`;
+ const resolve=smooth((t-15.05)/1.13),revealY=mix(260,-260,resolve);finished.visible=t>=15.05;revealPlane.constant=-revealY;assemblyPlane.constant=revealY;base.visible=base.visible&&resolve<1;
+ const preview=smooth((t-17.2)/.3);$('.volume').style.opacity=1-preview;renderer.render(scene,camera);
+ show($('.app'),t>=17.2&&t<29,preview);$('.app').style.transform=`scale(1)`;
  const date=t>=19.2,time=t>=20.9,confirmed=t>=24.2;
  document.querySelectorAll('.day').forEach(el=>{el.classList.toggle('selected',date&&el.textContent==='18');const p=clamp((t-19.2)/.42);el.style.transform=el.textContent==='18'?`scale(${1+Math.sin(p*Math.PI)*.12})`:'none'});document.querySelectorAll('.slot').forEach((el,i)=>{el.classList.toggle('selected',time&&i===1);el.style.transform=i===1?`translateY(${-Math.sin(clamp((t-20.9)/.42)*Math.PI)*3}px)`:'none'});
  $('.selection').textContent=time?'Sep 18 / 10:30':date?'September 18':'Select a date and time';
