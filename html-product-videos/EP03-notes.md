@@ -28,5 +28,6 @@ The app, three direction names, three-page plan, and check-in are illustrative a
 - Shared title placement, staged word reveals, green accents, and logo treatment from EP02.
 - Checked desktop and mobile keyframes, including intermediate states, title overflow, asset requests, canvas occupancy, and changing rendered frames.
 - v001: Initial complete episode. Source: EP03-design-first.html.
+- v002: Exploded-layer opening, three staged gallery turns, selected-design camera push, hinged screen-plan reveal, and stronger curved assembly paths. Added contrasting edge materials and corrected face depth rendering. Verified mobile/desktop intermediate frames, canvas boundaries, and text clearance. Still 32 seconds.
 
-Next version command: `node save-version.cjs v002 "Description" EP03-design-first.html`.
+Next version command: `node save-version.cjs v003 "Description" EP03-design-first.html`.
