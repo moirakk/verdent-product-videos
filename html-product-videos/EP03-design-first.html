@@ -17,6 +17,7 @@
 .prompt-label{font-size:10px;font-weight:700;color:#526c5e;margin-bottom:13px}.prompt-text{font-size:23px;font-weight:650;line-height:1.24;min-height:86px}.prompt-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:11px;color:#526c5e}.send{display:grid;place-items:center;width:29px;height:29px;background:var(--ink);color:white;border-radius:50%;font-size:20px}
 .decision{position:absolute;top:638px;left:90px;right:90px;text-align:center;font-size:12px;font-weight:650;color:var(--ink);visibility:hidden;z-index:8}
 .decision b{color:var(--green)}
+.traits{display:block;margin-top:5px;font-size:10px;line-height:1.3;font-weight:500;color:#617568}
 .endcard{position:absolute;inset:0;background:white;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center}
 </style>
 </head>
@@ -37,13 +38,14 @@ const film=$('.film'),duration=32;
 function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}
 addEventListener('resize',fit);fit();
 const beats=[
- [0,3,'Design first.|Then build.','Give your next product a clear direction.'],
+ [0,3,'Decide the look.|Before the code.','Start with the design you want to build.'],
  [3,6.5,'Describe it.|Find its feel.','A calm habit tracker for busy people.'],
  [6.5,10.5,'Explore the|possibilities.','One brief. Different visual directions.'],
- [10.5,14,'Choose the|look and feel.','Your choice guides what gets built.'],
- [14,19.5,'A direction.|A whole product.','Confirm the screens before the build.'],
- [19.5,24,'Your design.|Taking shape.','Build from the approved direction.'],
- [24,29,'See it.|Put it to work.','Preview the app. Keep refining.']
+ [10.5,14,'Your taste.|Your choice.','Approve a visual direction before building.'],
+ [14,18,'Type. Color.|Space.','The choices behind the Calm direction.'],
+ [18,23,'One design.|Every screen.','A consistent look. A confirmed screen plan.'],
+ [23,27,'Design approved.|Now build.','Carry the chosen design into the app.'],
+ [27,29,'Your vision.|Still your vision.','Review the design in a working preview.']
 ];
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});
 renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);
@@ -112,6 +114,12 @@ maps.foundation=texture(c=>{surface(c);rect(c,19,55,256,66,'#ffffff',0);rect(c,1
 const center=panel(maps.calm),left=panel(maps.editorial),right=panel(maps.bold),welcome=panel(maps.welcome),progress=panel(maps.progress);
 const approval=panel(texture(c=>{rect(c,0,0,130,33,'#144835',8);circle(c,18,16,8,'#1f9d6c');tick(c,18,16);text(c,'Direction approved',32,20,9,'#ffffff')},130,33),130,33,0x144835);
 const planApproval=panel(texture(c=>{rect(c,0,0,154,33,'#144835',8);circle(c,18,16,8,'#1f9d6c');tick(c,18,16);text(c,'3 screens confirmed',33,20,10,'#ffffff')},154,33),154,33,0x144835);
+// These design specimens explain the chosen aesthetic, not a product settings UI.
+const specimens=[
+ panel(texture(c=>{rect(c,0,0,134,86,'#ffffff',8);text(c,'TYPOGRAPHY',12,18,9,'#617568');text(c,'Aa',12,65,43,'#153c2b',700);text(c,'Sans',83,59,11,'#153c2b',500)},134,86),134,86),
+ panel(texture(c=>{rect(c,0,0,134,86,'#ffffff',8);text(c,'COLOR',12,18,9,'#617568');['#153c2b','#1f9d6c','#eff5f0'].forEach((color,i)=>rect(c,12+i*38,32,33,38,color,5))},134,86),134,86),
+ panel(texture(c=>{rect(c,0,0,134,86,'#ffffff',8);text(c,'SPACING',12,18,9,'#617568');[6,12,20].forEach((gap,i)=>{const x=16+i*37;rect(c,x,32,5,20,'#153c2b',1);rect(c,x+gap/2,32,5,20,'#1f9d6c',1);text(c,String(gap),x,72,11,'#617568',500)})},134,86),134,86)
+];
 const elements=[];
 // Design choices separate into tangible UI layers before becoming a preview.
 for(const [x,y,w,h] of [[0,107,254,64],[0,22,254,100],[0,-87,254,104],[0,-165,254,34]]){
@@ -124,11 +132,13 @@ function show(el,on,opacity=1){el.style.visibility=on?'visible':'hidden';el.styl
 function pose(g,x,y,z,rx,ry,rz,scale=1){g.position.set(x,y,z);g.rotation.set(rx,ry,rz);g.scale.setScalar(Math.max(.001,scale))}
 window.seek=t=>{frozen=Math.max(0,Math.min(31.999,t));render(frozen)};
 window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};
-function render(t){
- window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1]);show($('.copy'),!!beat);show($('.caption'),!!beat);
+function render(time){
+ // Hold the approved design for its visual breakdown, then resume the existing motion.
+ const t=time<14?time:time<18?14:time<23?14+(time-18)*1.1:time<27?19.5+(time-23)*1.125:time<29?24+(time-27)*2.5:time;
+ window.filmTime=time;const beat=beats.find(b=>time>=b[0]&&time<b[1]);show($('.copy'),!!beat);show($('.caption'),!!beat);
  if(beat){
   if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(value=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...value.split(' ').map(value=>{const word=document.createElement('span');word.className='word';word.textContent=value;return word}));return row}));$('.caption').textContent=beat[3]}
-  document.querySelectorAll('.word').forEach((el,i)=>{const p=clamp((t-beat[0]-i*.065)/.68),spring=p===1?1:1-Math.exp(-6*p)*Math.cos(9*p),out=phase(t,beat[1]-.25,beat[1]);el.style.opacity=clamp(p*4)*(1-out);el.style.transform=`translateY(${(1-spring)*36-out*11}px) rotateX(${(1-spring)*66}deg)`});
+  document.querySelectorAll('.word').forEach((el,i)=>{const p=clamp((time-beat[0]-i*.065)/.68),spring=p===1?1:1-Math.exp(-6*p)*Math.cos(9*p),out=phase(time,beat[1]-.25,beat[1]);el.style.opacity=clamp(p*4)*(1-out);el.style.transform=`translateY(${(1-spring)*36-out*11}px) rotateX(${(1-spring)*66}deg)`});
  }
  const pi=ease((t-2.8)/.65),po=phase(t,5.85,6.65);show($('.prompt'),t>=2.8&&t<6.65,1-po);$('.prompt').style.transform=`translateY(${(1-pi)*40-po*42}px) rotateX(${(1-pi)*12+po*14}deg) scale(${.92+.08*pi-po*.15})`;
  const brief='A calm habit tracker for busy people.';$('.prompt-text').textContent=brief.slice(0,Math.floor(brief.length*clamp((t-3.35)/1.5)));
@@ -152,8 +162,10 @@ function render(t){
  cx=mix(cx,0,choose);cs=mix(cs,.92,choose);cz=mix(cz,12,choose)+pickArc*28;cy=mix(cy,0,choose)+pickArc*8;ry=mix(ry,.08,choose)+pickArc*.22;rz=mix(rz,0,choose);
  cs=mix(cs,.60,pages*(1-build));cy=mix(cy,0,pages*(1-build));cz=mix(cz,32,pages*(1-build));ry*=1-pages*(1-build);
  if(t>=19.5){cs=mix(.60,.90,build);cy=0;cz=mix(32,0,build);ry=-Math.sin(build*Math.PI)*.42-.32*build*(1-assemble);rx=.14*Math.sin(build*Math.PI);rz=.025*Math.sin(build*Math.PI)}
+ const detail=phase(time,14,14.9)*(1-phase(time,17.5,18.5));
+ cx+=detail*86;cs*=1-detail*.38;ry-=detail*.24;
  pose(center,cx,cy-closing*28,cz-closing*60,rx,ry+closing*.16,rz,cs*(1-closing*.06));
- center.userData.face.material.map=t>=26.15?maps.done:(t<2.25||t>=20.15&&t<24)?maps.foundation:maps.calm;
+ center.userData.face.material.map=(t<2.25||t>=20.15&&t<24)?maps.foundation:maps.calm;
  center.visible=t<29.3;
  const reveal=phase(t,6.15,6.75),depart=phase(t,10.65,12.3);
  left.visible=right.visible=t>=6.15&&t<12.3;
@@ -161,7 +173,12 @@ function render(t){
   const side=i===0?-1:1,angle=turn+side*Math.PI*2/3,front=(Math.cos(angle)+1)/2;
   pose(card,Math.sin(angle)*109*reveal*(1-depart),Math.sin(angle)*10*(1-depart),mix(-125,-85+front*140,reveal)-depart*150,.04,-Math.sin(angle)*.62+side*depart*1.12,-Math.sin(angle)*.035,(.52+front*.25)*reveal*(1-depart));
  });
- const approved=phase(t,12,12.6)*(1-phase(t,13.7,14.3));approval.visible=approved>0;pose(approval,67,-171,86,0,-.06,0,approved*.95);
+ const approved=phase(t,12,12.6)*(1-phase(time,13.65,14));approval.visible=approved>0;pose(approval,67,-171,86,0,-.06,0,approved*.95);
+ specimens.forEach((item,i)=>{
+  const enter=phase(time,14.2+i*.14,15+i*.14),absorb=phase(time,17.5+i*.10,18.25+i*.10),arc=Math.sin(absorb*Math.PI);
+  item.visible=time>=14.2+i*.14&&time<18.25+i*.10;
+  pose(item,mix(mix(52,-96,enter),65,absorb),mix(106-i*106,80-i*65,absorb)+arc*13,mix(mix(-20,56,enter),-85,ease(absorb*2)),0,(1-enter)*-.9+absorb*.55,(1-enter)*-.08,(.60+.36*enter)*(1-absorb));
+ });
  const pageOut=phase(t,19.5,21.4);
  welcome.visible=progress.visible=t>=14.2&&t<21.4;
  [welcome,progress].forEach((card,i)=>{
@@ -179,10 +196,10 @@ function render(t){
   // Layers inherit the product pose, preserving a single continuous object.
   g.position.multiplyScalar(cs).applyEuler(center.rotation).add(center.position);g.quaternion.premultiply(center.quaternion);g.scale.multiplyScalar(cs);
  });
- cursor.visible=t>=25.05&&t<26.6;
+ cursor.visible=false;
  const pointer=phase(t,25.05,26.1);cursor.position.set(mix(102,0,pointer),mix(-95,-149,pointer),30);cursor.scale.setScalar(1+Math.sin(clamp((t-26.1)/.45)*Math.PI)*.35);
  const label=$('.decision');show(label,t>=7.35&&t<19.5&&!(t>=12&&t<14.2));
- if(t<8.3)label.textContent='01 / Editorial';else if(t<9.6)label.textContent='02 / Bold';else if(t<10.65)label.textContent='03 / Calm';else if(t<14.2)label.innerHTML='<b>Calm</b> selected';else label.textContent='Welcome / Today / Progress';
+ if(t<8.3)label.innerHTML='01 / Editorial<span class="traits">Serif type. A quiet, open layout.</span>';else if(t<9.6)label.innerHTML='02 / Bold<span class="traits">Strong type. High-contrast blocks.</span>';else if(t<10.65)label.innerHTML='03 / Calm<span class="traits">Soft greens. Rounded forms. Room to breathe.</span>';else if(t<14.2)label.innerHTML='<b>Calm</b> selected';else label.textContent='Welcome / Today / Progress';
  label.style.opacity=phase(t,7.35,7.5)*(1-phase(t,19.1,19.5));
  const ending=phase(t,28.7,29.4);show($('.endcard'),t>=28.7,ending);$('.logo').style.transform=`translateY(${(1-ending)*18}px)`;$('.endline').style.opacity=ease((t-29.25)/.6);
  renderer.render(scene,camera);
