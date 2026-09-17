@@ -30,7 +30,6 @@ h1{font-size:42px;line-height:1.06;font-weight:800;letter-spacing:0;margin:16px 
 import * as THREE from './assets/three.module.min.js';
 const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x));
 const mix=(a,b,p)=>a+(b-a)*p,ease=x=>1-Math.pow(1-clamp(x),3),smooth=x=>{x=clamp(x);return x*x*(3-2*x)},phase=(t,a,b)=>smooth((t-a)/(b-a));
-const pulse=(t,a,b)=>Math.sin(phase(t,a,b)*Math.PI),rebound=x=>{x=clamp(x);return Math.sin(x*Math.PI*2)*Math.pow(1-x,2)};
 const duration=32,film=$('.film');
 function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}
 addEventListener('resize',fit);fit();
@@ -38,7 +37,7 @@ const beats=[
  [0,3,'A brief.|A whole deck.','Bring your story into focus.'],
  [3,6.5,'Start with|your ideas.','Turn a product brief into a presentation.'],
  [6.5,10.5,'Find the|story inside.','Give each idea a place in the story.'],
- [10.5,16,'From points|to pages.','Headlines, visuals, and a clear hierarchy.'],
+ [10.5,16,'Watch the|story take shape.','Headlines, visuals, and a clear hierarchy.'],
  [16,21.5,'Six slides.|One visual voice.','Different layouts. A consistent look.'],
  [21.5,27.8,'See the deck.|Page by page.','Preview the presentation in Verdent.'],
  [27.8,29,'Your story.|Ready to present.','From the first idea to the final slide.']
@@ -85,6 +84,7 @@ function slide(c,i){
  text(c,'Start small.',30,142,60,'#ffffff',700);text(c,'Make it a habit.',30,212,45,'#d7eddd',500);text(c,'Meet Daylight.',33,283,17,'#c2e7d0',400);
 }
 const slideMaps=titles.map((_,i)=>texture(c=>slide(c,i)));
+const blankMaps=titles.map((_,i)=>texture(c=>{slide(c,i);rect(c,0,55,640,270,i===0||i===5?'#144835':'#ffffff',0)}));
 const outlineMaps=titles.map((title,i)=>texture(c=>{rect(c,0,0,320,44,'#ffffff',5);rect(c,12,10,25,25,'#eff5f0',5);text(c,`0${i+1}`,17,27,10,'#1f9d6c');text(c,title,50,28,16,'#153c2b',650);line(c,295,20,301,20,'#1f9d6c',2);line(c,301,20,298,17,'#1f9d6c',2);line(c,301,20,298,23,'#1f9d6c',2)},320,44));
 function rounded(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
 const geometry=new THREE.ExtrudeGeometry(rounded(320,180,6),{depth:9,bevelEnabled:true,bevelSize:1.6,bevelThickness:1.6,bevelSegments:4,curveSegments:12});geometry.translate(0,0,-5);
@@ -99,13 +99,22 @@ const slides=slideMaps.map((map,i)=>{
    bar.position.set((417+j*61+21.5)/2-160,90-(285-h/2)/2,6);bar.castShadow=true;relief.add(bar);
   });
  }
+ // Separate complete semantic elements, never slice through words or graphics.
+ const bands=(i===0?[[20,65,380,75],[20,145,380,158],[410,80,200,220]]:[]).map(([x,y,w,h],part)=>{
+  const bandMap=texture(c=>{
+   if(part===0)text(c,'Daylight',10,63,58,'#ffffff',700);
+   if(part===1){text(c,'Small habits.',13,31,30,'#ffffff',500);text(c,'Room to grow.',13,70,30,'#ffffff',500);text(c,'A calmer way to build a daily rhythm.',13,142,14,'#c2e7d0',400)}
+   if(part===2)[95,143,192].forEach((height,j)=>rect(c,7+j*61,205-height,43,height,['#6dae86','#96caab','#d7eddd'][j],8));
+  },w,h);
+  const band=new THREE.Mesh(new THREE.PlaneGeometry(w/2,h/2),new THREE.MeshBasicMaterial({map:bandMap,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
+  band.userData.x=-160+(x+w/2)/2;band.userData.y=90-(y+h/2)/2;band.position.set(band.userData.x,band.userData.y,6.05);band.visible=false;g.add(band);return band;
+ });g.userData.bands=bands;
  rig.add(g);return g;
 });
 function pose(g,p){g.position.set(p.x,p.y,p.z);g.rotation.set(p.rx,p.ry,p.rz);g.scale.set(p.s,p.s*p.h,p.s)}
 function blend(a,b,p){const result={};for(const key of Object.keys(a))result[key]=mix(a[key],b[key],p);return result}
-function stacked(i){return {x:(i-2.5)*5,y:(i-2.5)*13,z:35-i*19,rx:.22,ry:-.28,rz:-.08+i*.026,s:.94,h:1}}
 function grid(i){return {x:(i%2?1:-1)*92,y:133-Math.floor(i/2)*128,z:0,rx:.025,ry:i%2?-.055:.055,rz:0,s:.51,h:1}}
-function review(i,selected){if(i===selected)return {x:0,y:25,z:42,rx:.025,ry:-.035,rz:0,s:1.0,h:1};const side=i%2?1:-1;return {x:side*(20+i*3),y:-39-i*12,z:-42-i*17,rx:.15,ry:side*.13,rz:side*.065,s:.79,h:1}}
+function review(i,selected){if(i===selected)return {x:0,y:40,z:24,rx:.035,ry:-.055,rz:0,s:.99,h:1};return {x:-145+i*58,y:-137,z:-12,rx:.12,ry:0,rz:0,s:.145,h:1}}
 let active='',start=performance.now(),frozen=null,shadowFrame=-1;
 function show(el,on,opacity=1){el.style.visibility=on?'visible':'hidden';el.style.opacity=opacity}
 window.seek=t=>{frozen=Math.max(0,Math.min(31.999,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};
@@ -116,45 +125,47 @@ function render(t){
  const pi=ease((t-2.8)/.65),po=phase(t,5.9,6.6);show($('.prompt'),t>=2.8&&t<6.6,1-po);$('.prompt').style.transform=`translateY(${(1-pi)*45-po*30}px) rotateX(${(1-pi)*14+po*12}deg) scale(${.92+.08*pi-.12*po})`;
  const brief='Turn this brief into a 6-slide pitch deck.';$('.prompt-text').textContent=brief.slice(0,Math.floor(brief.length*clamp((t-3.25)/1.7)));$('.send').style.transform=`scale(${1-Math.sin(clamp((t-5.5)/.35)*Math.PI)*.15})`;
  rig.visible=t<29.5;shadow.visible=rig.visible;
- const turn=phase(t,10,14.9),zoom=phase(t,21.2,22.5);
- const openingOrbit=pulse(t,0,3),galleryOrbit=pulse(t,15.2,21.2);
- camera.position.set(22*openingOrbit-13*galleryOrbit,10*openingOrbit,800+Math.sin(turn*Math.PI)*40-zoom*12);camera.lookAt(0,0,0);
- rig.rotation.set(-.045*openingOrbit+.045*galleryOrbit,.13*openingOrbit-.075*galleryOrbit,-.025*galleryOrbit);
+ const assembly=phase(t,10.8,11.9)*(1-phase(t,14.8,16.3));
+ camera.position.set(0,0,810+assembly*35);camera.lookAt(0,0,0);
+ rig.rotation.set(assembly*.12,-assembly*.2,0);
  slides.forEach((g,i)=>{
-  let p=stacked(i),map=slideMaps[i];
-  const opening=ease((t-i*.07)/1.3);p.x+=(1-opening)*(i%2?45:-45);p.z+=(1-opening)*i*15;p.ry+=(1-opening)*.8;p.rz+=(1-opening)*(i-2.5)*.06;p.s*=.76+.24*opening;
-  const fan=phase(t,.2,1.1)*(1-phase(t,1.85,2.65));
-  p.x+=(i-2.5)*16*fan;p.y+=Math.abs(i-2.5)*15*fan;p.rz+=(i-2.5)*.115*fan;p.ry+=.16*fan;p.z+=fan*(i===0?24:-i*5);p.s*=1-.12*fan;
+  let p=review(i,0),map=slideMaps[i];
+  const opening=ease((t-i*.045)/1.1);p.y-=(1-opening)*55;p.z-=(1-opening)*110;p.rx+=(1-opening)*.45;p.ry-=(1-opening)*.3;
   const retreat=phase(t,2.3,3.3);p=blend(p,{x:0,y:80-i*5,z:-180-i*14,rx:.38,ry:-.32,rz:.04,s:.38,h:1},retreat);
   if(t>=5.95){
    const enter=phase(t,5.95+i*.11,6.9+i*.11),outline={x:0,y:142-i*56,z:i*2,rx:.025,ry:0,rz:0,s:.95,h:44/180};
-   p=blend({x:(i%2?1:-1)*105,y:142-i*56,z:-120,rx:.25,ry:(i%2?1:-1)*.6,rz:0,s:.32,h:44/180},outline,enter);map=outlineMaps[i];
-   const catchRow=rebound((t-5.95-i*.11)/1.15);p.x+=catchRow*(i%2?18:-18);p.rx+=catchRow*.16;
-   const morph=phase(t,10+i*.43,11.6+i*.43);p=blend(p,grid(i),morph);p.z+=Math.sin(morph*Math.PI)*70;p.ry+=Math.sin(morph*Math.PI)*Math.PI;
-   const arc=Math.sin(morph*Math.PI);p.x+=arc*(i%2?23:-23);p.rx+=arc*.24;p.rz+=arc*(i%2?-.13:.13);
+   p=blend(p,outline,enter);map=outlineMaps[i];
+   const morph=phase(t,9.1+i*.12,10.6+i*.12);p=blend(p,review(i,0),morph);
+   p.rx+=Math.sin(morph*Math.PI)*1.57;
    if(morph>=.5)map=slideMaps[i];
   }
-  if(t>=14.4){
-   const settle=phase(t,14.4,15.2);p=blend(p,grid(i),settle);
-   const breathe=Math.sin(phase(t,16.3,20.3)*Math.PI);p.ry+=breathe*(i%2?-.065:.065);p.z+=breathe*(i%2?9:0);
-   const settleWave=rebound((t-14.5-i*.13)/1.3);p.z+=settleWave*35;p.rx+=settleWave*.18;
-   const inspect=pulse(t,16+i*.35,18.4+i*.35);p.z+=inspect*17;p.ry+=inspect*(i%2?-.11:.11);
+  if(t>=14.8){
+   const expand=phase(t,14.8+i*.075,16.5+i*.075);p=blend(p,grid(i),expand);
+   p.z+=Math.sin(expand*Math.PI)*(i===0?25:48);p.ry+=Math.sin(expand*Math.PI)*(i%2?-.22:.22);
   }
   if(t>=21.2){
-   p=blend(p,review(i,0),phase(t,21.2,22.4));
-   const gather=pulse(t,21.2,22.4);p.x+=gather*(i%2?24:-24);p.ry+=gather*(i%2?-.25:.25);
+   p=blend(p,review(i,0),phase(t,21.2+i*.045,22.3+i*.045));
    const first=phase(t,23.3,24.25),second=phase(t,25.15,26.1);
-   p=blend(p,review(i,2),first);p=blend(p,review(i,3),second);
-   if(i===0){p.ry+=Math.sin(first*Math.PI)*1.05;p.x-=Math.sin(first*Math.PI)*67;p.rz+=Math.sin(first*Math.PI)*.09}
-   if(i===2){p.ry-=Math.sin(first*Math.PI)*.72;p.x+=Math.sin(first*Math.PI)*40;p.z+=Math.sin(first*Math.PI)*28;p.ry+=Math.sin(second*Math.PI)*1.05;p.x-=Math.sin(second*Math.PI)*67}
-   if(i===3){p.ry-=Math.sin(second*Math.PI)*.72;p.x+=Math.sin(second*Math.PI)*40;p.z+=Math.sin(second*Math.PI)*28}
-   p=blend(p,stacked(i),phase(t,27.5,28.5));
-   const close=pulse(t,27.5,28.5);p.rz+=close*(i-2.5)*.06;p.z+=close*(5-i)*8;
+   p=blend(p,review(i,2),i===0?phase(t,23.3,23.95):i===2?phase(t,23.6,24.25):first);
+   p=blend(p,review(i,3),i===2?phase(t,25.15,25.8):i===3?phase(t,25.45,26.1):second);
+   if(i===0)p.rx+=Math.sin(first*Math.PI)*.28;
+   if(i===2)p.rx+=Math.sin(second*Math.PI)*.28;
+   const finish=phase(t,27.5,28.6);p=blend(p,{...review(i,0),y:i===0?40:-112,z:i===0?24:-45,s:i===0?.99:.12},finish);
   }
-  pose(g,p);g.userData.face.material.map=map;g.userData.relief.visible=map===slideMaps[i]&&p.h>.95;
+  pose(g,p);
+  const build=i===0&&((t<2.3)||(t>=10.8&&t<14.8));
+  g.userData.bands.forEach((band,j)=>{
+   band.visible=build;
+   const arrival=t<2.3?phase(t,.12+j*.16,1.25+j*.16):phase(t,11.7+j*.42,12.6+j*.42);
+   const separation=(1-arrival)*(t<2.3?1:phase(t,10.8,11.35));
+   band.position.set(band.userData.x+separation*(j===2?3:7),band.userData.y+separation*(j===0?12:j===1?-6:0),6.05+separation*32);
+   band.rotation.set(separation*-.06,separation*.05,0);
+  });
+  g.userData.face.material.map=build?blankMaps[i]:map;
+  g.userData.relief.visible=map===slideMaps[i]&&p.h>.95&&!build;
  });
  const status=$('.status');show(status,t>=7.2&&t<28.8);
- if(t<10)status.innerHTML='An outline for <b>6 slides</b>';else if(t<15.2)status.innerHTML=`<b>${Math.min(6,Math.max(0,Math.floor((t-10.8)/.43)+1))} / 6</b> slides taking shape`;else if(t<21.2)status.innerHTML='<b>6 slides</b> / One complete deck';else if(t<27.5)status.innerHTML=`Deck preview / <b>${t<23.8?'01':t<25.65?'03':'04'} of 06</b>`;else status.innerHTML='<b>Daylight</b> / Pitch deck';
+ if(t<10)status.innerHTML='An outline for <b>6 slides</b>';else if(t<14.8)status.innerHTML=t<12?'<b>Headline</b> / Set the hierarchy':t<13?'<b>Message</b> / Build the story':'<b>Visuals</b> / Bring it together';else if(t<21.2)status.innerHTML='<b>6 slides</b> / One complete deck';else if(t<27.5)status.innerHTML=`Deck preview / <b>${t<23.8?'01':t<25.65?'03':'04'} of 06</b>`;else status.innerHTML='<b>Daylight</b> / Pitch deck';
  status.style.opacity=phase(t,7.2,7.6)*(1-phase(t,28.3,28.8));
  const ending=phase(t,28.8,29.5);show($('.endcard'),t>=28.8,ending);$('.logo').style.transform=`translateY(${(1-ending)*18}px)`;$('.endline').style.opacity=ease((t-29.3)/.6);
  const nextShadow=Math.floor(t*24);renderer.shadowMap.needsUpdate=nextShadow!==shadowFrame;shadowFrame=nextShadow;renderer.render(scene,camera);

@@ -31,4 +31,6 @@ Slide topics: Daylight, the problem, the idea, the experience, the plan, and the
 - v001: Initial complete episode. Source: EP04-create-slides.html.
 - v002: Stronger fan-out opening, real raised cover bars, subtle camera orbit, staggered outline catches, curved depth flips, gallery settling, and side-turn page handoffs. Preserves content, readable holds, 32-second duration, and supplied logo ending. Desktop/mobile checks include transition midpoints and canvas bounds; no page errors or text overflow found.
 
-Next version command: `node save-version.cjs v003 "Description" EP04-create-slides.html`.
+- v003: Reworked motion after v002 feedback. Removed fan-out, overlapping preview stacks, and large side-turns. Opening and preview use one hero slide with a thumbnail rail. Outline moves into the hero layout at 9.1-11.2s; complete headline, body, and graphic layers lift and settle on the cover at 10.8-14.8s; pages expand into the gallery at 14.8-17s. Preview handoffs shrink the outgoing slide before enlarging the next. Preserves 32 seconds, supplied logo, and earlier immutable versions. Desktop/mobile checks found no script errors, asset failures, or text overflow; reviewed assembly and preview transition frames.
+
+Next version command: `node save-version.cjs v004 "Description" EP04-create-slides.html`.
