@@ -33,4 +33,6 @@ The app, three direction names, screen plan, and design specimens are illustrati
 
 - v003: Design-led emphasis: explicit typography/layout descriptions for each direction, a dedicated 3D type/color/spacing breakdown, consistent design across screens, shorter build section, and no check-in demo. Preserves 32-second runtime and the established motion style.
 
-Next version command: `node save-version.cjs v004 "Description" EP03-design-first.html`.
+- v004: Deeper panel edges, physical raised color swatches and spacing bars, soft variance shadows, rim lighting, and small camera parallax during the design breakdown. Preserves v003 content and 32-second timing. Verified desktop/mobile keyframes and text clearance.
+
+Next version command: `node save-version.cjs v005 "Description" EP03-design-first.html`.
