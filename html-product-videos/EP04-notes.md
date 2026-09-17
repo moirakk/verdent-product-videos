@@ -29,5 +29,6 @@ Slide topics: Daylight, the problem, the idea, the experience, the plan, and the
 - Shared two-line kinetic typography, white space, green accents, and supplied logo treatment.
 - Desktop and mobile checks cover settled and intermediate frames, missing assets, page errors, text overflow, nonblank canvas bounds, and rendered state changes.
 - v001: Initial complete episode. Source: EP04-create-slides.html.
+- v002: Stronger fan-out opening, real raised cover bars, subtle camera orbit, staggered outline catches, curved depth flips, gallery settling, and side-turn page handoffs. Preserves content, readable holds, 32-second duration, and supplied logo ending. Desktop/mobile checks include transition midpoints and canvas bounds; no page errors or text overflow found.
 
-Next version command: `node save-version.cjs v002 "Description" EP04-create-slides.html`.
+Next version command: `node save-version.cjs v003 "Description" EP04-create-slides.html`.

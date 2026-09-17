@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdent Create Slides</title>
+<style>
+:root{--ink:#0f2a1e;--green:#1f9d6c}
+*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#e9ecea;font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+.film{position:absolute;left:50%;top:50%;width:430px;height:764px;transform-origin:center;overflow:hidden;background:#fbfdfb;isolation:isolate;perspective:1000px;box-shadow:0 36px 100px #0f2a1e22}
+.copy{position:absolute;left:28px;right:28px;top:34px;height:155px;z-index:20;pointer-events:none}.kicker{font:700 11px/1.2 monospace;color:var(--green)}
+h1{font-size:42px;line-height:1.06;font-weight:800;letter-spacing:0;margin:16px 0 0;perspective:650px}.line{display:block;white-space:nowrap}.line:last-child{color:var(--green)}.word{display:inline-block;margin-right:.19em;transform-origin:50% 90%}.word:last-child{margin:0}
+.volume{position:absolute;top:192px;width:430px;height:500px}.volume canvas{display:block;width:100%;height:100%}
+.caption{position:absolute;bottom:28px;left:28px;right:28px;height:30px;display:flex;align-items:flex-end;font-size:12px;line-height:1.4;font-weight:600;color:#526c5e;z-index:10}
+.prompt{position:absolute;left:40px;top:306px;width:350px;padding:23px;background:white;border:1px solid #d9e6dc;border-radius:18px;box-shadow:0 6px 0 #d9e6dc,0 28px 50px #0f2a1e18;z-index:6;visibility:hidden}
+.prompt-label{font-size:10px;font-weight:700;color:#526c5e;margin-bottom:12px}.prompt-text{font-size:23px;font-weight:650;line-height:1.24;height:88px}.attachment{display:flex;gap:10px;align-items:center;margin-top:15px;font-size:11px;color:#526c5e}.attachment svg{width:19px;height:23px;flex-shrink:0}.send{margin-left:auto;display:grid;place-items:center;width:29px;height:29px;background:var(--ink);color:white;border-radius:50%;font-size:20px}
+.status{position:absolute;top:650px;left:28px;right:28px;font-size:11px;font-weight:650;color:#526c5e;text-align:center;visibility:hidden}.status b{color:var(--green)}
+.endcard{position:absolute;inset:0;background:white;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center}
+</style>
+</head>
+<body>
+<main class="film" aria-label="Verdent Create Slides animated product film">
+ <header class="copy"><div class="kicker">VERDENT / CREATE SLIDES</div><h1></h1></header>
+ <div class="volume" aria-hidden="true"></div>
+ <article class="prompt"><div class="prompt-label">START WITH YOUR BRIEF</div><div class="prompt-text"></div><div class="attachment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg><span>daylight-brief.md</span><span class="send">&#8593;</span></div></article>
+ <div class="status"></div><div class="caption"></div>
+ <footer class="endcard"><img class="logo" src="assets/verdent-logo.png" alt="Verdent"><div class="endline">Your brief.<br>A story worth presenting.</div></footer>
+</main>
+<script type="module">
+import * as THREE from './assets/three.module.min.js';
+const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x));
+const mix=(a,b,p)=>a+(b-a)*p,ease=x=>1-Math.pow(1-clamp(x),3),smooth=x=>{x=clamp(x);return x*x*(3-2*x)},phase=(t,a,b)=>smooth((t-a)/(b-a));
+const pulse=(t,a,b)=>Math.sin(phase(t,a,b)*Math.PI),rebound=x=>{x=clamp(x);return Math.sin(x*Math.PI*2)*Math.pow(1-x,2)};
+const duration=32,film=$('.film');
+function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}
+addEventListener('resize',fit);fit();
+const beats=[
+ [0,3,'A brief.|A whole deck.','Bring your story into focus.'],
+ [3,6.5,'Start with|your ideas.','Turn a product brief into a presentation.'],
+ [6.5,10.5,'Find the|story inside.','Give each idea a place in the story.'],
+ [10.5,16,'From points|to pages.','Headlines, visuals, and a clear hierarchy.'],
+ [16,21.5,'Six slides.|One visual voice.','Different layouts. A consistent look.'],
+ [21.5,27.8,'See the deck.|Page by page.','Preview the presentation in Verdent.'],
+ [27.8,29,'Your story.|Ready to present.','From the first idea to the final slide.']
+];
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;renderer.shadowMap.autoUpdate=false;$('.volume').append(renderer.domElement);
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,800);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0x97aea0,1.65));
+const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(-180,220,900);key.castShadow=true;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-400,right:400,top:400,bottom:-400,near:1,far:1500});key.shadow.bias=-.0002;key.shadow.normalBias=.4;key.shadow.radius=9;key.shadow.blurSamples=8;scene.add(key);
+const fill=new THREE.DirectionalLight(0xe0ede5,1);fill.position.set(400,-100,400);scene.add(fill);
+const rim=new THREE.DirectionalLight(0xffffff,2.1);rim.position.set(320,220,-180);scene.add(rim);
+const rig=new THREE.Group();scene.add(rig);
+const shadow=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.ShadowMaterial({opacity:.055}));shadow.position.z=-150;shadow.receiveShadow=true;scene.add(shadow);
+function rect(c,x,y,w,h,color,r=4){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+function text(c,str,x,y,size=12,color='#153c2b',weight=600,font='Arial'){c.fillStyle=color;c.font=`${weight} ${size}px ${font}`;c.fillText(str,x,y)}
+function line(c,x,y,x2,y2,color='#dce7df',width=1){c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke()}
+function texture(paint,w=640,h=360){const canvas=document.createElement('canvas');canvas.width=w*2;canvas.height=h*2;const c=canvas.getContext('2d');c.scale(2,2);paint(c);const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
+const titles=['Daylight','The problem','The idea','The experience','The plan','Start small.'];
+function slide(c,i){
+ const dark=i===0||i===5,bg=dark?'#144835':'#ffffff',ink=dark?'#ffffff':'#153c2b',muted=dark?'#badaca':'#617568';
+ rect(c,0,0,640,360,bg,8);text(c,'DAYLIGHT',30,32,11,dark?'#c2e7d0':'#1f9d6c',750);text(c,`${String(i+1).padStart(2,'0')} / 06`,561,32,10,muted,500);line(c,30,330,610,330,dark?'#376451':'#e4ede6');text(c,'Small habits. Real life.',30,349,9,muted,400);
+ if(i===0){
+  text(c,'Daylight',30,128,58,ink,700);text(c,'Small habits.',33,176,30,'#ffffff',500);text(c,'Room to grow.',33,215,30,'#ffffff',500);text(c,'A calmer way to build a daily rhythm.',33,287,14,'#c2e7d0',400);
+  [95,143,192].forEach((h,j)=>{rect(c,417+j*61,285-h,43,h,['#6dae86','#96caab','#d7eddd'][j],8)});return;
+ }
+ if(i===1){
+  text(c,'Good intentions.',30,98,34,ink,700);text(c,'Busy lives.',30,142,34,ink,700);text(c,'Habits need room to fit.',30,182,17,muted,400);
+  ['Too much friction','Too many reminders','Not enough flexibility'].forEach((label,j)=>{const x=30+j*196;rect(c,x,229,184,64,'#eff5f0',6);text(c,`0${j+1}`,x+13,250,10,'#1f9d6c',700);text(c,label,x+13,279,12,ink,600)});return;
+ }
+ if(i===2){
+  text(c,'A rhythm that',30,97,34,ink,700);text(c,'works for you.',30,137,34,ink,700);text(c,'Start small. Check in. Keep going.',30,180,16,muted,400);
+  const labels=['Choose a habit','Make a little time','Notice your progress'];labels.forEach((label,j)=>{const x=30+j*198;rect(c,x,225,183,68,j===1?'#144835':'#eff5f0',7);text(c,`0${j+1}`,x+15,250,12,j===1?'#9ad3b3':'#1f9d6c');text(c,label,x+15,277,12,j===1?'#ffffff':ink)});return;
+ }
+ if(i===3){
+  text(c,'One small step.',30,96,34,ink,700);text(c,'A clear view of your day.',30,129,15,muted,400);
+  rect(c,30,161,267,137,'#eff5f0',8);text(c,'TODAY',48,185,10,'#617568',700);
+  ['Read for 10 minutes','Take a short walk','A moment to breathe'].forEach((label,j)=>{rect(c,48,197+j*29,232,23,'#ffffff',4);rect(c,55,204+j*29,8,8,j<2?'#1f9d6c':'#d9e6dc',2);text(c,label,73,213+j*29,11,ink,500)});
+  text(c,'YOUR WEEK',333,181,10,muted,700);[45,70,54,92,82,109,119].forEach((h,j)=>rect(c,334+j*39,299-h,24,h,j===6?'#1f9d6c':'#d9e6dc',3));return;
+ }
+ if(i===4){
+  text(c,'Build. Learn. Refine.',30,97,34,ink,700);text(c,'A focused path from first use to daily habit.',30,136,15,muted,400);
+  line(c,63,224,570,224,'#b4d7c3',3);
+  ['Start with the essentials','Learn from early use','Improve the daily flow'].forEach((label,j)=>{const x=30+j*196;rect(c,x,204,42,42,'#144835',7);text(c,`0${j+1}`,x+12,231,15,'#ffffff');text(c,label,x,279,12,ink,600)});return;
+ }
+ text(c,'Start small.',30,142,60,'#ffffff',700);text(c,'Make it a habit.',30,212,45,'#d7eddd',500);text(c,'Meet Daylight.',33,283,17,'#c2e7d0',400);
+}
+const slideMaps=titles.map((_,i)=>texture(c=>slide(c,i)));
+const outlineMaps=titles.map((title,i)=>texture(c=>{rect(c,0,0,320,44,'#ffffff',5);rect(c,12,10,25,25,'#eff5f0',5);text(c,`0${i+1}`,17,27,10,'#1f9d6c');text(c,title,50,28,16,'#153c2b',650);line(c,295,20,301,20,'#1f9d6c',2);line(c,301,20,298,17,'#1f9d6c',2);line(c,301,20,298,23,'#1f9d6c',2)},320,44));
+function rounded(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+const geometry=new THREE.ExtrudeGeometry(rounded(320,180,6),{depth:9,bevelEnabled:true,bevelSize:1.6,bevelThickness:1.6,bevelSegments:4,curveSegments:12});geometry.translate(0,0,-5);
+const slides=slideMaps.map((map,i)=>{
+ const g=new THREE.Group();const body=new THREE.Mesh(geometry,[new THREE.MeshStandardMaterial({color:0xffffff,roughness:.32}),new THREE.MeshStandardMaterial({color:i===0||i===5?0x315847:0xaec8b9,roughness:.27,metalness:.12})]);body.castShadow=true;body.receiveShadow=true;g.add(body);
+ const face=new THREE.Mesh(new THREE.PlaneGeometry(320,180),new THREE.MeshBasicMaterial({map,alphaTest:.03,depthWrite:true}));face.position.z=5.9;g.add(face);g.userData.face=face;
+ const relief=new THREE.Group();g.add(relief);g.userData.relief=relief;
+ if(i===0){
+  [95,143,192].forEach((h,j)=>{
+   const geom=new THREE.ExtrudeGeometry(rounded(21.5,h/2,3),{depth:5,bevelEnabled:true,bevelSize:.7,bevelThickness:.7,bevelSegments:3,curveSegments:8});
+   const bar=new THREE.Mesh(geom,new THREE.MeshStandardMaterial({color:[0x6dae86,0x96caab,0xd7eddd][j],roughness:.3,metalness:.08}));
+   bar.position.set((417+j*61+21.5)/2-160,90-(285-h/2)/2,6);bar.castShadow=true;relief.add(bar);
+  });
+ }
+ rig.add(g);return g;
+});
+function pose(g,p){g.position.set(p.x,p.y,p.z);g.rotation.set(p.rx,p.ry,p.rz);g.scale.set(p.s,p.s*p.h,p.s)}
+function blend(a,b,p){const result={};for(const key of Object.keys(a))result[key]=mix(a[key],b[key],p);return result}
+function stacked(i){return {x:(i-2.5)*5,y:(i-2.5)*13,z:35-i*19,rx:.22,ry:-.28,rz:-.08+i*.026,s:.94,h:1}}
+function grid(i){return {x:(i%2?1:-1)*92,y:133-Math.floor(i/2)*128,z:0,rx:.025,ry:i%2?-.055:.055,rz:0,s:.51,h:1}}
+function review(i,selected){if(i===selected)return {x:0,y:25,z:42,rx:.025,ry:-.035,rz:0,s:1.0,h:1};const side=i%2?1:-1;return {x:side*(20+i*3),y:-39-i*12,z:-42-i*17,rx:.15,ry:side*.13,rz:side*.065,s:.79,h:1}}
+let active='',start=performance.now(),frozen=null,shadowFrame=-1;
+function show(el,on,opacity=1){el.style.visibility=on?'visible':'hidden';el.style.opacity=opacity}
+window.seek=t=>{frozen=Math.max(0,Math.min(31.999,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};
+function render(t){
+ window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1]);show($('.copy'),!!beat);show($('.caption'),!!beat);
+ if(beat){if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(value=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...value.split(' ').map(value=>{const word=document.createElement('span');word.className='word';word.textContent=value;return word}));return row}));$('.caption').textContent=beat[3]}
+ document.querySelectorAll('.word').forEach((el,i)=>{const p=clamp((t-beat[0]-i*.065)/.68),spring=p===1?1:1-Math.exp(-6*p)*Math.cos(9*p),out=phase(t,beat[1]-.25,beat[1]);el.style.opacity=clamp(p*4)*(1-out);el.style.transform=`translateY(${(1-spring)*36-out*11}px) rotateX(${(1-spring)*66}deg)`})}
+ const pi=ease((t-2.8)/.65),po=phase(t,5.9,6.6);show($('.prompt'),t>=2.8&&t<6.6,1-po);$('.prompt').style.transform=`translateY(${(1-pi)*45-po*30}px) rotateX(${(1-pi)*14+po*12}deg) scale(${.92+.08*pi-.12*po})`;
+ const brief='Turn this brief into a 6-slide pitch deck.';$('.prompt-text').textContent=brief.slice(0,Math.floor(brief.length*clamp((t-3.25)/1.7)));$('.send').style.transform=`scale(${1-Math.sin(clamp((t-5.5)/.35)*Math.PI)*.15})`;
+ rig.visible=t<29.5;shadow.visible=rig.visible;
+ const turn=phase(t,10,14.9),zoom=phase(t,21.2,22.5);
+ const openingOrbit=pulse(t,0,3),galleryOrbit=pulse(t,15.2,21.2);
+ camera.position.set(22*openingOrbit-13*galleryOrbit,10*openingOrbit,800+Math.sin(turn*Math.PI)*40-zoom*12);camera.lookAt(0,0,0);
+ rig.rotation.set(-.045*openingOrbit+.045*galleryOrbit,.13*openingOrbit-.075*galleryOrbit,-.025*galleryOrbit);
+ slides.forEach((g,i)=>{
+  let p=stacked(i),map=slideMaps[i];
+  const opening=ease((t-i*.07)/1.3);p.x+=(1-opening)*(i%2?45:-45);p.z+=(1-opening)*i*15;p.ry+=(1-opening)*.8;p.rz+=(1-opening)*(i-2.5)*.06;p.s*=.76+.24*opening;
+  const fan=phase(t,.2,1.1)*(1-phase(t,1.85,2.65));
+  p.x+=(i-2.5)*16*fan;p.y+=Math.abs(i-2.5)*15*fan;p.rz+=(i-2.5)*.115*fan;p.ry+=.16*fan;p.z+=fan*(i===0?24:-i*5);p.s*=1-.12*fan;
+  const retreat=phase(t,2.3,3.3);p=blend(p,{x:0,y:80-i*5,z:-180-i*14,rx:.38,ry:-.32,rz:.04,s:.38,h:1},retreat);
+  if(t>=5.95){
+   const enter=phase(t,5.95+i*.11,6.9+i*.11),outline={x:0,y:142-i*56,z:i*2,rx:.025,ry:0,rz:0,s:.95,h:44/180};
+   p=blend({x:(i%2?1:-1)*105,y:142-i*56,z:-120,rx:.25,ry:(i%2?1:-1)*.6,rz:0,s:.32,h:44/180},outline,enter);map=outlineMaps[i];
+   const catchRow=rebound((t-5.95-i*.11)/1.15);p.x+=catchRow*(i%2?18:-18);p.rx+=catchRow*.16;
+   const morph=phase(t,10+i*.43,11.6+i*.43);p=blend(p,grid(i),morph);p.z+=Math.sin(morph*Math.PI)*70;p.ry+=Math.sin(morph*Math.PI)*Math.PI;
+   const arc=Math.sin(morph*Math.PI);p.x+=arc*(i%2?23:-23);p.rx+=arc*.24;p.rz+=arc*(i%2?-.13:.13);
+   if(morph>=.5)map=slideMaps[i];
+  }
+  if(t>=14.4){
+   const settle=phase(t,14.4,15.2);p=blend(p,grid(i),settle);
+   const breathe=Math.sin(phase(t,16.3,20.3)*Math.PI);p.ry+=breathe*(i%2?-.065:.065);p.z+=breathe*(i%2?9:0);
+   const settleWave=rebound((t-14.5-i*.13)/1.3);p.z+=settleWave*35;p.rx+=settleWave*.18;
+   const inspect=pulse(t,16+i*.35,18.4+i*.35);p.z+=inspect*17;p.ry+=inspect*(i%2?-.11:.11);
+  }
+  if(t>=21.2){
+   p=blend(p,review(i,0),phase(t,21.2,22.4));
+   const gather=pulse(t,21.2,22.4);p.x+=gather*(i%2?24:-24);p.ry+=gather*(i%2?-.25:.25);
+   const first=phase(t,23.3,24.25),second=phase(t,25.15,26.1);
+   p=blend(p,review(i,2),first);p=blend(p,review(i,3),second);
+   if(i===0){p.ry+=Math.sin(first*Math.PI)*1.05;p.x-=Math.sin(first*Math.PI)*67;p.rz+=Math.sin(first*Math.PI)*.09}
+   if(i===2){p.ry-=Math.sin(first*Math.PI)*.72;p.x+=Math.sin(first*Math.PI)*40;p.z+=Math.sin(first*Math.PI)*28;p.ry+=Math.sin(second*Math.PI)*1.05;p.x-=Math.sin(second*Math.PI)*67}
+   if(i===3){p.ry-=Math.sin(second*Math.PI)*.72;p.x+=Math.sin(second*Math.PI)*40;p.z+=Math.sin(second*Math.PI)*28}
+   p=blend(p,stacked(i),phase(t,27.5,28.5));
+   const close=pulse(t,27.5,28.5);p.rz+=close*(i-2.5)*.06;p.z+=close*(5-i)*8;
+  }
+  pose(g,p);g.userData.face.material.map=map;g.userData.relief.visible=map===slideMaps[i]&&p.h>.95;
+ });
+ const status=$('.status');show(status,t>=7.2&&t<28.8);
+ if(t<10)status.innerHTML='An outline for <b>6 slides</b>';else if(t<15.2)status.innerHTML=`<b>${Math.min(6,Math.max(0,Math.floor((t-10.8)/.43)+1))} / 6</b> slides taking shape`;else if(t<21.2)status.innerHTML='<b>6 slides</b> / One complete deck';else if(t<27.5)status.innerHTML=`Deck preview / <b>${t<23.8?'01':t<25.65?'03':'04'} of 06</b>`;else status.innerHTML='<b>Daylight</b> / Pitch deck';
+ status.style.opacity=phase(t,7.2,7.6)*(1-phase(t,28.3,28.8));
+ const ending=phase(t,28.8,29.5);show($('.endcard'),t>=28.8,ending);$('.logo').style.transform=`translateY(${(1-ending)*18}px)`;$('.endline').style.opacity=ease((t-29.3)/.6);
+ const nextShadow=Math.floor(t*24);renderer.shadowMap.needsUpdate=nextShadow!==shadowFrame;shadowFrame=nextShadow;renderer.render(scene,camera);
+}
+function animate(now){render(frozen===null?((now-start)/1000)%duration:frozen);requestAnimationFrame(animate)}requestAnimationFrame(animate);
+</script>
+</body>
+</html>
