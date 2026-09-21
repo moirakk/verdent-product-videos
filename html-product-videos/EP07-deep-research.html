@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdent Deep Research</title>
+<style>
+:root{--ink:#0f2a1e;--green:#1f9d6c}*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:#e9ecea;font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+.film{position:absolute;left:50%;top:50%;width:430px;height:764px;transform-origin:center;overflow:hidden;background:#fbfdfb;isolation:isolate;perspective:1000px;box-shadow:0 36px 100px #0f2a1e22}
+.copy{position:absolute;left:28px;right:28px;top:34px;height:155px;z-index:20;pointer-events:none}.kicker{font:700 11px/1.2 monospace;color:var(--green)}
+h1{font-size:42px;line-height:1.06;font-weight:800;letter-spacing:0;margin:16px 0 0;perspective:650px}.line{display:block;white-space:nowrap}.line:last-child{color:var(--green)}.word{display:inline-block;margin-right:.19em;transform-origin:50% 90%}.word:last-child{margin:0}
+.volume{position:absolute;top:192px;width:430px;height:500px}.volume canvas{display:block;width:100%;height:100%}
+.caption{position:absolute;bottom:28px;left:28px;right:28px;height:30px;display:flex;align-items:flex-end;font-size:12px;line-height:1.4;font-weight:600;color:#526c5e;z-index:10}
+.source{position:absolute;left:28px;bottom:66px;font:10px/1.2 Arial,sans-serif;color:#708176;z-index:10}
+.prompt{position:absolute;left:40px;top:310px;width:350px;padding:24px;background:#fff;border:1px solid #d9e6dc;border-radius:8px;box-shadow:0 6px 0 #d9e6dc,0 28px 50px #0f2a1e18;z-index:6;visibility:hidden}
+.prompt-label{font-size:10px;font-weight:700;color:#526c5e;margin-bottom:14px}.prompt-text{font-size:25px;font-weight:650;line-height:1.25;height:100px}.prompt-bottom{margin-top:12px;padding-top:14px;border-top:1px solid #edf2ee;font-size:12px;color:#526c5e;display:flex;align-items:center;gap:10px}.send{margin-left:auto;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:#fff;background:#144835}
+.endcard{position:absolute;inset:0;background:white;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center}
+</style>
+</head>
+<body>
+<main class="film" aria-label="Verdent Deep Research animated product film">
+<header class="copy"><div class="kicker">VERDENT / DEEP RESEARCH</div><h1></h1></header>
+<div class="volume" aria-hidden="true"></div>
+<article class="prompt"><div class="prompt-label">START WITH A QUESTION</div><div class="prompt-text"></div><div class="prompt-bottom"><span>Pricing. Features. Sources.</span><span class="send">&#8593;</span></div></article>
+<div class="source">Illustrative research / fictional tools and prices</div><div class="caption"></div>
+<footer class="endcard"><img class="logo" src="assets/verdent-logo.png" alt="Verdent"><div class="endline">One question.<br>A sourced perspective.</div></footer>
+</main>
+<script type="module">
+import * as THREE from './assets/three.module.min.js';
+const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},phase=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(Math.PI*p);
+const duration=33,film=$('.film');
+function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}
+addEventListener('resize',fit);fit();
+const evidence=[
+ {id:1,name:'Tool A',domain:'tool-a.example/pricing',price:12,reminders:'Included'},
+ {id:2,name:'Tool B',domain:'tool-b.example/pricing',price:18,reminders:'Add-on; price not listed'},
+ {id:3,name:'Tool C',domain:'tool-c.example/pricing',price:24,reminders:'Included'}
+];
+window.researchExample={illustrative:true,currency:'USD',billing:'monthly, per seat',sources:evidence,lowestBasePrice:'Tool A',unknown:'Tool B reminder add-on price'};
+const beats=[
+ [0,3,'One question.|A wider view.','Research starts with something worth asking.'],
+ [3,6,'Set the scope.|Start exploring.','Compare pricing, features, and the sources.'],
+ [6,11.5,'Explore more.|Keep the sources.','Read across sources, not just one page.'],
+ [11.5,17,'Same basis.|Clear differences.','Monthly billing. One seat. A fair comparison.'],
+ [17,23,'Spot the gap.|Before deciding.','An unlisted add-on cost stays an open question.'],
+ [23,29.5,'Evidence in.|Clarity out.','A concise research brief, with sources retained.']
+];
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;renderer.shadowMap.autoUpdate=false;$('.volume').append(renderer.domElement);
+const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);
+const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,820);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0xa5b8ab,1.4));
+const key=new THREE.DirectionalLight(0xffffff,2.3);key.position.set(-240,280,550);key.castShadow=true;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-380,right:380,top:380,bottom:-380,near:1,far:1400});key.shadow.bias=-.0002;key.shadow.normalBias=.4;key.shadow.radius=8;key.shadow.blurSamples=8;scene.add(key);
+const fill=new THREE.DirectionalLight(0xd9f0e4,1);fill.position.set(400,0,300);scene.add(fill);const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(250,180,-200);scene.add(rim);
+const shadow=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.ShadowMaterial({opacity:.045}));shadow.position.z=-115;shadow.receiveShadow=true;scene.add(shadow);
+function rect(c,x,y,w,h,color,r=4){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+function text(c,s,x,y,size=14,color='#153c2b',weight=600){c.fillStyle=color;c.font=`${weight} ${size}px Arial`;c.fillText(s,x,y)}
+function line(c,x,y,x2,y2,color='#dce7df'){c.strokeStyle=color;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke()}
+function texture(w,h,paint){const el=document.createElement('canvas');el.width=w*3;el.height=h*3;const c=el.getContext('2d');c.scale(3,3);paint(c);const map=new THREE.CanvasTexture(el);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
+function shape(w,h,r=5){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+function slab(w,h,d,color=0xffffff){const geometry=new THREE.ExtrudeGeometry(shape(w,h),{depth:d,bevelEnabled:true,bevelSize:.6,bevelThickness:.6,bevelSegments:3,curveSegments:8});geometry.translate(0,0,-d);const mesh=new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({color,roughness:.42,metalness:.035}));mesh.castShadow=true;mesh.receiveShadow=true;return mesh}
+function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
+function panel(w,h,paint,color=0xffffff){const g=new THREE.Group(),body=slab(w,h,9,color),face=label(w,h,paint);face.position.z=1.8;g.add(body,face);g.userData={body,face};rig.add(g);return g}
+function pose(g,x,y,z,rx,ry,s,rz=0){g.position.set(x,y,z);g.rotation.set(rx,ry,rz);g.scale.setScalar(s);g.visible=s>.000001}
+function face(g,opacity){g.userData.face.material.opacity=opacity}
+const dossier=panel(260,278,c=>{
+ rect(c,0,0,260,278,'#144835',5);text(c,'RESEARCH BRIEF',23,35,11,'#b7ddc6',700);
+ text(c,'Scheduling',23,100,32,'#ffffff',700);text(c,'tools.',23,141,32,'#ffffff',700);
+ line(c,23,169,237,169,'#4a7761');text(c,'Pricing. Features. Sources.',23,196,13,'#d6eadf',500);
+ text(c,'01',23,247,28,'#ffffff',700);text(c,'QUESTION',76,246,11,'#b7ddc6',700);
+},0x144835);
+const backLeaves=[0,1,2].map(i=>{const sheet=slab(260,278,3,i===0?0xddeae2:0xffffff);sheet.position.set(i*4+5,-i*3-3,-15-i*9);dossier.add(sheet);return sheet});
+const sources=evidence.map((e,i)=>{
+ const g=panel(320,110,c=>{
+  rect(c,10,9,300,21,'#eff5f0',3);text(c,e.domain,20,24,10,'#617568',500);
+  text(c,e.name,18,59,24);text(c,`$${e.price}`,230,60,29);text(c,'per seat / month',215,78,10,'#617568',500);
+  text(c,i===1?'Email reminders: paid add-on':'Email reminders included',18,96,12,'#526c5e',500);
+ });
+ const row=label(320,110,c=>{
+  text(c,e.name,18,40,23);text(c,`$${e.price}`,151,40,25);text(c,`[${e.id}]`,267,40,13,'#1f9d6c',700);
+  text(c,i===1?'Reminders: add-on cost unknown':'Reminders included',18,76,13,'#617568',500);
+ });row.position.z=2;g.add(row);
+ const miniature=label(320,110,c=>text(c,`[${e.id}] ${e.name}`,51,69,34));miniature.position.z=2.1;g.add(miniature);
+ const backing=slab(324,114,3,i===1?0xcbd9df:0xd0e5d7);backing.position.set(2,-2,-13);g.add(backing);
+ const tag=panel(35,25,c=>text(c,`[${e.id}]`,8,17,12,'#144835',700),0xe8f3eb);rig.remove(tag);tag.position.set(135,40,10);g.add(tag);
+ g.userData.row=row;g.userData.miniature=miniature;g.userData.tag=tag;g.userData.backing=backing;return g;
+});
+const basis=panel(320,60,c=>{text(c,'COMPARE LIKE FOR LIKE',18,24,10,'#1f9d6c',700);text(c,'USD / month / one seat',18,45,17)});
+const gap=panel(320,148,c=>{
+ text(c,'TOOL B / SOURCE [2]',20,28,11,'#1f9d6c',700);text(c,'Reminder add-on',20,64,25);text(c,'Price not listed.',20,98,25);
+ text(c,'Keep this question open.',20,129,13,'#617568',500);
+});
+const gapBacking=slab(326,154,4,0x144835);gapBacking.position.z=-14;gap.add(gapBacking);
+const question=panel(300,63,c=>{text(c,'FOLLOW-UP',17,22,10,'#1f9d6c',700);text(c,'What is the full monthly cost?',17,46,17)});
+const report=panel(338,364,c=>{
+ text(c,'RESEARCH BRIEF',22,28,10,'#1f9d6c',700);text(c,'The useful picture.',22,63,27);
+ text(c,'LOWEST LISTED BASE PRICE',22,103,10,'#617568',600);text(c,'Tool A: $12 / seat / month',22,133,20);text(c,'Compared with $18 and $24. [1-3]',22,155,12,'#617568',500);
+ line(c,22,175,316,175);text(c,'STILL TO CHECK',22,201,10,'#1f9d6c',700);text(c,'Tool B reminder add-on:',22,228,18);text(c,'price not listed. [2]',22,253,18);
+ line(c,22,274,316,274);text(c,'SOURCES',22,296,10,'#617568',600);
+ text(c,'[1] Tool A   [2] Tool B   [3] Tool C',22,319,12);text(c,'Verify live pricing before choosing.',22,344,12,'#617568',500);
+});
+const reportBacking=slab(346,372,4,0x144835);reportBacking.position.z=-14;report.add(reportBacking);
+// Three source tabs physically travel with the evidence, then dock below the report.
+const references=evidence.map(e=>panel(90,30,c=>text(c,`[${e.id}] ${e.name}`,10,20,13,'#144835',650),0xe8f3eb));
+let start=performance.now(),frozen=null,active='',lastShadowTime=-1;
+function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
+window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};window.restart=()=>{start=performance.now();frozen=null};
+function render(t){
+ window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1),closing=1-phase(t,29.15,29.65);
+ show($('.copy'),closing);show($('.source'),closing);
+ if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=beat[3]}
+ document.querySelectorAll('.word').forEach((el,i)=>{const p=phase(t,beat[0]+i*.05,beat[0]+i*.05+.55),out=phase(t,beat[1]-.3,beat[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*8}px) rotateX(${(1-p)*35}deg)`});
+ show($('.caption'),closing*phase(t,beat[0],beat[0]+.3)*(1-phase(t,beat[1]-.3,beat[1])));
+ const pin=phase(t,2.6,3.45),pout=phase(t,5.5,6.3);show($('.prompt'),pin*(1-pout));$('.prompt').style.transform=`translateY(${(1-pin)*30-pout*40}px) rotateX(${-pout*20}deg) scale(${(.94+.06*pin)*(1-.15*pout)})`;
+ const prompt='Compare pricing for three scheduling tools.';$('.prompt-text').textContent=prompt.slice(0,Math.floor(prompt.length*clamp((t-3.25)/1.65)));
+ const enter=phase(t,0,1.1),retreat=phase(t,2.1,3.1),unfold=phase(t,5.45,7.4),compare=phase(t,10.8,12.8),focus=phase(t,16.65,18.3),assemble=phase(t,22.65,25);
+ pose(dossier,0,20+retreat*10,-retreat*80,.1*(1-retreat),-.26*(1-retreat),enter*mix(1,.36,retreat)*(1-phase(t,5.5,6.45)));
+ backLeaves.forEach((leaf,i)=>{const spread=arc(phase(t,.25,2.6));leaf.position.set(5+i*4+spread*(i+1)*6,-3-i*3,-15-i*9-spread*i*8);leaf.rotation.y=spread*.045*(i+1)});
+ const sweep=arc(unfold),turn=arc(compare),gather=arc(assemble);
+ rig.rotation.set(.035*sweep+.045*turn,-.13*sweep+.12*turn-.08*gather,.02*sweep);
+ camera.position.set(16*sweep-12*gather,8*turn,820+32*sweep+20*turn+22*gather);camera.lookAt(0,0,0);
+ sources.forEach((g,i)=>{
+  const p=phase(t,5.6+i*.16,7.2+i*.16),m=phase(t,10.8+i*.15,12.5+i*.15),lift=arc(m);
+  let x=(1-p)*(i-1)*75,y=mix(15,132-i*130,p),z=-90+95*p+lift*24;
+  let rx=(1-p)*.75-lift*.32,ry=(1-p)*(i-1)*.6-.055+lift*(i-1)*.18,s=p;
+  y=mix(y,48-i*96,m);s*=mix(1,.94,m);
+  // Source text clears before the cards turn into comparison rows.
+  face(g,phase(p,.7,1)*(1-phase(t,10.8+i*.15,11.4+i*.15)));
+  g.userData.row.material.opacity=phase(t,11.6+i*.15,12.35+i*.15)*(1-phase(t,16.6,17.1));
+  g.userData.miniature.material.opacity=phase(t,18.3,18.9)*(1-phase(t,22.7,23.3));
+  g.userData.tag.scale.setScalar(phase(p,.65,1)*(1-phase(t,10.7,11.2)));
+  g.userData.backing.position.z=-13-lift*16;
+  x=mix(x,(i-1)*88,focus);y=mix(y,-143,focus);z=mix(z,-55,focus);s*=mix(1,.24,focus);
+  const absorb=phase(t,22.7+i*.15,24.3+i*.15),a=arc(absorb);
+  x=mix(x,(i-1)*50,absorb)+a*(i-1)*15;y=mix(y,-20,absorb);z=mix(z,-25,absorb)+a*30;ry+=a*(i-1)*.3;s*=1-absorb;
+  pose(g,x,y,z,rx,ry,s,(1-p)*(i-1)*.12);
+ });
+ const basisIn=phase(t,11.15,12.2),basisOut=1-phase(t,16.65,17.3);pose(basis,0,155,-5,(1-basisIn)*-.3,-.055,basisIn*basisOut);face(basis,phase(basisIn,.6,1)*basisOut);
+ const gapIn=phase(t,17.05,18.4),gapOut=phase(t,22.65,24.1),gapArc=arc(gapOut);
+ pose(gap,24*arc(gapIn)-gapArc*22,mix(5,55,gapIn)-gapOut*35,25+arc(gapIn)*25-gapOut*45,-.22*(1-gapIn)+gapArc*.2,.5*(1-gapIn)-.065+gapArc*.24,gapIn*(1-gapOut));face(gap,phase(t,17.65,18.4)*(1-phase(t,22.65,23.15)));
+ const q=phase(t,18.55,19.3)*(1-phase(t,22.6,23.5));pose(question,0,-68,10,(1-q)*.15,-.045,q);face(question,phase(q,.55,1));
+ const reportIn=phase(t,23,24.8);pose(report,0,-18*(1-reportIn),-20+45*reportIn,-.25*(1-reportIn),.55*(1-reportIn)-.06*reportIn,reportIn);face(report,phase(t,24.35,25.15));
+ references.forEach((g,i)=>{const p=phase(t,23.2+i*.13,24.95+i*.13),a=arc(p);pose(g,(i-1)*mix(118,100,p),mix(-90,-225,p)+a*35,-20+a*75,-a*.3,(i-1)*a*.25,p*(1-phase(t,29,29.6)));face(g,phase(p,.45,1))});
+ const end=phase(t,29.35,30.1);show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=phase(t,29.8,30.5);
+ renderer.shadowMap.needsUpdate=t!==lastShadowTime;lastShadowTime=t;renderer.render(scene,camera);
+}
+function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
+</script>
+</body>
+</html>

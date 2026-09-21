@@ -24,7 +24,7 @@ Reference: `versions/v009/EP01-manager.html`. Preserve this snapshot unchanged.
 4. Create Slides: brief to an organized presentation. Initial 32-second Daylight pitch-deck film: `versions/EP04/v001/EP04-create-slides.html`; six distinct slide layouts, outline-to-slide depth flips, gallery and preview. Feature scope and sources in `EP04-notes.md`.
 5. Data Analysis: data to charts and grounded observations; do not invent causal certainty. Initial 32-second signup-analysis film: `versions/EP05/v001/EP05-data-analysis.html`. Example CSV to dimensional chart, week comparison, channel breakdown, and report. Official capability check and arithmetic in `EP05-notes.md`.
 6. Document Analysis: source documents to summaries and extracted information; avoid promises of exhaustive risk detection. Initial 32-second launch-plan film: `versions/EP06/v001/EP06-document-analysis.html`. Source excerpts become referenced findings, an open item, and a concise brief. Example provenance and verified scope in `EP06-notes.md`.
-7. Deep Research: research question to a sourced report.
+7. Deep Research: research question to a sourced report. Initial 33-second fictional scheduling-tool comparison: `versions/EP07/v001/EP07-deep-research.html`. Source pages become normalized comparison rows, an unresolved cost, and a referenced research brief. Capability boundaries and example data in `EP07-notes.md`.
 8. Create Image: visual brief to generated image.
 9. Generate Video: prompt to generated video preview and download, subject to verified product behavior.
 
@@ -35,3 +35,7 @@ These are topic directions, not verified feature specifications. Before producin
 Keep a self-contained, immutable snapshot of every completed revision, including its assets and description. Commit scoped changes and synchronize them to `https://github.com/moirakk/verdent-product-videos`. Never treat a preview query parameter as a saved version. Explicitly report any synchronization failure.
 
 Future episodes should use the v009 visual language with timing and composition tailored to their own content. Do not begin other episodes until the user requests them.
+
+## Latest Direction
+
+The user provisionally accepted EP06 v003 on 2026-09-21. Preserve it unchanged. Continue its layered paper, connected spatial transitions, restrained camera parallax, readable holds, and logo ending in subsequent episodes; adapt the visual story to each feature.
