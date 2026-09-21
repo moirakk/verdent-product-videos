@@ -3,8 +3,8 @@ const path = require('node:path');
 const os = require('node:os');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const url = process.env.EP07_URL || 'http://127.0.0.1:8768/EP07-deep-research.html';
-const times = [1.6, 3.5, 4.8, 6.4, 7.6, 9.5, 11, 11.8, 13.5, 17.1, 17.7, 20, 23.8, 24.6, 25.8, 31];
-const boundaries = [0, .9, 3.05, 3.2, 3.8, 4.2, 5.8, 6.65, 8.1, 8.95, 10.25, 10.8, 11.3, 12, 16.2, 16.75, 16.95, 17.65, 18.7, 22.4, 22.7, 22.95, 23.8, 25.7, 29.35, 30.1];
+const times = [1.6, 2.9, 3.5, 4.5, 5.55, 6.3, 7.65, 8.5, 9.6, 10.7, 12, 15.6, 17.2, 20.6, 21.3, 22.4, 25.8, 31];
+const boundaries = [0, .8, 2.65, 2.7, 3.3, 3.8, 4.55, 5.15, 5.95, 7.25, 8.05, 9.1, 9.75, 10.25, 11.1, 14.8, 15.3, 16.25, 20.25, 20.65, 21.35, 21.4, 22.6, 29.35, 30.1];
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
@@ -21,6 +21,17 @@ const boundaries = [0, .9, 3.05, 3.2, 3.8, 4.2, 5.8, 6.65, 8.1, 8.95, 10.25, 10.
     assert.equal(example.lowestBasePrice, 'Tool A');
     assert.equal(example.sources[1].reminders, 'Add-on; price not listed');
     assert.ok(example.sources.every(s => s.domain.includes('.example/')));
+    const connectedSurfaces = await page.evaluate(() => {
+      const input = [1.6, 2.7, 3, 3.5, 3.9].map(t => { seek(t); return { ...motionState }; });
+      const report = [19, 20.65, 21, 21.5, 22, 22.6, 26].map(t => { seek(t); return { ...motionState }; });
+      return { input, report };
+    });
+    assert.equal(new Set(connectedSurfaces.input.map(s => s.inputSourceId)).size, 1);
+    assert.ok(connectedSurfaces.input.every(s => s.inputScale > .99), 'Input/source surface disappears at the handoff');
+    assert.equal(new Set(connectedSurfaces.report.map(s => s.questionReportId)).size, 1);
+    assert.ok(connectedSurfaces.report.every(s => s.reportScale > .99), 'Question/report surface disappears at the handoff');
+    assert.equal(connectedSurfaces.report.at(-1).reportWidth, 334);
+    assert.equal(connectedSurfaces.report.at(-1).reportHeight, 350);
     for (const [name, width, height] of [['desktop', 1280, 900], ['mobile', 390, 844], ['small', 320, 568]]) {
       await page.setViewportSize({ width, height });
       for (const time of times) {
@@ -30,7 +41,7 @@ const boundaries = [0, .9, 3.05, 3.2, 3.8, 4.2, 5.8, 6.65, 8.1, 8.95, 10.25, 10.
         await page.locator('.film').screenshot({ path: path.join(os.tmpdir(), `ep07-${name}-${time}.png`) });
       }
     }
-    for (const time of times.filter(t => t !== 4.8 && t < 30)) {
+    for (const time of times.filter(t => t < 30)) {
       const pixels = await page.evaluate(t => {
         seek(t);
         const canvas = document.createElement('canvas'); canvas.width = 430; canvas.height = 500;
