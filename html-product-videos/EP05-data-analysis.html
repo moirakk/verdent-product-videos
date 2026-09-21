@@ -86,43 +86,46 @@ const report=card(340,350,c=>{
  text(c,'THE FINDING',22,184,10,'#1f9d6c',750);text(c,'Paid signups fell by 270.',22,212,18);text(c,'Other channels added 30.',22,237,16,'#526c5e',400);
  rect(c,18,261,304,70,'#edf5ef',6);text(c,'NEXT: INVESTIGATE',32,283,10,'#1f9d6c',750);text(c,'Check campaign and spend changes.',32,307,14);
 });
-let active='',start=performance.now(),frozen=null,shadowFrame=-1;
+let active='',start=performance.now(),frozen=null,lastShadowTime=-1;
 function show(el,on,opacity=1){el.style.visibility=on?'visible':'hidden';el.style.opacity=opacity}
 window.seek=t=>{frozen=Math.max(0,Math.min(31.999,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};
 function render(t){
- window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1]);show($('.copy'),!!beat);show($('.caption'),!!beat);show($('.source'),t<29);
+ window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1])||(t>=29?beats.at(-1):null),closing=1-phase(t,28.5,29);
+ show($('.copy'),true,closing);show($('.caption'),true,closing);show($('.source'),true,closing);
  if(beat){if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=beat[3]}
- document.querySelectorAll('.word').forEach((el,i)=>{const p=clamp((t-beat[0]-i*.055)/.65),spring=p===1?1:1-Math.exp(-6*p)*Math.cos(8*p),out=phase(t,beat[1]-.22,beat[1]);el.style.opacity=clamp(p*4)*(1-out);el.style.transform=`translateY(${(1-spring)*30-out*8}px) rotateX(${(1-spring)*55}deg)`})}
+ document.querySelectorAll('.word').forEach((el,i)=>{const p=phase(t,beat[0]+i*.055,beat[0]+i*.055+.6),out=phase(t,beat[1]-.35,beat[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*8}px) rotateX(${(1-p)*35}deg)`});$('.caption').style.opacity=closing*phase(t,beat[0],beat[0]+.35)*(1-phase(t,beat[1]-.35,beat[1]));}
  const pin=phase(t,2.75,3.4),pout=phase(t,5.85,6.5);show($('.prompt'),t>=2.75&&t<6.5,pin*(1-pout));$('.prompt').style.transform=`translateY(${(1-pin)*30-pout*28}px) rotateX(${(1-pin)*12}deg) scale(${.94+.06*pin-.08*pout})`;
  const question='What changed in signups last week?';$('.prompt-text').textContent=question.slice(0,Math.floor(question.length*clamp((t-3.25)/1.6)));
  const tableIn=phase(t,5.95,7),toChart=phase(t,9.6,11.7),compare=phase(t,14.6,15.7),breakdown=phase(t,18.55,19.8),toReport=phase(t,23.65,25);
- rig.visible=t<29.4;shadow.visible=rig.visible;
+ rig.visible=true;shadow.visible=true;
  const orbit=Math.sin(toChart*Math.PI),openingOrbit=(1-phase(t,1.1,2.7))*(t<3?1:0),chartOrbit=phase(t,10,11.5)*(1-phase(t,12,14.3));
  rig.rotation.set(orbit*.1+openingOrbit*.1+chartOrbit*.06,-orbit*.12-openingOrbit*.26-chartOrbit*.18,0);camera.position.z=810+orbit*20+openingOrbit*20;
- tableHead.visible=t>=6.6&&t<10.5;transform(tableHead,0,180,-10,0,0,1);tableHead.material.opacity=tableIn*(1-phase(t,9.6,10.5));
- rows.forEach((row,i)=>{const enter=phase(t,5.95+i*.065,6.95+i*.065),turn=phase(t,9.6+i*.09,10.8+i*.09);row.visible=t>=5.95&&t<11.3&&turn<.999;transform(row,mix((1-enter)*(i%2?1:-1)*24,(-135+i*54),turn),mix(142-i*49,-82,turn)-(1-enter)*35,mix(-65,5,enter)+Math.sin(turn*Math.PI)*45,(1-enter)*.45+turn*1.5,(1-enter)*-.25,mix(.94+.06*enter,.1,turn));row.children[1].material.opacity=1-phase(turn,.05,.55);});
- axes.visible=(t<2.6)||(t>=10&&t<15.5);axes.material.opacity=t<2.6?phase(t,.1,.8)*(1-phase(t,2,2.6)):phase(t,10,11.6)*(1-compare);
+ tableHead.material.opacity=phase(t,6.6,7.05)*(1-phase(t,9.6,10.5));tableHead.visible=tableHead.material.opacity>0;transform(tableHead,0,180,-10,0,0,1);
+ rows.forEach((row,i)=>{const enter=phase(t,5.95+i*.065,6.95+i*.065),turn=phase(t,9.6+i*.09,10.8+i*.09);row.visible=enter>0&&turn<1;transform(row,mix((1-enter)*(i%2?1:-1)*24,(-135+i*54),turn),mix(142-i*49,-82,turn)-(1-enter)*35,mix(-65,5,enter)+Math.sin(turn*Math.PI)*45,(1-enter)*.45+turn*1.5,(1-enter)*-.25,enter*(1-turn));row.children[1].material.opacity=phase(enter,.4,1)*(1-phase(turn,.05,.55));});
+ axes.material.opacity=t<3?phase(t,.1,.8)*(1-phase(t,2,2.6)):phase(t,10,11.6)*(1-compare);axes.visible=axes.material.opacity>0;
  bars.forEach(({g,body,value,week},i)=>{
   const opening=t<3,entry=opening?phase(t,.1+i*.075,1.4+i*.075):phase(t,10+i*.09,11.6+i*.09),exit=opening?phase(t,2.1,2.85):breakdown;
-  g.visible=opening?t<2.85:t>=10&&t<19.8;
   let x=-135+i*54,base=-82,z=10,width=1,height=data[i].total/1200*180*entry;
   let opacity=entry*(1-exit);
   if(!opening){if(i<4){opacity*=1-compare;x-=compare*30}else{x=mix(x,i===4?-77:77,compare);base=mix(base,-95,compare);height=mix(height,data[i].total/1200*200,compare);width=mix(1,1.8,compare);z+=compare*12}}
   const flight=Math.sin(entry*Math.PI);
-  g.position.set(x+(1-entry)*(i%2?12:-12),base-exit*15,z-exit*80+flight*35);g.rotation.set(0,0,0);g.scale.setScalar(1-exit*.25);
-  body.rotation.set(-(1-entry)*.7,-.32,0);body.scale.set(width,Math.max(.005,height/100),1);
-  body.material.forEach(m=>{m.transparent=opacity<1;m.opacity=opacity});
+  const bodyScale=(1-exit)*(opening||i>=4?1:1-compare);g.visible=entry>0&&bodyScale>0;
+  g.position.set(x+(1-entry)*(i%2?12:-12),base-exit*15,z-exit*80+flight*35);g.rotation.set(0,0,0);g.scale.setScalar(bodyScale);
+  body.rotation.set(-(1-entry)*.7,-.32,0);body.scale.set(width*phase(entry,0,.35),Math.max(.005,height/100),entry);
+  body.material.forEach(m=>{m.transparent=false;m.opacity=1});
   value.position.set(0,height+24+(i===5?compare*40:0),16);value.material.opacity=opacity*phase(entry,.7,1);week.position.set(0,-23,16);week.material.opacity=opacity*phase(entry,.6,1);
  });
- const gapIn=phase(t,16,16.7);gap.visible=t>=16&&t<19.7;gap.material.opacity=gapIn*(1-breakdown)*.55;gap.position.set(83,65+20*gapIn,14);gap.scale.y=Math.max(.001,gapIn);gap.rotation.y=-.32;
- comparison.visible=t>=14.6&&t<19.7;comparison.material.opacity=compare*(1-breakdown);
- channels.forEach((g,i)=>{const enter=phase(t,18.7+i*.13,19.8+i*.13),lift=phase(t,19.45+i*.15,20.15+i*.15);g.visible=t>=18.7&&t<24.65;transform(g,(1-enter)*(i%2?45:-45),mix(135-i*105,35-i*9,toReport)-(1-enter)*20,enter*12+Math.sin(enter*Math.PI)*30-toReport*(30+i*8),(1-enter)*.36+toReport*.17,(1-enter)*-.32-.065*(1-toReport),mix(.93+.07*enter,.45,toReport));g.children[1].material.opacity=1-phase(t,23.65,24.02);g.userData.metric.position.z=12+(1-lift)*35;g.userData.metric.scale.setScalar(.8+.2*lift);g.userData.metric.visible=t<24.02;});
+ const gapIn=phase(t,16,16.7);gap.material.opacity=gapIn*(1-breakdown)*.55;gap.visible=gap.material.opacity>0;gap.position.set(83,65+20*gapIn,14);gap.scale.set(1-breakdown,Math.max(.001,gapIn)*(1-breakdown),1-breakdown);gap.rotation.y=-.32;
+ comparison.material.opacity=compare*(1-breakdown);comparison.visible=comparison.material.opacity>0;
+ channels.forEach((g,i)=>{const enter=phase(t,18.7+i*.13,19.8+i*.13),lift=phase(t,19.45+i*.15,20.15+i*.15),leave=phase(t,24.2,25),read=phase(enter,.6,1)*(1-phase(t,23.65,24.05));g.visible=enter>0&&leave<1;transform(g,(1-enter)*(i%2?45:-45),mix(135-i*105,35-i*9,toReport)-(1-enter)*20,enter*12+Math.sin(enter*Math.PI)*30-toReport*(30+i*8),(1-enter)*.36+toReport*.17,(1-enter)*-.32-.065*(1-toReport),enter*(1-leave));g.children[1].material.opacity=read;g.userData.metric.position.z=12+(1-lift)*35;g.userData.metric.scale.setScalar(lift*(1-phase(t,23.65,24.35)));g.userData.metric.visible=lift>0;g.userData.metric.children[1].material.opacity=read;});
  equation.visible=t>=20.2&&t<24.3;equation.material.opacity=phase(t,20.2,20.7)*(1-phase(t,23.65,24.3));
- const reportIn=phase(t,24.05,25.05);report.visible=t>=24.05;transform(report,0,(1-reportIn)*20,25+Math.sin(reportIn*Math.PI)*24,(1-reportIn)*-.35,(1-reportIn)*.5-.055*reportIn,.08+.92*reportIn);report.children[1].material.opacity=phase(t,24.62,25.12);
+ const reportIn=phase(t,23.85,24.9);report.visible=reportIn>0;transform(report,0,(1-reportIn)*20,25+Math.sin(reportIn*Math.PI)*24,(1-reportIn)*-.35,(1-reportIn)*.5-.055*reportIn,reportIn);report.children[1].material.opacity=phase(t,24.45,25);
  const end=phase(t,28.8,29.5);show($('.endcard'),t>=28.8,end);$('.logo').style.transform=`translateY(${(1-end)*18}px)`;$('.endline').style.opacity=phase(t,29.2,29.9);
- const next=Math.floor(t*24);renderer.shadowMap.needsUpdate=next!==shadowFrame;shadowFrame=next;renderer.render(scene,camera);
+ renderer.shadowMap.needsUpdate=t!==lastShadowTime;lastShadowTime=t;renderer.render(scene,camera);
 }
-function tick(now){render(frozen===null?((now-start)/1000)%duration:frozen);requestAnimationFrame(tick)}requestAnimationFrame(tick);
+// End on the logo instead of cutting directly from the last frame to the first.
+window.restart=()=>{start=performance.now();frozen=null};
+function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
 </script>
 </body>
 </html>

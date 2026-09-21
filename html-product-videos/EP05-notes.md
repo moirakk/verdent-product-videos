@@ -43,4 +43,7 @@ The report describes an observed channel contribution, not a proven cause. Check
 
 - v002: Increased bar depth from 24 to 38 units, differentiated side materials, oblique-to-front camera movement, stronger row-fold and column rise, and raised channel metric modules. An animated wireframe shows the missing 240 signups above W6 without changing either bar value. Repositioned grid planes behind geometry and separated comparison summary from bar labels. Retains 32-second timing and the same data. Desktop/mobile/small-screen rendering, arithmetic, and autoplay checks passed.
 
-Next version: `node save-version.cjs v003 "Description" EP05-data-analysis.html`.
+- v003: Continuity repair. Table rows, channel cards, raised metrics, and report now enter and leave at zero scale instead of appearing or disappearing at full size. Grid/header visibility follows its opacity envelope. Bars retain an opaque material pass and grow their depth continuously, avoiding transparency-pass changes. Shadows update with the animated geometry rather than at a separate 24 Hz cadence. Headline easing has continuous endpoints. The 32-second film holds on the logo instead of jumping back to its opening.
+- Regression: compare frames 2 ms apart at scene boundaries with `tests/ep05-continuity.cjs`. Requires Playwright (`PLAYWRIGHT_MODULE` can specify a local installation); `EP05_URL` optionally selects a saved version. Mean RGB delta threshold is 1/255, intended to catch hard cuts rather than certify all motion quality. A complete playback also reached 32 seconds with no page errors or frame intervals above 100 ms in the test browser; performance varies by device.
+
+Next version: `node save-version.cjs v004 "Description" EP05-data-analysis.html`.
