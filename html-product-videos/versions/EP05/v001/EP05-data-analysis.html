@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdent Data Analysis</title>
+<style>
+:root{--ink:#0f2a1e;--green:#1f9d6c}*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:#e9ecea;font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+.film{position:absolute;left:50%;top:50%;width:430px;height:764px;transform-origin:center;overflow:hidden;background:#fbfdfb;isolation:isolate;perspective:1000px;box-shadow:0 36px 100px #0f2a1e22}
+.copy{position:absolute;left:28px;right:28px;top:34px;height:155px;z-index:20;pointer-events:none}.kicker{font:700 11px/1.2 monospace;color:var(--green)}
+h1{font-size:42px;line-height:1.06;font-weight:800;letter-spacing:0;margin:16px 0 0;perspective:650px}.line{display:block;white-space:nowrap}.line:last-child{color:var(--green)}.word{display:inline-block;margin-right:.19em;transform-origin:50% 90%}.word:last-child{margin:0}
+.volume{position:absolute;top:192px;width:430px;height:500px}.volume canvas{display:block;width:100%;height:100%}
+.caption{position:absolute;bottom:28px;left:28px;right:28px;height:30px;display:flex;align-items:flex-end;font-size:12px;line-height:1.4;font-weight:600;color:#526c5e;z-index:10}
+.source{position:absolute;left:28px;bottom:66px;font:10px/1.2 Arial,sans-serif;color:#708176;z-index:10}
+.prompt{position:absolute;left:40px;top:300px;width:350px;padding:24px;background:#fff;border:1px solid #d9e6dc;border-radius:8px;box-shadow:0 6px 0 #d9e6dc,0 28px 50px #0f2a1e18;z-index:6;visibility:hidden}
+.prompt-label{font-size:10px;font-weight:700;color:#526c5e;margin-bottom:14px}.prompt-text{font-size:24px;font-weight:650;line-height:1.25;height:94px}.attachment{margin-top:12px;padding-top:14px;border-top:1px solid #edf2ee;font-size:12px;color:#526c5e;display:flex;align-items:center;gap:10px}.filemark{font:700 9px monospace;color:#1f9d6c;border:1px solid #c7d9cb;padding:7px 3px}.send{margin-left:auto;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:#fff;background:#144835}
+.endcard{position:absolute;inset:0;background:white;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center}
+</style>
+</head>
+<body>
+<main class="film" aria-label="Verdent Data Analysis animated product film">
+<header class="copy"><div class="kicker">VERDENT / DATA ANALYSIS</div><h1></h1></header>
+<div class="volume" aria-hidden="true"></div>
+<article class="prompt"><div class="prompt-label">ASK YOUR DATA</div><div class="prompt-text"></div><div class="attachment"><span class="filemark">CSV</span><span>weekly-signups.csv</span><span class="send">&#8593;</span></div></article>
+<div class="source">Illustrative dataset</div><div class="caption"></div>
+<footer class="endcard"><img class="logo" src="assets/verdent-logo.png" alt="Verdent"><div class="endline">From raw data.<br>To a clearer next step.</div></footer>
+</main>
+<script type="module">
+import * as THREE from './assets/three.module.min.js';
+const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},phase=(t,a,b)=>smooth((t-a)/(b-a));
+const film=$('.film'),duration=32;
+function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}
+addEventListener('resize',fit);fit();
+const data=[[300,180,520],[320,190,570],[340,190,590],[370,200,590],[400,200,600],[420,210,330]].map((r,i)=>({week:`W${i+1}`,organic:r[0],direct:r[1],paid:r[2],total:r.reduce((a,b)=>a+b,0)}));
+const previous=data[4],current=data[5],delta=current.total-previous.total,percent=Math.round(delta/previous.total*100),paidDelta=current.paid-previous.paid,otherDelta=delta-paidDelta;
+const fmt=n=>n.toLocaleString('en-US'),signed=n=>`${n>0?'+':''}${fmt(n)}`;
+window.analysis={data,delta,percent,paidDelta,otherDelta};
+const beats=[
+ [0,3,'Your data.|A clearer story.','Go from rows of numbers to something useful.'],
+ [3,6.5,'Ask a question.|Bring your data.','A CSV. A question. A place to start.'],
+ [6.5,10.5,'Start with|the numbers.','Six weeks. Three channels. One comparison.'],
+ [10.5,15,'See the|pattern emerge.','Weekly signups, drawn from the same data.'],
+ [15,19,'Spot the|change.','Compare the latest week with the one before.'],
+ [19,24.2,'See where|it changed.','Break the total change down by channel.'],
+ [24.2,29,'An insight.|A next step.','Separate what the data shows from what to check.']
+];
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;renderer.shadowMap.autoUpdate=false;$('.volume').append(renderer.domElement);
+const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);
+const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,810);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0xa5b8ab,1.8));
+const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(-220,240,700);key.castShadow=true;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-380,right:380,top:380,bottom:-380,near:1,far:1400});key.shadow.bias=-.0002;key.shadow.normalBias=.4;key.shadow.radius=8;key.shadow.blurSamples=8;scene.add(key);
+const fill=new THREE.DirectionalLight(0xd9f0e4,1);fill.position.set(400,0,300);scene.add(fill);
+const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(250,180,-200);scene.add(rim);
+const shadow=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.ShadowMaterial({opacity:.055}));shadow.position.z=-110;shadow.receiveShadow=true;scene.add(shadow);
+function rect(c,x,y,w,h,color,r=4){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+function text(c,s,x,y,size=14,color='#153c2b',weight=600){c.fillStyle=color;c.font=`${weight} ${size}px Arial`;c.fillText(s,x,y)}
+function line(c,x,y,x2,y2,color='#dce7df'){c.strokeStyle=color;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke()}
+function texture(w,h,paint){const el=document.createElement('canvas');el.width=w*3;el.height=h*3;const c=el.getContext('2d');c.scale(3,3);paint(c);const map=new THREE.CanvasTexture(el);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
+function shape(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+function slab(w,h,depth,color=0xffffff){const geo=new THREE.ExtrudeGeometry(shape(w,h,Math.min(5,h/4)),{depth,bevelEnabled:true,bevelSize:.8,bevelThickness:.8,bevelSegments:3,curveSegments:8});geo.translate(0,0,-depth);const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color,roughness:.28,metalness:.09}));mesh.castShadow=true;mesh.receiveShadow=true;return mesh}
+function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
+function card(w,h,paint){const g=new THREE.Group();g.add(slab(w,h,7));const face=label(w,h,paint);face.position.z=1.1;g.add(face);rig.add(g);return g}
+function transform(g,x,y,z,rx,ry,s=1){g.position.set(x,y,z);g.rotation.set(rx,ry,0);g.scale.setScalar(s)}
+const tableHead=label(340,28,c=>{text(c,'WEEK',12,20,10,'#708176');text(c,'ORGANIC',70,20,10,'#708176');text(c,'DIRECT',163,20,10,'#708176');text(c,'PAID',230,20,10,'#708176');text(c,'TOTAL',285,20,10,'#708176')});rig.add(tableHead);
+const rows=data.map((r,i)=>card(340,40,c=>{rect(c,0,0,340,40,i===5?'#e9f4ed':'#ffffff');text(c,r.week,12,25,13);text(c,fmt(r.organic),70,25,13);text(c,fmt(r.direct),163,25,13);text(c,fmt(r.paid),230,25,13);text(c,fmt(r.total),285,25,13,i===5?'#1f9d6c':'#153c2b',750)}));
+const bars=data.map((r,i)=>{
+ const g=new THREE.Group(),body=slab(32,100,24,i===5?0x144835:0x9ac6aa);body.geometry.translate(0,50,0);g.add(body);
+ const value=label(62,26,c=>text(c,fmt(r.total),5,19,15,i===5?'#144835':'#526c5e',700));g.add(value);
+ const week=label(40,25,c=>text(c,r.week,10,18,12,'#526c5e',600));g.add(week);rig.add(g);return {g,body,value,week};
+});
+const axes=label(380,290,c=>{[0,600,1200].forEach((v,i)=>{const y=235-i*90;line(c,34,y,365,y);text(c,`${v}`,0,y+4,10,'#819086',400)})});axes.position.set(0,8,-1);rig.add(axes);
+const comparison=label(330,66,c=>{text(c,`${percent}%`,8,46,44,'#144835',750);text(c,`${signed(delta)} signups`,160,30,18);text(c,'W6 compared with W5',160,50,11,'#708176',400)});comparison.position.set(0,157,8);rig.add(comparison);
+const channelValues=[['Paid',previous.paid,current.paid],['Organic',previous.organic,current.organic],['Direct',previous.direct,current.direct]];
+const channels=channelValues.map(([name,a,b],i)=>card(340,85,c=>{text(c,name,18,28,18);text(c,`${fmt(a)}  to  ${fmt(b)}`,18,59,14,'#617568',400);rect(c,234,19,89,45,i===0?'#144835':'#eaf4ed',6);text(c,signed(b-a),246,49,23,i===0?'#ffffff':'#1f9d6c',750)}));
+const equation=label(340,60,c=>{text(c,`${signed(paidDelta)} paid  +  ${otherDelta} other`,32,25,18);text(c,`= ${signed(delta)} total signups`,54,49,18,'#1f9d6c',700)});equation.position.set(0,-147,10);rig.add(equation);
+const report=card(340,350,c=>{
+ text(c,'SIGNUP ANALYSIS',22,30,10,'#1f9d6c',750);text(c,'What changed?',22,68,28);
+ text(c,`${fmt(previous.total)}  to  ${fmt(current.total)}`,22,114,32);text(c,`${percent}% week over week`,22,141,15,'#526c5e',400);line(c,22,160,318,160);
+ text(c,'THE FINDING',22,184,10,'#1f9d6c',750);text(c,'Paid signups fell by 270.',22,212,18);text(c,'Other channels added 30.',22,237,16,'#526c5e',400);
+ rect(c,18,261,304,70,'#edf5ef',6);text(c,'NEXT: INVESTIGATE',32,283,10,'#1f9d6c',750);text(c,'Check campaign and spend changes.',32,307,14);
+});
+let active='',start=performance.now(),frozen=null,shadowFrame=-1;
+function show(el,on,opacity=1){el.style.visibility=on?'visible':'hidden';el.style.opacity=opacity}
+window.seek=t=>{frozen=Math.max(0,Math.min(31.999,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};
+function render(t){
+ window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1]);show($('.copy'),!!beat);show($('.caption'),!!beat);show($('.source'),t<29);
+ if(beat){if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=beat[3]}
+ document.querySelectorAll('.word').forEach((el,i)=>{const p=clamp((t-beat[0]-i*.055)/.65),spring=p===1?1:1-Math.exp(-6*p)*Math.cos(8*p),out=phase(t,beat[1]-.22,beat[1]);el.style.opacity=clamp(p*4)*(1-out);el.style.transform=`translateY(${(1-spring)*30-out*8}px) rotateX(${(1-spring)*55}deg)`})}
+ const pin=phase(t,2.75,3.4),pout=phase(t,5.85,6.5);show($('.prompt'),t>=2.75&&t<6.5,pin*(1-pout));$('.prompt').style.transform=`translateY(${(1-pin)*30-pout*28}px) rotateX(${(1-pin)*12}deg) scale(${.94+.06*pin-.08*pout})`;
+ const question='What changed in signups last week?';$('.prompt-text').textContent=question.slice(0,Math.floor(question.length*clamp((t-3.25)/1.6)));
+ const tableIn=phase(t,5.95,7),toChart=phase(t,9.6,11.7),compare=phase(t,14.6,15.7),breakdown=phase(t,18.55,19.8),toReport=phase(t,23.65,25);
+ rig.visible=t<29.4;shadow.visible=rig.visible;
+ const orbit=Math.sin(toChart*Math.PI);rig.rotation.set(orbit*.11,-orbit*.14,0);camera.position.z=810+orbit*15;
+ tableHead.visible=t>=6.6&&t<10.5;transform(tableHead,0,180,-10,0,0,1);tableHead.material.opacity=tableIn*(1-phase(t,9.6,10.5));
+ rows.forEach((row,i)=>{const enter=phase(t,5.95+i*.065,6.95+i*.065),turn=phase(t,9.6+i*.09,10.8+i*.09);row.visible=t>=5.95&&t<11.3&&turn<.999;transform(row,mix((1-enter)*(i%2?1:-1)*24,(-135+i*54),turn),mix(142-i*49,-82,turn)-(1-enter)*35,mix(-45,5,enter)+Math.sin(turn*Math.PI)*18,(1-enter)*.15+turn*1.5,0,mix(.94+.06*enter,.1,turn));});
+ axes.visible=(t<2.6)||(t>=10&&t<15.5);axes.material.opacity=t<2.6?phase(t,.1,.8)*(1-phase(t,2,2.6)):phase(t,10,11.6)*(1-compare);
+ bars.forEach(({g,body,value,week},i)=>{
+  const opening=t<3,entry=opening?phase(t,.1+i*.075,1.4+i*.075):phase(t,10+i*.09,11.6+i*.09),exit=opening?phase(t,2.1,2.85):breakdown;
+  g.visible=opening?t<2.85:t>=10&&t<19.8;
+  let x=-135+i*54,base=-82,z=10,width=1,height=data[i].total/1200*180*entry;
+  let opacity=entry*(1-exit);
+  if(!opening){if(i<4){opacity*=1-compare;x-=compare*30}else{x=mix(x,i===4?-77:77,compare);base=mix(base,-95,compare);height=mix(height,data[i].total/1200*200,compare);width=mix(1,1.8,compare);z+=compare*12}}
+  g.position.set(x,base-exit*15,z-exit*80);g.rotation.set(opening?.1*(1-exit):0,opening?-.18*(1-exit):0,0);g.scale.setScalar(1-exit*.25);
+  body.scale.set(width,Math.max(.005,height/100),1);body.material.transparent=opacity<1;body.material.opacity=opacity;
+  value.position.set(0,height+21,7);value.material.opacity=opacity;week.position.set(0,-21,7);week.material.opacity=opacity;
+ });
+ comparison.visible=t>=14.6&&t<19.7;comparison.material.opacity=compare*(1-breakdown);
+ channels.forEach((g,i)=>{const enter=phase(t,18.7+i*.13,19.8+i*.13);g.visible=t>=18.7&&t<24.65;transform(g,(1-enter)*(i%2?45:-45),mix(135-i*105,35-i*9,toReport)-(1-enter)*20,enter*12-toReport*(30+i*8),(1-enter)*.22+toReport*.17,(1-enter)*-.18,mix(.93+.07*enter,.45,toReport));g.children[1].material.opacity=1-phase(t,23.65,24.02);});
+ equation.visible=t>=20.2&&t<24.3;equation.material.opacity=phase(t,20.2,20.7)*(1-phase(t,23.65,24.3));
+ const reportIn=phase(t,24.05,25.05);report.visible=t>=24.05;transform(report,0,(1-reportIn)*20,25,(1-reportIn)*-.22,(1-reportIn)*.2,.08+.92*reportIn);report.children[1].material.opacity=phase(t,24.62,25.12);
+ const end=phase(t,28.8,29.5);show($('.endcard'),t>=28.8,end);$('.logo').style.transform=`translateY(${(1-end)*18}px)`;$('.endline').style.opacity=phase(t,29.2,29.9);
+ const next=Math.floor(t*24);renderer.shadowMap.needsUpdate=next!==shadowFrame;shadowFrame=next;renderer.render(scene,camera);
+}
+function tick(now){render(frozen===null?((now-start)/1000)%duration:frozen);requestAnimationFrame(tick)}requestAnimationFrame(tick);
+</script>
+</body>
+</html>

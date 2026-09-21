@@ -22,7 +22,7 @@ Reference: `versions/v009/EP01-manager.html`. Preserve this snapshot unchanged.
 2. Create App: brief to working application preview. First film saved as `versions/EP02/v001/EP02-create-app.html`; illustrative studio booking flow, 32 seconds.
 3. Design First: brief, visual direction, screen-plan approval, build, and preview. Official Design Mode documentation checked on 2026-09-16. Initial 32-second habit-tracker film: `versions/EP03/v001/EP03-design-first.html`; details in `EP03-notes.md`.
 4. Create Slides: brief to an organized presentation. Initial 32-second Daylight pitch-deck film: `versions/EP04/v001/EP04-create-slides.html`; six distinct slide layouts, outline-to-slide depth flips, gallery and preview. Feature scope and sources in `EP04-notes.md`.
-5. Data Analysis: data to charts and grounded observations; do not invent causal certainty.
+5. Data Analysis: data to charts and grounded observations; do not invent causal certainty. Initial 32-second signup-analysis film: `versions/EP05/v001/EP05-data-analysis.html`. Example CSV to dimensional chart, week comparison, channel breakdown, and report. Official capability check and arithmetic in `EP05-notes.md`.
 6. Document Analysis: source documents to summaries and extracted information; avoid promises of exhaustive risk detection.
 7. Deep Research: research question to a sourced report.
 8. Create Image: visual brief to generated image.
