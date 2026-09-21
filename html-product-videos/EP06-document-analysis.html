@@ -59,7 +59,7 @@ function texture(w,h,paint){const el=document.createElement('canvas');el.width=w
 function shape(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
 function slab(w,h,d,color=0xffffff){const geo=new THREE.ExtrudeGeometry(shape(w,h,5),{depth:d,bevelEnabled:true,bevelSize:.6,bevelThickness:.6,bevelSegments:3,curveSegments:8});geo.translate(0,0,-d);const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color,roughness:.32,metalness:.06}));mesh.castShadow=true;mesh.receiveShadow=true;return mesh}
 function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
-function panel(w,h,paint){const g=new THREE.Group();g.add(slab(w,h,8));const face=label(w,h,paint);face.position.z=1.8;g.add(face);g.userData.face=face;rig.add(g);return g}
+function panel(w,h,paint){const g=new THREE.Group();g.add(slab(w,h,11));const face=label(w,h,paint);face.position.z=1.8;g.add(face);g.userData.face=face;rig.add(g);return g}
 function pose(g,x,y,z,rx,ry,s){g.position.set(x,y,z);g.rotation.set(rx,ry,0);g.scale.setScalar(s);g.visible=s>0.000001}
 const book=new THREE.Group();rig.add(book);
 const sheet=slab(280,330,2.4);const sheets=[];
@@ -67,13 +67,21 @@ for(let i=0;i<10;i++){const mesh=new THREE.Mesh(sheet.geometry,sheet.material);m
 const cover=label(280,330,c=>{
  rect(c,0,0,280,330,'#144835',5);text(c,'DAYLIGHT',24,35,11,'#b7ddc6',750);text(c,'Launch',24,103,39,'#ffffff',700);text(c,'plan.',24,151,39,'#ffffff',700);
  line(c,24,186,256,186,'#4a7761');text(c,'Timing. Channels. Readiness.',24,212,13,'#cbe4d5',400);text(c,'40',24,289,45,'#ffffff',700);text(c,'PAGES',90,287,12,'#b7ddc6',600);
-});cover.position.z=1.8;book.add(cover);
+});
+const contents=label(280,330,c=>{
+ text(c,'INSIDE THE PLAN',24,38,11,'#1f9d6c',750);text(c,'From context',24,85,25);text(c,'to clarity.',24,116,25);
+ evidence.forEach((e,i)=>{const y=166+i*48;text(c,e.section,24,y,13);text(c,`p.${e.page}`,224,y,11,'#1f9d6c');line(c,24,y+15,256,y+15)});
+});contents.position.z=1.8;book.add(contents);
+// The cover rotates around its spine, rather than rotating the whole book flat.
+const coverHinge=new THREE.Group();coverHinge.position.set(-140,0,4);book.add(coverHinge);
+const coverBody=slab(280,330,3,0x144835);coverBody.position.x=140;coverHinge.add(coverBody);cover.position.set(140,0,1.8);coverHinge.add(cover);
 const excerpts=evidence.map((e,i)=>{
  const g=panel(320,96,c=>{text(c,`P.${e.page} / ${e.section.toUpperCase()}`,18,24,10,'#1f9d6c',750);e.quote.forEach((s,j)=>text(c,s,18,53+j*21,15,'#153c2b',500))});
  const highlight=new THREE.Mesh(new THREE.PlaneGeometry(280,25),new THREE.MeshBasicMaterial({color:0x90c6a4,transparent:true,opacity:.28,depthWrite:false}));highlight.position.set(0,-1.5,1.1);g.add(highlight);
  const finding=label(320,96,c=>{text(c,e.label.toUpperCase(),18,25,10,'#1f9d6c',750);text(c,e.answer,18,65,25,'#153c2b',650)});finding.position.z=2;g.add(finding);
  const tag=new THREE.Group();tag.add(slab(43,25,5,0xe8f3eb));const tagText=label(43,25,c=>text(c,`p.${e.page}`,7,17,12,'#144835',700));tagText.position.z=1.3;tag.add(tagText);tag.position.set(125,24,8);g.add(tag);
- g.userData.highlight=highlight;g.userData.finding=finding;g.userData.tag=tag;return g;
+ const layers=[0,1].map(j=>{const paper=slab(320,96,2.5, j===0?0xf3f8f4:0xe2ece5);paper.position.set(3+j*3,-2-j*2,-14-j*5);g.add(paper);return paper});
+ g.userData.layers=layers;g.userData.highlight=highlight;g.userData.finding=finding;g.userData.tag=tag;return g;
 });
 const followup=panel(310,70,c=>{text(c,'NEXT STEP',18,23,10,'#1f9d6c',750);text(c,'Confirm the owner before launch.',18,50,16)});
 const brief=panel(340,365,c=>{
@@ -93,26 +101,29 @@ function render(t){
  const pin=phase(t,2.55,3.4),pout=phase(t,5.85,6.6);show($('.prompt'),pin*(1-pout));$('.prompt').style.transform=`translateY(${(1-pin)*28-pout*25}px) scale(${.94+.06*pin})`;
  const question="Summarize this plan. What's still open?";$('.prompt-text').textContent=question.slice(0,Math.floor(question.length*clamp((t-3.25)/1.8)));
  const enter=phase(t,0,1.1),retreat=phase(t,2.25,3.15),open=phase(t,5.9,7.3),extract=phase(t,10.8,12.6),focus=phase(t,16.7,18),reportIn=phase(t,22.8,24.2),cardsOut=phase(t,23.3,24.5);
- const bookScale=enter*mix(1,.38,retreat)*(1-open);
- pose(book,0,18+retreat*20,-retreat*60,-.07+.16*(1-retreat),-.26*(1-retreat),bookScale);
- sheets.forEach((s,i)=>{const spread=Math.sin(phase(t,.3,2.5)*Math.PI);s.position.set(i*.6+spread*i*1.9,-i*.5+spread*i*1.1,-i*3-spread*i*2.1)});
- rig.rotation.set(0,-.055*Math.sin(extract*Math.PI),0);camera.position.z=820+12*Math.sin(extract*Math.PI);
+ const bookScale=enter*mix(.94,.38,retreat)*(1-open),coverOpen=phase(t,.65,1.55)*(1-phase(t,2,2.85));
+ pose(book,0,18+retreat*20,-retreat*60,.14*(1-retreat)-.07*retreat,-.3*(1-retreat),bookScale);
+ coverHinge.rotation.y=-.82*coverOpen;
+ sheets.forEach((s,i)=>{const spread=Math.sin(phase(t,.3,2.7)*Math.PI);s.position.set(i*.6+spread*i*1.9,-i*.5+spread*i*.7,-i*3-spread*i*2.6);s.rotation.y=spread*i*.025});
+ const dolly=Math.sin(extract*Math.PI);rig.rotation.set(.035*dolly,-.12*dolly,0);camera.position.z=820+20*dolly;
  excerpts.forEach((g,i)=>{
   const appear=phase(t,6+i*.17,7.4+i*.17),morph=phase(t,10.8+i*.18,12.2+i*.18),scan=phase(t,8+i*.55,8.9+i*.55),scanOut=1-phase(t,10.8+i*.18,11.5+i*.18);
-  let x=(1-appear)*(i%2?55:-55),y=mix(0,128-i*126,appear),z=-35+appear*45+Math.sin(morph*Math.PI)*24,rx=(1-appear)*.8+Math.sin(morph*Math.PI)*-.15,ry=(1-appear)*-.2-.045;
+  const lift=Math.sin(morph*Math.PI);
+  let x=(1-appear)*(i%2?55:-55)+lift*(i%2?9:-9),y=mix(0,128-i*126,appear),z=-35+appear*45+lift*48,rx=(1-appear)*1.05-lift*.24,ry=(1-appear)*-.34-.09+lift*(i%2?-.2:.2);
   let scale=appear;
-  if(i===2){x=mix(x,0,focus);y=mix(y,45,focus);z=mix(z,30,focus);scale*=mix(1,1.03,focus)}
+  if(i===2){x=mix(x,0,focus)+Math.sin(focus*Math.PI)*24;y=mix(y,45,focus);z=mix(z,30,focus)+Math.sin(focus*Math.PI)*28;ry-=Math.sin(focus*Math.PI)*.18;scale*=mix(1,1.03,focus)}
   else{x=mix(x,i===0?-88:88,focus);y=mix(y,-145,focus);z=mix(z,-20,focus);scale*=mix(1,.42,focus)}
   y=mix(y,0,cardsOut);z-=cardsOut*(30+i*8);scale*=1-cardsOut;
   pose(g,x,y,z,rx,ry,scale);
+  g.userData.layers.forEach((paper,j)=>{paper.position.set(3+j*3+lift*(j+1)*3,-2-j*2,-14-j*5-lift*(j+1)*12);paper.rotation.y=-lift*(j+1)*.035});
   g.userData.face.material.opacity=phase(appear,.55,1)*(1-phase(t,10.8+i*.18,11.45+i*.18));
   const travelling=i<2?1-phase(t,16.7,17.05)*(1-phase(t,18,18.4)):1;
   g.userData.finding.material.opacity=phase(t,11.45+i*.18,12.15+i*.18)*(1-phase(t,22.8,23.25))*travelling;
   const h=g.userData.highlight;h.scale.x=scan;h.position.x=-140+140*scan;h.material.opacity=.28*scanOut*appear;
-  const tag=phase(t,11.5+i*.18,12.35+i*.18)*(1-cardsOut)*travelling;g.userData.tag.scale.setScalar(tag);g.userData.tag.position.z=8+(1-tag)*15;
+  const tag=phase(t,11.5+i*.18,12.35+i*.18)*(1-cardsOut)*travelling;g.userData.tag.scale.setScalar(tag);g.userData.tag.position.z=10+(1-tag)*24;g.userData.tag.rotation.y=(1-tag)*-.35;
  });
  const nextIn=phase(t,18.2,19),nextOut=1-phase(t,22.5,23.35);pose(followup,0,-58,18,(1-nextIn)*.15,-.035,nextIn*nextOut);followup.userData.face.material.opacity=phase(nextIn,.55,1)*nextOut;
- pose(brief,0,(1-reportIn)*-20,25+Math.sin(reportIn*Math.PI)*15,(1-reportIn)*-.22,(1-reportIn)*.3-.045*reportIn,reportIn);brief.userData.face.material.opacity=phase(t,23.6,24.4);
+ pose(brief,0,(1-reportIn)*-20,25+Math.sin(reportIn*Math.PI)*28,(1-reportIn)*-.3,(1-reportIn)*.45-.065*reportIn,reportIn);brief.userData.face.material.opacity=phase(t,23.6,24.4);
  const end=phase(t,28.8,29.5);show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=phase(t,29.2,29.9);
  renderer.shadowMap.needsUpdate=t!==lastShadowTime;lastShadowTime=t;renderer.render(scene,camera);
 }

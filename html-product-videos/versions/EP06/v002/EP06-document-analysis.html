@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdent Document Analysis</title>
+<style>
+:root{--ink:#0f2a1e;--green:#1f9d6c}*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:#e9ecea;font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+.film{position:absolute;left:50%;top:50%;width:430px;height:764px;transform-origin:center;overflow:hidden;background:#fbfdfb;isolation:isolate;perspective:1000px;box-shadow:0 36px 100px #0f2a1e22}
+.copy{position:absolute;left:28px;right:28px;top:34px;height:155px;z-index:20;pointer-events:none}.kicker{font:700 11px/1.2 monospace;color:var(--green)}
+h1{font-size:42px;line-height:1.06;font-weight:800;letter-spacing:0;margin:16px 0 0;perspective:650px}.line{display:block;white-space:nowrap}.line:last-child{color:var(--green)}.word{display:inline-block;margin-right:.19em;transform-origin:50% 90%}.word:last-child{margin:0}
+.volume{position:absolute;top:192px;width:430px;height:500px}.volume canvas{display:block;width:100%;height:100%}
+.caption{position:absolute;bottom:28px;left:28px;right:28px;height:30px;display:flex;align-items:flex-end;font-size:12px;line-height:1.4;font-weight:600;color:#526c5e;z-index:10}
+.source{position:absolute;left:28px;bottom:66px;font:10px/1.2 Arial,sans-serif;color:#708176;z-index:10}
+.prompt{position:absolute;left:40px;top:302px;width:350px;padding:24px;background:#fff;border:1px solid #d9e6dc;border-radius:8px;box-shadow:0 6px 0 #d9e6dc,0 28px 50px #0f2a1e18;z-index:6;visibility:hidden}
+.prompt-label{font-size:10px;font-weight:700;color:#526c5e;margin-bottom:14px}.prompt-text{font-size:24px;font-weight:650;line-height:1.25;height:96px}.attachment{margin-top:12px;padding-top:14px;border-top:1px solid #edf2ee;font-size:12px;color:#526c5e;display:flex;align-items:center;gap:10px}.filemark{font:700 9px monospace;color:#1f9d6c;border:1px solid #c7d9cb;padding:7px 3px}.send{margin-left:auto;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:#fff;background:#144835}
+.endcard{position:absolute;inset:0;background:white;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center}
+</style>
+</head>
+<body>
+<main class="film" aria-label="Verdent Document Analysis animated product film">
+<header class="copy"><div class="kicker">VERDENT / DOCUMENT ANALYSIS</div><h1></h1></header>
+<div class="volume" aria-hidden="true"></div>
+<article class="prompt"><div class="prompt-label">ASK YOUR DOCUMENT</div><div class="prompt-text"></div><div class="attachment"><span class="filemark">PDF</span><span>launch-plan.pdf · 40 pages</span><span class="send">&#8593;</span></div></article>
+<div class="source">Illustrative document</div><div class="caption"></div>
+<footer class="endcard"><img class="logo" src="assets/verdent-logo.png" alt="Verdent"><div class="endline">The detail stays.<br>The picture gets clearer.</div></footer>
+</main>
+<script type="module">
+import * as THREE from './assets/three.module.min.js';
+const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},phase=(t,a,b)=>smooth((t-a)/(b-a));
+const film=$('.film'),duration=32;
+function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}
+addEventListener('resize',fit);fit();
+const evidence=[
+ {page:'04',section:'Launch timing',quote:['The planned launch date is October 12.'],label:'Planned launch',answer:'October 12'},
+ {page:'18',section:'Launch channels',quote:['Launch channels are email','and the website.'],label:'Channels',answer:'Email + website'},
+ {page:'27',section:'Support readiness',quote:['The support owner has not','yet been assigned.'],label:'Support owner',answer:'Not assigned'}
+];window.documentExample={pages:40,evidence,illustrative:true};
+const beats=[
+ [0,3,'40 pages.|Find the point.','Turn a long document into a clear starting point.'],
+ [3,6.5,'Ask for|what matters.','A summary, with the open questions called out.'],
+ [6.5,11,'Read it.|Keep the context.','Locate the passages that answer the question.'],
+ [11,17,'Key details.|Sources attached.','Keep the page reference with each finding.'],
+ [17,22.8,"See what's|still open.",'An unassigned owner, surfaced from the plan.'],
+ [22.8,29,'Less reading.|More clarity.','A concise brief, with a clear next step.']
+];
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;renderer.shadowMap.autoUpdate=false;$('.volume').append(renderer.domElement);
+const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);
+const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,820);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0xa5b8ab,1.4));
+const key=new THREE.DirectionalLight(0xffffff,2.3);key.position.set(-240,280,550);key.castShadow=true;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-380,right:380,top:380,bottom:-380,near:1,far:1400});key.shadow.bias=-.0002;key.shadow.normalBias=.4;key.shadow.radius=8;key.shadow.blurSamples=8;scene.add(key);
+const fill=new THREE.DirectionalLight(0xd9f0e4,1);fill.position.set(400,0,300);scene.add(fill);const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(250,180,-200);scene.add(rim);
+const shadow=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.ShadowMaterial({opacity:.05}));shadow.position.z=-130;shadow.receiveShadow=true;scene.add(shadow);
+function rect(c,x,y,w,h,color,r=4){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+function text(c,s,x,y,size=14,color='#153c2b',weight=600){c.fillStyle=color;c.font=`${weight} ${size}px Arial`;c.fillText(s,x,y)}
+function line(c,x,y,x2,y2,color='#dce7df'){c.strokeStyle=color;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke()}
+function texture(w,h,paint){const el=document.createElement('canvas');el.width=w*3;el.height=h*3;const c=el.getContext('2d');c.scale(3,3);paint(c);const map=new THREE.CanvasTexture(el);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
+function shape(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+function slab(w,h,d,color=0xffffff){const geo=new THREE.ExtrudeGeometry(shape(w,h,5),{depth:d,bevelEnabled:true,bevelSize:.6,bevelThickness:.6,bevelSegments:3,curveSegments:8});geo.translate(0,0,-d);const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color,roughness:.32,metalness:.06}));mesh.castShadow=true;mesh.receiveShadow=true;return mesh}
+function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
+function panel(w,h,paint){const g=new THREE.Group();g.add(slab(w,h,11));const face=label(w,h,paint);face.position.z=1.8;g.add(face);g.userData.face=face;rig.add(g);return g}
+function pose(g,x,y,z,rx,ry,s){g.position.set(x,y,z);g.rotation.set(rx,ry,0);g.scale.setScalar(s);g.visible=s>0.000001}
+const book=new THREE.Group();rig.add(book);
+const sheet=slab(280,330,2.4);const sheets=[];
+for(let i=0;i<10;i++){const mesh=new THREE.Mesh(sheet.geometry,sheet.material);mesh.position.set(i*.6,-i*.5,-i*3);mesh.castShadow=i<2;mesh.receiveShadow=true;book.add(mesh);sheets.push(mesh)}
+const cover=label(280,330,c=>{
+ rect(c,0,0,280,330,'#144835',5);text(c,'DAYLIGHT',24,35,11,'#b7ddc6',750);text(c,'Launch',24,103,39,'#ffffff',700);text(c,'plan.',24,151,39,'#ffffff',700);
+ line(c,24,186,256,186,'#4a7761');text(c,'Timing. Channels. Readiness.',24,212,13,'#cbe4d5',400);text(c,'40',24,289,45,'#ffffff',700);text(c,'PAGES',90,287,12,'#b7ddc6',600);
+});
+const contents=label(280,330,c=>{
+ text(c,'INSIDE THE PLAN',24,38,11,'#1f9d6c',750);text(c,'From context',24,85,25);text(c,'to clarity.',24,116,25);
+ evidence.forEach((e,i)=>{const y=166+i*48;text(c,e.section,24,y,13);text(c,`p.${e.page}`,224,y,11,'#1f9d6c');line(c,24,y+15,256,y+15)});
+});contents.position.z=1.8;book.add(contents);
+// The cover rotates around its spine, rather than rotating the whole book flat.
+const coverHinge=new THREE.Group();coverHinge.position.set(-140,0,4);book.add(coverHinge);
+const coverBody=slab(280,330,3,0x144835);coverBody.position.x=140;coverHinge.add(coverBody);cover.position.set(140,0,1.8);coverHinge.add(cover);
+const excerpts=evidence.map((e,i)=>{
+ const g=panel(320,96,c=>{text(c,`P.${e.page} / ${e.section.toUpperCase()}`,18,24,10,'#1f9d6c',750);e.quote.forEach((s,j)=>text(c,s,18,53+j*21,15,'#153c2b',500))});
+ const highlight=new THREE.Mesh(new THREE.PlaneGeometry(280,25),new THREE.MeshBasicMaterial({color:0x90c6a4,transparent:true,opacity:.28,depthWrite:false}));highlight.position.set(0,-1.5,1.1);g.add(highlight);
+ const finding=label(320,96,c=>{text(c,e.label.toUpperCase(),18,25,10,'#1f9d6c',750);text(c,e.answer,18,65,25,'#153c2b',650)});finding.position.z=2;g.add(finding);
+ const tag=new THREE.Group();tag.add(slab(43,25,5,0xe8f3eb));const tagText=label(43,25,c=>text(c,`p.${e.page}`,7,17,12,'#144835',700));tagText.position.z=1.3;tag.add(tagText);tag.position.set(125,24,8);g.add(tag);
+ const layers=[0,1].map(j=>{const paper=slab(320,96,2.5, j===0?0xf3f8f4:0xe2ece5);paper.position.set(3+j*3,-2-j*2,-14-j*5);g.add(paper);return paper});
+ g.userData.layers=layers;g.userData.highlight=highlight;g.userData.finding=finding;g.userData.tag=tag;return g;
+});
+const followup=panel(310,70,c=>{text(c,'NEXT STEP',18,23,10,'#1f9d6c',750);text(c,'Confirm the owner before launch.',18,50,16)});
+const brief=panel(340,365,c=>{
+ text(c,'LAUNCH BRIEF',22,29,10,'#1f9d6c',750);text(c,'The plan, distilled.',22,64,27);
+ evidence.forEach((e,i)=>{const y=105+i*72;text(c,e.label,22,y,12,'#617568',500);text(c,e.answer,22,y+28,21);text(c,`p.${e.page}`,286,y+28,11,'#1f9d6c',700);if(i<2)line(c,22,y+43,318,y+43)});
+ rect(c,18,298,304,49,'#edf5ef',6);text(c,'NEXT: CONFIRM THE SUPPORT OWNER',30,318,10,'#1f9d6c',750);text(c,'Keep the source pages with the summary.',30,337,12,'#526c5e',400);
+});
+let start=performance.now(),frozen=null,active='',lastShadowTime=-1;
+function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
+window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};window.restart=()=>{start=performance.now();frozen=null};
+function render(t){
+ window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1),closing=1-phase(t,28.5,29);
+ show($('.copy'),closing);show($('.source'),closing);
+ if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=beat[3]}
+ document.querySelectorAll('.word').forEach((el,i)=>{const p=phase(t,beat[0]+i*.05,beat[0]+i*.05+.55),out=phase(t,beat[1]-.3,beat[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*8}px) rotateX(${(1-p)*35}deg)`});
+ show($('.caption'),closing*phase(t,beat[0],beat[0]+.3)*(1-phase(t,beat[1]-.3,beat[1])));
+ const pin=phase(t,2.55,3.4),pout=phase(t,5.85,6.6);show($('.prompt'),pin*(1-pout));$('.prompt').style.transform=`translateY(${(1-pin)*28-pout*25}px) scale(${.94+.06*pin})`;
+ const question="Summarize this plan. What's still open?";$('.prompt-text').textContent=question.slice(0,Math.floor(question.length*clamp((t-3.25)/1.8)));
+ const enter=phase(t,0,1.1),retreat=phase(t,2.25,3.15),open=phase(t,5.9,7.3),extract=phase(t,10.8,12.6),focus=phase(t,16.7,18),reportIn=phase(t,22.8,24.2),cardsOut=phase(t,23.3,24.5);
+ const bookScale=enter*mix(.94,.38,retreat)*(1-open),coverOpen=phase(t,.65,1.55)*(1-phase(t,2,2.85));
+ pose(book,0,18+retreat*20,-retreat*60,.14*(1-retreat)-.07*retreat,-.3*(1-retreat),bookScale);
+ coverHinge.rotation.y=-.82*coverOpen;
+ sheets.forEach((s,i)=>{const spread=Math.sin(phase(t,.3,2.7)*Math.PI);s.position.set(i*.6+spread*i*1.9,-i*.5+spread*i*.7,-i*3-spread*i*2.6);s.rotation.y=spread*i*.025});
+ const dolly=Math.sin(extract*Math.PI);rig.rotation.set(.035*dolly,-.12*dolly,0);camera.position.z=820+20*dolly;
+ excerpts.forEach((g,i)=>{
+  const appear=phase(t,6+i*.17,7.4+i*.17),morph=phase(t,10.8+i*.18,12.2+i*.18),scan=phase(t,8+i*.55,8.9+i*.55),scanOut=1-phase(t,10.8+i*.18,11.5+i*.18);
+  const lift=Math.sin(morph*Math.PI);
+  let x=(1-appear)*(i%2?55:-55)+lift*(i%2?9:-9),y=mix(0,128-i*126,appear),z=-35+appear*45+lift*48,rx=(1-appear)*1.05-lift*.24,ry=(1-appear)*-.34-.09+lift*(i%2?-.2:.2);
+  let scale=appear;
+  if(i===2){x=mix(x,0,focus)+Math.sin(focus*Math.PI)*24;y=mix(y,45,focus);z=mix(z,30,focus)+Math.sin(focus*Math.PI)*28;ry-=Math.sin(focus*Math.PI)*.18;scale*=mix(1,1.03,focus)}
+  else{x=mix(x,i===0?-88:88,focus);y=mix(y,-145,focus);z=mix(z,-20,focus);scale*=mix(1,.42,focus)}
+  y=mix(y,0,cardsOut);z-=cardsOut*(30+i*8);scale*=1-cardsOut;
+  pose(g,x,y,z,rx,ry,scale);
+  g.userData.layers.forEach((paper,j)=>{paper.position.set(3+j*3+lift*(j+1)*3,-2-j*2,-14-j*5-lift*(j+1)*12);paper.rotation.y=-lift*(j+1)*.035});
+  g.userData.face.material.opacity=phase(appear,.55,1)*(1-phase(t,10.8+i*.18,11.45+i*.18));
+  const travelling=i<2?1-phase(t,16.7,17.05)*(1-phase(t,18,18.4)):1;
+  g.userData.finding.material.opacity=phase(t,11.45+i*.18,12.15+i*.18)*(1-phase(t,22.8,23.25))*travelling;
+  const h=g.userData.highlight;h.scale.x=scan;h.position.x=-140+140*scan;h.material.opacity=.28*scanOut*appear;
+  const tag=phase(t,11.5+i*.18,12.35+i*.18)*(1-cardsOut)*travelling;g.userData.tag.scale.setScalar(tag);g.userData.tag.position.z=10+(1-tag)*24;g.userData.tag.rotation.y=(1-tag)*-.35;
+ });
+ const nextIn=phase(t,18.2,19),nextOut=1-phase(t,22.5,23.35);pose(followup,0,-58,18,(1-nextIn)*.15,-.035,nextIn*nextOut);followup.userData.face.material.opacity=phase(nextIn,.55,1)*nextOut;
+ pose(brief,0,(1-reportIn)*-20,25+Math.sin(reportIn*Math.PI)*28,(1-reportIn)*-.3,(1-reportIn)*.45-.065*reportIn,reportIn);brief.userData.face.material.opacity=phase(t,23.6,24.4);
+ const end=phase(t,28.8,29.5);show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=phase(t,29.2,29.9);
+ renderer.shadowMap.needsUpdate=t!==lastShadowTime;lastShadowTime=t;renderer.render(scene,camera);
+}
+function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
+</script>
+</body>
+</html>

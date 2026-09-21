@@ -37,7 +37,8 @@ Objects enter and leave through continuous scale/position curves. Finding textur
 ## Verification and Versions
 
 - v001: Initial film. Source: EP06-document-analysis.html.
+- v002: Hinged book cover reveals an inside contents page; separated paper edges make document depth visible. Excerpts lift with staggered backing sheets, page-reference badges settle above the surface, and the open question moves forward before gathering into the final brief. A restrained camera arc accompanies extraction; reading holds remain still. Duration and factual content are unchanged.
 - Desktop 1280x900, mobile 390x844, and small-screen 320x568: checked asset loads, page errors, text overflow, canvas pixel bounds, settled compositions, and transition frames.
 - `tests/ep06-continuity.cjs` compares adjacent frames around transition boundaries, asserts the example answers/page references, and checks final-logo hold. Set `PLAYWRIGHT_MODULE` to an installed Playwright module if needed; `EP06_URL` can select a snapshot. `FULL_PLAYBACK=1` runs the full film before the tail assertion.
 
-Next version: `node save-version.cjs v002 "Description" EP06-document-analysis.html`.
+Next version: `node save-version.cjs v003 "Description" EP06-document-analysis.html`.
