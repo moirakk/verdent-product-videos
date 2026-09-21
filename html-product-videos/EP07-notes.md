@@ -38,8 +38,12 @@ The supported conclusion is only that Tool A has the lowest listed base price am
 
 v001: Initial Deep Research film. Source: EP07-deep-research.html.
 
+v002: Stronger physical depth. The opening cover hinges around its spine to reveal an inside research path. Solid panels have separate face/edge materials and thicker bevels; source pages have independent depth planes, raised reference badges, and two additional backing sheets that separate during comparison. Camera parallax and transition tilts are stronger, then settle for reading. Comparison rows have more clearance. The final report gathers onto a layered paper backing. Content, 33-second timing, and final logo are unchanged.
+
+v002 verification: Full 33-second playback passed, followed by the expanded 25-boundary continuity regression. All three viewport checks, canvas bounds, text overflow, source-data assertions, assets, and final hold passed without browser errors. Reviewed the hinged-cover, comparison-transition, settled source rows, and small-screen final report screenshots.
+
 Verification passed at 1280x900, 390x844, and 320x568. Reviewed settled and intermediate frames; adjusted reference-tab spacing beneath the final report. Source data assertions, 21 adjacent-frame continuity checks, nonblank/in-bounds canvas samples, asset loading, browser error checks, and final-logo hold passed. The initial full 33-second playback also completed successfully; final spacing changes were then regression-tested.
 
 Test with `PLAYWRIGHT_MODULE=/path/to/playwright node tests/ep07-verify.cjs`. Checks source data, text overflow, browser errors, assets, canvas content/bounds, transition continuity, and final hold across desktop and portrait viewports. Screenshots are written under the system temporary directory. Set `FULL_PLAYBACK=1` to play the full film.
 
-Next snapshot: `node save-version.cjs v002 "Description" EP07-deep-research.html`.
+Next snapshot: `node save-version.cjs v003 "Description" EP07-deep-research.html`.
