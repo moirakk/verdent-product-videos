@@ -75,6 +75,17 @@ const contents=label(280,330,c=>{
 // The cover rotates around its spine, rather than rotating the whole book flat.
 const coverHinge=new THREE.Group();coverHinge.position.set(-140,0,4);book.add(coverHinge);
 const coverBody=slab(280,330,3,0x144835);coverBody.position.x=140;coverHinge.add(coverBody);cover.position.set(140,0,1.8);coverHinge.add(cover);
+// Curved leaves carry the document into the extracted passages, behind their text.
+const leaves=Array.from({length:5},(_,i)=>{
+ const geometry=new THREE.PlaneGeometry(190,246,24,24);
+ const map=texture(190,246,c=>{
+  rect(c,0,0,190,246,i===4?'#144835':i%2?'#f1f7f2':'#ffffff',4);
+  rect(c,18,23,42,5,i===4?'#b5dfc5':'#1f9d6c',1);
+  for(let row=0;row<12;row++)rect(c,18,49+row*13,row%3===2?105:154,2,i===4?'#54806b':'#d5e2d8',1);
+ });
+ const leaf=new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({map,side:THREE.DoubleSide,roughness:.65,metalness:0}));
+ leaf.userData.rest=Float32Array.from(geometry.attributes.position.array);leaf.castShadow=true;leaf.receiveShadow=true;rig.add(leaf);return leaf;
+});
 const excerpts=evidence.map((e,i)=>{
  const g=panel(320,96,c=>{text(c,`P.${e.page} / ${e.section.toUpperCase()}`,18,24,10,'#1f9d6c',750);e.quote.forEach((s,j)=>text(c,s,18,53+j*21,15,'#153c2b',500))});
  const highlight=new THREE.Mesh(new THREE.PlaneGeometry(280,25),new THREE.MeshBasicMaterial({color:0x90c6a4,transparent:true,opacity:.28,depthWrite:false}));highlight.position.set(0,-1.5,1.1);g.add(highlight);
@@ -89,6 +100,7 @@ const brief=panel(340,365,c=>{
  evidence.forEach((e,i)=>{const y=105+i*72;text(c,e.label,22,y,12,'#617568',500);text(c,e.answer,22,y+28,21);text(c,`p.${e.page}`,286,y+28,11,'#1f9d6c',700);if(i<2)line(c,22,y+43,318,y+43)});
  rect(c,18,298,304,49,'#edf5ef',6);text(c,'NEXT: CONFIRM THE SUPPORT OWNER',30,318,10,'#1f9d6c',750);text(c,'Keep the source pages with the summary.',30,337,12,'#526c5e',400);
 });
+const briefBacking=slab(348,373,4,0x144835);briefBacking.position.set(0,0,-14);brief.add(briefBacking);
 let start=performance.now(),frozen=null,active='',lastShadowTime=-1;
 function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
 window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};window.restart=()=>{start=performance.now();frozen=null};
@@ -98,22 +110,39 @@ function render(t){
  if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=beat[3]}
  document.querySelectorAll('.word').forEach((el,i)=>{const p=phase(t,beat[0]+i*.05,beat[0]+i*.05+.55),out=phase(t,beat[1]-.3,beat[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*8}px) rotateX(${(1-p)*35}deg)`});
  show($('.caption'),closing*phase(t,beat[0],beat[0]+.3)*(1-phase(t,beat[1]-.3,beat[1])));
- const pin=phase(t,2.55,3.4),pout=phase(t,5.85,6.6);show($('.prompt'),pin*(1-pout));$('.prompt').style.transform=`translateY(${(1-pin)*28-pout*25}px) scale(${.94+.06*pin})`;
+ const pin=phase(t,2.55,3.4),pout=phase(t,5.65,6.45);show($('.prompt'),pin*(1-pout));$('.prompt').style.transform=`translateY(${(1-pin)*28-pout*45}px) rotateX(${-pout*24}deg) scale(${(.94+.06*pin)*(1-.18*pout)})`;
  const question="Summarize this plan. What's still open?";$('.prompt-text').textContent=question.slice(0,Math.floor(question.length*clamp((t-3.25)/1.8)));
- const enter=phase(t,0,1.1),retreat=phase(t,2.25,3.15),open=phase(t,5.9,7.3),extract=phase(t,10.8,12.6),focus=phase(t,16.7,18),reportIn=phase(t,22.8,24.2),cardsOut=phase(t,23.3,24.5);
+ const enter=phase(t,0,1.1),retreat=phase(t,2.25,3.15),open=phase(t,5.8,6.45),extract=phase(t,10.8,12.6),focus=phase(t,16.7,18),reportIn=phase(t,22.8,24.2),cardsOut=phase(t,23.3,24.5);
  const bookScale=enter*mix(.94,.38,retreat)*(1-open),coverOpen=phase(t,.65,1.55)*(1-phase(t,2,2.85));
  pose(book,0,18+retreat*20,-retreat*60,.14*(1-retreat)-.07*retreat,-.3*(1-retreat),bookScale);
  coverHinge.rotation.y=-.82*coverOpen;
  sheets.forEach((s,i)=>{const spread=Math.sin(phase(t,.3,2.7)*Math.PI);s.position.set(i*.6+spread*i*1.9,-i*.5+spread*i*.7,-i*3-spread*i*2.6);s.rotation.y=spread*i*.025});
- const dolly=Math.sin(extract*Math.PI);rig.rotation.set(.035*dolly,-.12*dolly,0);camera.position.z=820+20*dolly;
+ const fan=phase(t,5.75,7.8),fanArc=Math.sin(fan*Math.PI),dolly=Math.sin(extract*Math.PI),gather=Math.sin(reportIn*Math.PI);
+ rig.rotation.set(.06*dolly+.045*fanArc,-.14*dolly+.1*fanArc-.1*gather,.025*fanArc);
+ camera.position.set(18*fanArc-14*gather,8*dolly,820+38*fanArc+24*dolly+30*gather);camera.lookAt(0,0,0);
+ leaves.forEach((leaf,i)=>{
+  const p=phase(t,5.75+i*.07,7.45+i*.07),arc=Math.sin(p*Math.PI),spread=(i-2)/2;
+  pose(leaf,spread*105*arc,32+Math.cos(i*.75)*45*arc,-280+arc*i*65,-.4*arc,spread*.5*arc,arc*.83);
+  if(!leaf.visible)return;
+  leaf.rotation.z=spread*.16*arc;
+  const positions=leaf.geometry.attributes.position,rest=leaf.userData.rest;
+  for(let j=0;j<positions.count;j++){
+   const x=rest[j*3],y=rest[j*3+1],angle=x/190*1.5*arc;
+   positions.setXYZ(j,x,y,Math.sin(angle)*32*arc+Math.sin((y/246+.5)*Math.PI)*14*arc);
+  }
+  positions.needsUpdate=true;leaf.geometry.computeVertexNormals();
+ });
  excerpts.forEach((g,i)=>{
-  const appear=phase(t,6+i*.17,7.4+i*.17),morph=phase(t,10.8+i*.18,12.2+i*.18),scan=phase(t,8+i*.55,8.9+i*.55),scanOut=1-phase(t,10.8+i*.18,11.5+i*.18);
+  const appear=phase(t,6.9+i*.1,7.85+i*.1),morph=phase(t,10.8+i*.18,12.2+i*.18),scan=phase(t,8+i*.55,8.9+i*.55),scanOut=1-phase(t,10.8+i*.18,11.5+i*.18);
   const lift=Math.sin(morph*Math.PI);
-  let x=(1-appear)*(i%2?55:-55)+lift*(i%2?9:-9),y=mix(0,128-i*126,appear),z=-35+appear*45+lift*48,rx=(1-appear)*1.05-lift*.24,ry=(1-appear)*-.34-.09+lift*(i%2?-.2:.2);
+  let x=(1-appear)*(i%2?55:-55)+lift*(i%2?12:-12),y=mix(0,128-i*126,appear),z=-35+appear*45+lift*40,rx=(1-appear)*1.05-lift*.48,ry=(1-appear)*-.34-.09+lift*(i%2?-.32:.32);
   let scale=appear;
   if(i===2){x=mix(x,0,focus)+Math.sin(focus*Math.PI)*24;y=mix(y,45,focus);z=mix(z,30,focus)+Math.sin(focus*Math.PI)*28;ry-=Math.sin(focus*Math.PI)*.18;scale*=mix(1,1.03,focus)}
   else{x=mix(x,i===0?-88:88,focus);y=mix(y,-145,focus);z=mix(z,-20,focus);scale*=mix(1,.42,focus)}
-  y=mix(y,0,cardsOut);z-=cardsOut*(30+i*8);scale*=1-cardsOut;
+  const merge=phase(t,22.65+i*.13,24+i*.13),mergeArc=Math.sin(merge*Math.PI),absorb=phase(t,23.6+i*.13,24.3+i*.13);
+  x=mix(x,0,merge)+(i-1)*28*mergeArc;y=mix(y,53-i*72,merge);
+  z=mix(z,8,merge)+mergeArc*28;rx-=mergeArc*.24;ry=mix(ry,-.065,merge)+mergeArc*(i-1)*.18;
+  scale=mix(scale,.89,merge)*(1-absorb);
   pose(g,x,y,z,rx,ry,scale);
   g.userData.layers.forEach((paper,j)=>{paper.position.set(3+j*3+lift*(j+1)*3,-2-j*2,-14-j*5-lift*(j+1)*12);paper.rotation.y=-lift*(j+1)*.035});
   g.userData.face.material.opacity=phase(appear,.55,1)*(1-phase(t,10.8+i*.18,11.45+i*.18));
@@ -123,7 +152,9 @@ function render(t){
   const tag=phase(t,11.5+i*.18,12.35+i*.18)*(1-cardsOut)*travelling;g.userData.tag.scale.setScalar(tag);g.userData.tag.position.z=10+(1-tag)*24;g.userData.tag.rotation.y=(1-tag)*-.35;
  });
  const nextIn=phase(t,18.2,19),nextOut=1-phase(t,22.5,23.35);pose(followup,0,-58,18,(1-nextIn)*.15,-.035,nextIn*nextOut);followup.userData.face.material.opacity=phase(nextIn,.55,1)*nextOut;
- pose(brief,0,(1-reportIn)*-20,25+Math.sin(reportIn*Math.PI)*28,(1-reportIn)*-.3,(1-reportIn)*.45-.065*reportIn,reportIn);brief.userData.face.material.opacity=phase(t,23.6,24.4);
+ const reportReveal=phase(t,22.75,24.5);
+ pose(brief,0,(1-reportReveal)*-22,-32+reportReveal*57,(1-reportReveal)*-.22,(1-reportReveal)*.6-.065*reportReveal,reportReveal);
+ brief.userData.face.material.opacity=phase(t,24.3,25);
  const end=phase(t,28.8,29.5);show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=phase(t,29.2,29.9);
  renderer.shadowMap.needsUpdate=t!==lastShadowTime;lastShadowTime=t;renderer.render(scene,camera);
 }

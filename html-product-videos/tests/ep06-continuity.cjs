@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const url = process.env.EP06_URL || 'http://127.0.0.1:8768/EP06-document-analysis.html';
-const boundaries = [0, 0.65, 1.55, 2, 2.25, 2.7, 2.85, 3, 5.9, 6, 6.5, 7.3, 10.8, 11, 11.45, 16.7, 17, 18.2, 22.5, 22.8, 23.3, 24.2, 28.8, 29];
+const boundaries = [0, 0.65, 1.55, 2, 2.25, 2.7, 2.85, 3, 5.65, 5.75, 5.9, 6, 6.5, 6.8, 7.3, 7.8, 10.8, 11, 11.45, 16.7, 17, 18.2, 22.5, 22.65, 22.75, 22.8, 23.3, 23.6, 24.2, 24.56, 25, 28.8, 29];
 
 (async () => {
   const browser = await chromium.launch({ headless: true });

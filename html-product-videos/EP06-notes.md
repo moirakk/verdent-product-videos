@@ -38,7 +38,8 @@ Objects enter and leave through continuous scale/position curves. Finding textur
 
 - v001: Initial film. Source: EP06-document-analysis.html.
 - v002: Hinged book cover reveals an inside contents page; separated paper edges make document depth visible. Excerpts lift with staggered backing sheets, page-reference badges settle above the surface, and the open question moves forward before gathering into the final brief. A restrained camera arc accompanies extraction; reading holds remain still. Duration and factual content are unchanged.
+- v003: Redesigned transitions: five curved, shaded leaves fan out from the document; staggered excerpt tilts coordinate with a camera arc; findings travel into their report-row positions before the final text appears. A deep-green divider and thin report backing distinguish the paper layers. The prompt recedes in perspective instead of simply fading. Motion remains confined to transitions, with unchanged reading holds, content, and 32-second logo stop.
 - Desktop 1280x900, mobile 390x844, and small-screen 320x568: checked asset loads, page errors, text overflow, canvas pixel bounds, settled compositions, and transition frames.
 - `tests/ep06-continuity.cjs` compares adjacent frames around transition boundaries, asserts the example answers/page references, and checks final-logo hold. Set `PLAYWRIGHT_MODULE` to an installed Playwright module if needed; `EP06_URL` can select a snapshot. `FULL_PLAYBACK=1` runs the full film before the tail assertion.
 
-Next version: `node save-version.cjs v003 "Description" EP06-document-analysis.html`.
+Next version: `node save-version.cjs v004 "Description" EP06-document-analysis.html`.
