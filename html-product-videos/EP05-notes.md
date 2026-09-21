@@ -41,4 +41,6 @@ The report describes an observed channel contribution, not a proven cause. Check
 - Inspected table alignment, chart, comparison, channel breakdown, report, and intermediate transition frames. Report copy appears after the old channel text clears.
 - Preview server moved to port 8768 because the old 8767 service returned empty responses. Earlier files and versions remain unchanged.
 
-Next version: `node save-version.cjs v002 "Description" EP05-data-analysis.html`.
+- v002: Increased bar depth from 24 to 38 units, differentiated side materials, oblique-to-front camera movement, stronger row-fold and column rise, and raised channel metric modules. An animated wireframe shows the missing 240 signups above W6 without changing either bar value. Repositioned grid planes behind geometry and separated comparison summary from bar labels. Retains 32-second timing and the same data. Desktop/mobile/small-screen rendering, arithmetic, and autoplay checks passed.
+
+Next version: `node save-version.cjs v003 "Description" EP05-data-analysis.html`.
