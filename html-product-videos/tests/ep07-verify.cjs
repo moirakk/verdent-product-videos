@@ -3,8 +3,8 @@ const path = require('node:path');
 const os = require('node:os');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const url = process.env.EP07_URL || 'http://127.0.0.1:8768/EP07-deep-research.html';
-const times = [1.6, 4.8, 6.4, 7.6, 9.5, 11.8, 13.5, 17.7, 20, 23.8, 25.8, 31];
-const boundaries = [0, .85, 1.65, 2.05, 2.1, 2.95, 3, 5.45, 5.5, 6, 6.45, 7.2, 7.52, 10.8, 11.5, 12.8, 16.65, 17.05, 18.4, 22.65, 23, 24.3, 25.15, 29.35, 30.1];
+const times = [1.6, 3.5, 4.8, 6.4, 7.6, 9.5, 11, 11.8, 13.5, 17.1, 17.7, 20, 23.8, 24.6, 25.8, 31];
+const boundaries = [0, .9, 3.05, 3.2, 3.8, 4.2, 5.8, 6.65, 8.1, 8.95, 10.25, 10.8, 11.3, 12, 16.2, 16.75, 16.95, 17.65, 18.7, 22.4, 22.7, 22.95, 23.8, 25.7, 29.35, 30.1];
 
 (async () => {
   const browser = await chromium.launch({ headless: true });

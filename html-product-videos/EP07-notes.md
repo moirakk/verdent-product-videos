@@ -1,6 +1,6 @@
 # EP07: Deep Research
 
-33-second portrait autoplay film. White/green lighting, dimensional paper, continuous camera movement at transitions, short headlines, supplied Verdent logo, and final-frame hold follow the accepted EP06 v003 direction. EP06 is provisionally approved and must remain unchanged.
+33-second portrait autoplay film. White/green lighting, dimensional materials, short headlines, supplied Verdent logo, and final-frame hold retain the series identity. Starting with v003, choreography is deliberately distinct from EP06: do not reuse its book entrance and vertical card procession. EP06 is provisionally approved and must remain unchanged.
 
 ## Verified Capability Scope
 
@@ -26,12 +26,11 @@ The supported conclusion is only that Tool A has the lowest listed base price am
 
 ## Structure
 
-- 0-3s: A dimensional research dossier and layered source pages.
-- 3-6s: Ask to compare pricing for three scheduling tools.
-- 6-11.5s: Three browser-like source pages unfold in depth and become readable.
-- 11.5-17s: Pages reorganize into comparison rows with the same monthly, per-seat basis.
-- 17-23s: Isolate the unlisted add-on price; preserve an open question.
-- 23-29.5s: Gather findings into a research brief; source-reference tabs dock beneath it.
+- 0-3.8s: The research question and a dimensional search symbol; the question tips away as exploration begins.
+- 3.8-10.8s: A source carousel brings A, B, and C to the foreground in turn. Only the front-facing source text is exposed.
+- 10.8-16.2s: The same source meshes change proportion and unfold into a three-column accordion comparison. Units appear above the comparison, not inside another card.
+- 16.2-22.5s: The central Tool B panel turns over; its reverse reveals the unknown add-on cost while the side panels fold away. The follow-up question is unframed.
+- 22.5-29.5s: A subdivided paper surface unrolls into the research brief. Sources remain printed on the sheet; no additional queue of citation cards.
 - 29.5-33s: Actual supplied Verdent logo, then hold.
 
 ## Versions and Verification
@@ -42,8 +41,12 @@ v002: Stronger physical depth. The opening cover hinges around its spine to reve
 
 v002 verification: Full 33-second playback passed, followed by the expanded 25-boundary continuity regression. All three viewport checks, canvas bounds, text overflow, source-data assertions, assets, and final hold passed without browser errors. Reviewed the hinged-cover, comparison-transition, settled source rows, and small-screen final report screenshots.
 
+v003: Choreography rebuild in response to repeated entrances/transitions feeling homogeneous. Removes the book, stacked rows, pop-up gap card, and floating reference chips. Introduces sequential orbital source browsing, a hinged three-column comparison, a reverse-side reveal, and a geometrically curled report sheet that unrolls. Source data, factual uncertainty, example disclosure, duration, and logo are unchanged.
+
+v003 verification: Passed full 33-second playback, 26 continuity boundaries, source-data assertions, three viewport sizes, text overflow checks, canvas pixel/bounds checks, asset loading, and logo hold. Reviewed carousel, accordion, reverse-side question, partially unrolled report, and final report screenshots. Shortened the focus headline after detecting a width overflow. No browser errors remained.
+
 Verification passed at 1280x900, 390x844, and 320x568. Reviewed settled and intermediate frames; adjusted reference-tab spacing beneath the final report. Source data assertions, 21 adjacent-frame continuity checks, nonblank/in-bounds canvas samples, asset loading, browser error checks, and final-logo hold passed. The initial full 33-second playback also completed successfully; final spacing changes were then regression-tested.
 
 Test with `PLAYWRIGHT_MODULE=/path/to/playwright node tests/ep07-verify.cjs`. Checks source data, text overflow, browser errors, assets, canvas content/bounds, transition continuity, and final hold across desktop and portrait viewports. Screenshots are written under the system temporary directory. Set `FULL_PLAYBACK=1` to play the full film.
 
-Next snapshot: `node save-version.cjs v003 "Description" EP07-deep-research.html`.
+Next snapshot: `node save-version.cjs v004 "Description" EP07-deep-research.html`.

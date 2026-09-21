@@ -39,3 +39,5 @@ Future episodes should use the v009 visual language with timing and composition 
 ## Latest Direction
 
 The user provisionally accepted EP06 v003 on 2026-09-21. Preserve it unchanged. Continue its layered paper, connected spatial transitions, restrained camera parallax, readable holds, and logo ending in subsequent episodes; adapt the visual story to each feature.
+
+The user subsequently rejected repetitive choreography across episodes. Consistency means shared brand, materials, typography, and quality, not identical entrances or scene structure. EP07 v003 replaces the book/card queue with orbital source browsing, accordion comparison, reverse-side evidence reveal, and an unrolling report. Future episodes should have their own feature-specific visual metaphor and varied transition mechanisms; increasing rotation on the previous template is not enough.
