@@ -1,5 +1,13 @@
 # EP12 · Message Anywhere
 
+## v005 · visible remote-edit choreography
+
+The user rejected v004 as insufficiently engaging. v005 rebuilds the middle of the film around the actual project change, preserving 18 seconds and the feature scope. A larger foreground phone sends one physical message; the example homepage takes over the frame. The message compacts into a task strip, two solid headline rails lift and flip from “Find a little / time for you.” to “Make room / for calm.”, and a completion status appears. The same message strip opens into a reply and returns to the original conversation. The final phone retains a small copy of the original request above the result.
+
+The former large checklist card and parallel task wall are removed. Phone controls, a dark-green machined rim, larger result framing and camera parallax support the action. Headline flips are an editorial 3D visualization of text replacement, not a claim that the product has a mechanical editing UI. The leaf illustration is a procedural page graphic. No new external action or account connection is performed.
+
+Opaque screen faces write depth with alpha-tested rounded corners; this fixes a triangular surface dropout found during frame review. Transparent completion text has explicit ordering. Request, compact strip and reply layers have coordinated sizes and alpha through the fold. Word-rail identities and both before/after orientations are checked alongside device docks, continuity and full playback. v004 remains preserved and rejected; v005 is for review.
+
 ## v004 · faster rhythm and stronger depth
 
 User feedback: more 3D and a quicker pace. Runtime drops from 21 to 18 seconds. Phone body/back shell total depth grows to about 54 units, workspace body to 44 and message card to 26. Stronger oblique poses, darker side materials, camera parallax and deeper curved travel make the physical separation visible. The message rises clear of the workspace before turning; the returning reply travels in front of the moving phone. Phone movement waits for the returning card rather than crossing its face.

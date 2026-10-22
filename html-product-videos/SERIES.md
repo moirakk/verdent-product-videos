@@ -101,3 +101,8 @@ EP12 v003 is the individual 21-second Message Anywhere film: already paired Tele
 ## Message Anywhere depth and pace revision
 
 The user asked for stronger 3D and faster rhythm after EP12 v003. EP12 v004 is 18 seconds with thicker device/card bodies, stronger side materials and oblique poses, deeper curved foreground travel and a lifted card turn that clears the workspace. Task holds are shortened and return/phone movement overlap. Title/caption handoffs avoid double text. v004 is for review; v003 remains immutable. No work advances to EP13 and EP09 stays skipped.
+
+
+## Message Anywhere v005 rebuild
+
+The user rejected EP12 v004 as insufficiently engaging and requested a full optimization pass. v005 retains 18 seconds but replaces the checklist wall with a visible homepage edit. A persistent message compacts into a task strip; two physical headline rails flip to the requested wording; the same strip opens into the reply and returns to the phone. Foreground scale and camera movement follow the task rather than holding two parallel panels. Opaque screen depth handling fixes a triangular surface dropout found during review. v005 is for review; v004 is preserved, not approved. EP11 v003 remains approved, EP09 skipped, EP13 paused.
