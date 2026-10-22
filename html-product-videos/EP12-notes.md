@@ -1,41 +1,36 @@
 # EP12 · Message Anywhere
 
-## v006 · 13-second timing pass
+## v007 — full scene and direction reset
 
-The user still found v005 too slow. v006 keeps its visual story but compresses 18 seconds to 13 with a velocity-continuous time map. Phone/send: roughly 0–1.25s; delivery by 3.1s; visible edit completed around 5.5s; reply returns by 8.4s; final result hold ends at 9.9s, then the logo. Holds are reduced as well as travel time. The turning packet rises vertically to remain inside the frame at intermediate orientations. No feature or topic change; v005 stays immutable.
+The user explicitly rejected the previous section and authorized a complete restart. v007 replaces the scene construction, composition, motion and middle narrative; it retains only the series brand/material utilities and the verified instant-messaging feature. Runtime: 13 seconds. This version is for individual review, not approved. EP09 remains skipped; EP13 remains paused.
 
-Continuity checks record both 2ms and 0.2ms pixel differences; the finer interval distinguishes fast motion from a discontinuity while repeated frames still must remain stable. Spatial/time-map velocity joins, headline states, moving anchors and full playback are verified.
+## Current story
 
-## v005 · visible remote-edit choreography
+A paired Telegram bot receives a specific Daylight homepage wording request. Phone and project are two fixed places within one 3D set. An extruded communication route and a restrained travelling signal establish the connected channel. The camera pulls back, crosses to the project, then pushes into the work. A selection and solid edit caret replace the actual page headline with “Make room / for calm.”. The camera returns along the connection, and the result appears inside the original conversation.
 
-The user rejected v004 as insufficiently engaging. v005 rebuilds the middle of the film around the actual project change, preserving 18 seconds and the feature scope. A larger foreground phone sends one physical message; the example homepage takes over the frame. The message compacts into a task strip, two solid headline rails lift and flip from “Find a little / time for you.” to “Make room / for calm.”, and a completion status appears. The same message strip opens into a reply and returns to the original conversation. The final phone retains a small copy of the original request above the result.
+There is no flying message card, card-to-task transformation, checklist wall, physical word flip or repeated resize of a hero object. The request compacts locally inside the phone; the reply appears locally in the phone thread. The fixed set and continuous camera create the transitions.
 
-The former large checklist card and parallel task wall are removed. Phone controls, a dark-green machined rim, larger result framing and camera parallax support the action. Headline flips are an editorial 3D visualization of text replacement, not a claim that the product has a mechanical editing UI. The leaf illustration is a procedural page graphic. No new external action or account connection is performed.
+## Feature scope
 
-Opaque screen faces write depth with alpha-tested rounded corners; this fixes a triangular surface dropout found during frame review. Transparent completion text has explicit ordering. Request, compact strip and reply layers have coordinated sizes and alpha through the fold. Word-rail identities and both before/after orientations are checked alongside device docks, continuity and full playback. v004 remains preserved and rejected; v005 is for review.
+Official source: https://www.verdent.ai/docs/verdent-manager/core-features/instant-messaging (checked 2026-10-22).
 
-## v004 · faster rhythm and stronger depth
+Supported platforms include Telegram, Slack and Feishu. Each requires Bot setup, credentials and pairing first. This film demonstrates an already paired Telegram channel and labels that prerequisite. Manager handles the remote request as a project task and returns the result to the conversation. Screens, requests, project and progress are illustrative. The physical route and camera travel are editorial animation, not actual product hardware. No external channel was connected, no message sent and no real project modified.
 
-User feedback: more 3D and a quicker pace. Runtime drops from 21 to 18 seconds. Phone body/back shell total depth grows to about 54 units, workspace body to 44 and message card to 26. Stronger oblique poses, darker side materials, camera parallax and deeper curved travel make the physical separation visible. The message rises clear of the workspace before turning; the returning reply travels in front of the moving phone. Phone movement waits for the returning card rather than crossing its face.
+The existing generated seedling PNG from EP08 is reused as a static image in the example page; its provenance remains in assets/ep08-image-provenance.md. It is not shown being generated or presented as a new capability.
 
-Send/expand, completion/turn and return/phone movement overlap more closely. The project-stage hold is shorter, while the final result keeps a readable hold before the logo. Title/caption timing removes the previous double-text overlap. All spatial curves remain continuous and all moving anchors remain exact. The v003 snapshot remains unchanged. Review v004 individually; EP09 remains skipped.
+## Timing
 
-v003 is the individual 21-second film following the user's approval of EP11 v003. EP09 remains explicitly skipped. EP12 v001 and v002 preserve earlier unapproved batch drafts.
+- 0–1.65: large phone, concrete request and send action.
+- 1.65–3.4: pull back through the channel, push into the project.
+- 3.4–7.1: selection, caret movement, visible headline update and completion status.
+- 7.1–8.8: continuous camera return.
+- 8.8–10.4: result in the original chat.
+- 10.4–13: supplied Verdent logo and closing hold.
 
-## Feature and story
+## Verification
 
-Official source checked 2026-10-22: https://www.verdent.ai/docs/verdent-manager/core-features/instant-messaging
+`tests/ep12-verify.cjs` checks three viewport sizes, text overflow, persistent set identities, focused-subject bounds in settled shots, nonblank travel frames, request/result state, camera and caret velocity joins, deterministic repeats, fine-interval continuity, full playback and logo hold. Static shadow maps update only when the in-phone request geometry changes, and the edit texture is cached outside the actual editing interval. Passing checks is followed by manual review of close-ups, complete project states and wide transition frames. Peripheral objects may leave the frame during camera travel; the settled focal subject must remain within its safe bounds.
 
-A Telegram bot is already connected and paired with Manager. The user sends one specific request: update the Daylight homepage headline to “Make room for calm.” The same physical message card leaves the phone, unfolds into a project task, turns to show completion, and returns as a reply in the same conversation. This episode focuses on remote delegation and the return channel rather than replaying app creation or publishing.
+## History
 
-Supported channels in the docs are Telegram, Slack and Feishu. Bot creation, credentials and pairing are prerequisites. The footer explicitly marks the paired Telegram bot. The film uses one channel to keep the idea clear; it does not demonstrate setup or promise that an unconfigured bot works immediately.
-
-## Motion and validation
-
-White/green materials, real extruded bodies, phone rear shell and side buttons, a raised channel strip, short two-line kinetic typography and the supplied logo continue the established series style. Spatial tracks are cubic Hermite with shared velocities. One persistent message follows curved paths between moving phone/workspace anchors; no scene resets or object replacement. Its physical reverse side carries the reply.
-
-The task well is raised clear of the workspace label plane to eliminate coplanar depth flicker. Task check marks use explicit transparent-layer ordering. The date/calendar story from EP11 is not reused.
-
-`tests/ep12-verify.cjs` checks three viewport sizes, text overflow, persistent identities, drawing bounds, both device docks, velocity joins, adjacent-frame differences, deterministic repeated frames, complete playback (18 seconds in v004) and logo hold. Screenshots are manually reviewed at request, send, task, turn, return and final phone states. Browser timing statistics are diagnostic and machine-specific.
-
-All messages, project progress and UI are authored illustrations. No message was sent to an actual account, no external channel was connected, and no real project was changed. UI turnaround and task execution are compressed for the film.
+v001/v002: paused batch drafts. v003: first individual film. v004: thicker bodies and 18-second pace. v005: physical headline flips. v006: 13-second retiming. All previous EP12 schemes were superseded by the user's full-reset request and remain immutable in versions/EP12/. They are not approved references.
