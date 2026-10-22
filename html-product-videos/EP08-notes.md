@@ -1,6 +1,6 @@
 # EP08: Create Image — PNG storyboard implementation
 
-Current review revision: v004. Runtime: 32 seconds. This is a single-episode review, not an approved baseline. EP09–EP13 remain paused drafts.
+Current review revision: v005. Runtime: 27 seconds. This is a single-episode review, not an approved baseline. EP09–EP13 remain paused drafts.
 
 The user authorized the revised storyboard, then emphasized matching earlier videos. Visual references: Manager v009 and EP06 v003. Retains the white background, green palette, short two-line typography, bevels, physical depth, restrained lights, coordinated camera movement, and supplied logo ending.
 
@@ -39,3 +39,16 @@ The app, media frame, and image retain their object identities throughout the fi
 Do not run the previous batch generator on this episode. Edit this standalone HTML individually after user review.
 
 Final v004 checks passed: three viewport sizes, 14 sampled frames per viewport, persistent app/frame/image identities, nonblank in-bounds canvas, adjacent-frame mean RGB delta maximum 0.511/255 (limit 1), identical-frame delta 0, full 32-second playback, and final hold. Browser and asset errors: none. These checks do not replace the user's visual review.
+
+
+## v005 — quicker pacing, continuous handoffs
+
+The user liked v004 and requested a faster rhythm with particular care for frame-to-frame continuity. v004 remains unchanged in its snapshot.
+
+v005 compresses the 32-second film to 27 seconds (about 16% shorter). Scene boundaries are 0–3, 3–6.2, 6.2–12, 12–17.5, 17.5–23.5, then a 23.5–27 logo ending. The app return runs 17.5–19.8; the completed screen remains readable until the ending. Still-image hold, short file-reading hold, and final logo hold remain.
+
+All physical phases, image-opacity curves, title/caption boundaries, wait indicator, file dismissal, camera motion, and final hold were retimed together. Position/quaternion handoffs still derive from the original app-local pose; the same app, frame, and PNG objects persist. Quintic easing retains zero endpoint velocity and acceleration. Geometry, color, artwork, and materials remain those of v004.
+
+The verification script now reads the episode duration rather than assuming 32 seconds. It checks both adjacent-time frames and repeated identical-time rendering in addition to layout, object identities, bounds, resources, full playback, and the final hold.
+
+Final v005 verification passed: all three viewport sizes, 14 sample frames each, permanent app/frame/image identities, canvas bounds, adjacent-frame maximum mean RGB delta 0.765/255 (limit 1), repeated-frame delta 0, complete 27-second playback, final logo hold, and no browser/asset errors.

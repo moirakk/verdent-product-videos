@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdent Create Image</title><style>
+:root{--ink:#0f2a1e;--green:#1f9d6c}*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#e9ecea;font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+.film{position:absolute;left:50%;top:50%;width:430px;height:764px;transform-origin:center;overflow:hidden;background:#fbfdfb;isolation:isolate;perspective:1000px;box-shadow:0 36px 100px #0f2a1e22}
+.copy{position:absolute;left:28px;right:28px;top:34px;height:155px;z-index:20;pointer-events:none}.kicker{font:700 11px/1.2 monospace;color:var(--green)}h1{font-size:40px;line-height:1.07;font-weight:800;letter-spacing:0;margin:16px 0 0;perspective:650px}.line{display:block;white-space:nowrap}.line:last-child{color:var(--green)}.word{display:inline-block;margin-right:.19em;transform-origin:50% 90%}.word:last-child{margin:0}
+.volume{position:absolute;top:192px;width:430px;height:500px}.volume canvas{display:block;width:100%;height:100%}.caption{position:absolute;bottom:28px;left:28px;right:28px;height:32px;display:flex;align-items:flex-end;font-size:12px;line-height:1.4;font-weight:600;color:#526c5e;z-index:10}.source{position:absolute;left:28px;right:28px;bottom:69px;font:9px/1.3 Arial,sans-serif;color:#708176;z-index:10}
+.endcard{position:absolute;inset:0;background:#ffffff;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center}
+</style></head><body>
+<main class="film" aria-label="Verdent Create Image animated product film">
+<header class="copy"><div class="kicker">VERDENT / CREATE IMAGE</div><h1></h1></header>
+<div class="volume" aria-hidden="true"></div><div class="source">Illustrative workflow / generated PNG asset</div><div class="caption"></div>
+<footer class="endcard"><img class="logo" src="assets/verdent-logo.png" alt="Verdent"><div class="endline">Images for what<br>you’re building.</div></footer>
+</main><script type="module">
+
+import * as THREE from './assets/three.module.min.js';
+const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=27;
+const film=$('.film');function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}addEventListener('resize',fit);fit();
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;$('.volume').append(renderer.domElement);
+const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,850);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0xa5b8ab,1.2));const key=new THREE.DirectionalLight(0xffffff,2.6);key.position.set(-300,250,430);key.castShadow=true;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-380,right:380,top:380,bottom:-380,near:1,far:1400});key.shadow.bias=-.0002;key.shadow.normalBias=.4;key.shadow.radius=8;key.shadow.blurSamples=8;scene.add(key);const fill=new THREE.DirectionalLight(0xd9f0e4,1);fill.position.set(400,0,300);scene.add(fill);const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(250,180,-200);scene.add(rim);
+const shadow=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.ShadowMaterial({opacity:.045}));shadow.position.z=-160;shadow.receiveShadow=true;scene.add(shadow);
+function rect(c,x,y,w,h,color,r=5){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+function text(c,s,x,y,size=14,color='#153c2b',weight=600,font='Arial'){c.fillStyle=color;c.font=`${weight} ${size}px ${font}`;c.fillText(s,x,y)}
+function line(c,x,y,x2,y2,color='#dce7df'){c.strokeStyle=color;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke()}
+function texture(w,h,paint){const el=document.createElement('canvas');el.width=w*3;el.height=h*3;const c=el.getContext('2d');c.scale(3,3);paint(c);const map=new THREE.CanvasTexture(el);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
+function shape(w,h,r=7){r=Math.min(r,w/2,h/2);const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+// Geometry ends at z=1. Text and image faces sit at z>=3, with an explicit depth gap.
+function slab(w,h,d=16,color=0xffffff){const g=new THREE.ExtrudeGeometry(shape(w,h),{depth:d,bevelEnabled:true,bevelSize:1,bevelThickness:1,bevelSegments:4,curveSegments:12});g.translate(0,0,-d);const body=new THREE.Mesh(g,[new THREE.MeshStandardMaterial({color,roughness:.36,metalness:.035}),new THREE.MeshStandardMaterial({color:new THREE.Color(color).multiplyScalar(.79),roughness:.38,metalness:.08})]);body.castShadow=true;body.receiveShadow=true;return body}
+function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
+function panel(w,h,paint,color=0xffffff,depth=16){const g=new THREE.Group(),body=slab(w,h,depth,color),face=label(w,h,paint);face.position.z=3;g.add(body,face);g.userData={body,face};rig.add(g);return g}
+function pose(g,x,y,z,rx,ry,s=1,rz=0){g.position.set(x,y,z);g.rotation.set(rx,ry,rz);g.scale.setScalar(s)}
+function opacity(mesh,a){mesh.material.opacity=clamp(a)}
+const imageMap=await new THREE.TextureLoader().loadAsync('./assets/ep08-daylight-seedling.png');imageMap.colorSpace=THREE.SRGBColorSpace;imageMap.anisotropy=renderer.capabilities.getMaxAnisotropy();
+const hero=panel(340,420,c=>{rect(c,0,0,340,420,'#ffffff');text(c,'daylight',24,36,23,'#153c2b',650,'Georgia');text(c,'WELCOME',256,33,9,'#1f9d6c');line(c,24,52,316,52);text(c,'Make room',24,90,29);text(c,'for yourself.',24,123,29);rect(c,29,141,282,192,'#f2f6f1',10);text(c,'WELCOME ILLUSTRATION',106,243,8,'#a4b7a7',500);text(c,'Small habits. At your own pace.',24,359,12,'#617568',400);rect(c,24,377,292,26,'#153c2b',6);text(c,'Find my rhythm',124,394,11,'#ffffff')},0xffffff,20);
+// The media frame is a continuous physical object, never replaced at a handoff.
+const media=new THREE.Group();rig.add(media);const rails=[slab(282,5,12,0xd9e6dc),slab(282,5,12,0xd9e6dc),slab(5,192,12,0xd9e6dc),slab(5,192,12,0xd9e6dc)];media.add(...rails);
+const backing=slab(276,186,4,0xffffff);backing.position.z=-4;media.add(backing);
+const picture=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:imageMap,transparent:true,depthWrite:false}));picture.position.z=4;media.add(picture);
+const placeholder=label(240,32,c=>text(c,'A PLACE FOR YOUR IMAGE',43,20,10,'#97ad9c',500));placeholder.position.z=3;media.add(placeholder);
+const prompt=panel(330,96,c=>{text(c,'CREATE IMAGE / WELCOME ILLUSTRATION',19,22,9,'#1f9d6c');text(c,'A small green seedling.',19,51,22);text(c,'Soft light. Transparent background.',19,77,14,'#617568')},0xffffff,12);
+const waiting=label(300,28,c=>text(c,'Generating image…',88,19,13,'#1f9d6c',600));rig.add(waiting);
+const file=panel(330,64,c=>{rect(c,13,13,39,38,'#eef5ee');text(c,'PNG',21,37,11,'#1f9d6c');text(c,'welcome-seedling.png',65,29,17);text(c,'assets / images / illustrations',65,50,11,'#617568');text(c,'✓',304,39,18,'#1f9d6c')},0xffffff,10);
+const beats=[
+ [0,3,'Your product.|One missing image.','An existing welcome screen. A space for one illustration.'],
+ [3,6.2,'Describe the image.|Keep your style.','A small green seedling for this welcome screen.'],
+ [6.2,12,'A few words.|An image to use.','Generate an illustration for the product you already have.'],
+ [12,17.5,'Your image.|In your project.','Save the PNG alongside the code that uses it.'],
+ [17.5,23.5,'The missing piece.|Now in place.','Use the same image in the existing welcome screen.']
+];
+let frozen=null,start=performance.now(),active='';window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};window.restart=()=>{start=performance.now();frozen=null};
+function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
+function render(t){window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1),end=P(t,23.5,24.4),closing=1-end;
+ if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=beat[3]}
+ document.querySelectorAll('.word').forEach((el,i)=>{const p=P(t,beat[0]+i*.05,beat[0]+i*.05+.6),out=P(t,beat[1]-.24,beat[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*9}px) rotateX(${(1-p)*32}deg)`});show($('.copy'),closing);show($('.source'),closing);show($('.caption'),closing*P(t,beat[0],beat[0]+.3)*(1-P(t,beat[1]-.24,beat[1])));
+ const arrive=P(t,0,.95),lift=P(t,2.8,4.5),settle=P(t,6,6.9),reveal=P(t,7.3,8.9),save=P(t,12,13.2),ret=P(t,17.5,19.8),free=lift*(1-ret);
+ pose(hero,-27*free,24*free,-100*free,.08*(1-arrive)+free*.03,-.26*(1-arrive)-.28*free,.94-.21*free,(1-arrive)*-.035);
+ // Interpolate from the frame's exact app-local pose into its foreground pose, then back.
+ const appLocal=new THREE.Vector3(0,-27,8).multiplyScalar(hero.scale.x).applyQuaternion(hero.quaternion).add(hero.position);
+ const foreground=new THREE.Vector3(0,31+save*13,50+save*7);media.position.copy(appLocal).lerp(foreground,free);const q=new THREE.Quaternion().setFromEuler(new THREE.Euler(-.06+arc(settle)*.07,-.23+save*.13,-.025*(1-settle)));media.quaternion.copy(hero.quaternion).slerp(q,free);media.scale.setScalar(mix(hero.scale.x,1.06,free));
+ const w=mix(282,294,free),h=mix(192,288,free);rails[0].scale.x=rails[1].scale.x=w/282;rails[0].position.set(0,h/2,0);rails[1].position.set(0,-h/2,0);rails[2].scale.y=rails[3].scale.y=h/192;rails[2].position.set(-w/2,0,0);rails[3].position.set(w/2,0,0);backing.scale.set((w-6)/276,(h-6)/186,1);
+ picture.scale.set(mix(168,253,free),mix(168,253,free),1);opacity(picture,reveal);opacity(placeholder,1-P(t,6.5,7.3));
+ const ask=P(t,3.25,3.95)*(1-P(t,5.85,6.7));pose(prompt,0,-164+(1-P(t,3.25,3.95))*18,43,(1-ask)*-.22,-.06,ask);pose(waiting,0,-151,15,0,0,1);opacity(waiting,P(t,6.2,6.6)*(1-P(t,8.1,8.8)));
+ const fileIn=save*(1-P(t,17.3,18.3));pose(file,0,-152+(1-save)*23,33,arc(save)*-.22,-.04,fileIn);
+ // Hide only zero-scale objects. Fixed transparency modes and separated depth layers prevent flicker.
+ prompt.visible=ask>0;file.visible=fileIn>0;rig.visible=t<24.4;shadow.visible=t<24.4;
+ camera.position.set(-arc(lift)*9+arc(ret)*8,arc(lift)*4,850-arc(lift)*20+arc(ret)*12);camera.lookAt(0,0,0);renderer.render(scene,camera);
+ window.motionState={heroId:hero.uuid,heroScale:hero.scale.x,frameId:media.uuid,imageId:picture.uuid,frameScale:media.scale.x,reveal,imageWidth:picture.scale.x,objects:3};
+ show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,24.05,24.75);
+}
+window.episodeDuration=duration;window.episodeReady=true;function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
+
+</script></body></html>

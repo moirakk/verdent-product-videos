@@ -65,3 +65,8 @@ The user then identified feature overlap and asked for careful replanning. All n
 ## EP08 revised storyboard implementation
 
 The user authorized continuing with the PNG storyboard and reiterated style consistency. EP08 v004 implements only the existing-page → image brief → PNG → project asset → existing-page sequence, with Manager v009 / EP06 v003 visual references. The previous sculpture story and direction-comparison story are rejected. Other new episodes remain paused. v004 is for individual user review, not approved. The illustration provenance and exact built-in image generation prompt are retained in assets/ep08-image-provenance.md.
+
+
+## EP08 pacing feedback
+
+The user liked EP08 v004 and asked for a quicker pace with continuous frames. v005 retains its visual treatment and asset while compressing 32 seconds to 27, retiming scene boundaries and motion together. Review v005 individually; v004 stays preserved. Other new episodes remain paused.

@@ -15,7 +15,7 @@
 
 import * as THREE from './assets/three.module.min.js';
 const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
-const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=32;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=27;
 const film=$('.film');function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}addEventListener('resize',fit);fit();
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;$('.volume').append(renderer.domElement);
 const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,850);camera.lookAt(0,0,0);
@@ -43,32 +43,32 @@ const prompt=panel(330,96,c=>{text(c,'CREATE IMAGE / WELCOME ILLUSTRATION',19,22
 const waiting=label(300,28,c=>text(c,'Generating image…',88,19,13,'#1f9d6c',600));rig.add(waiting);
 const file=panel(330,64,c=>{rect(c,13,13,39,38,'#eef5ee');text(c,'PNG',21,37,11,'#1f9d6c');text(c,'welcome-seedling.png',65,29,17);text(c,'assets / images / illustrations',65,50,11,'#617568');text(c,'✓',304,39,18,'#1f9d6c')},0xffffff,10);
 const beats=[
- [0,4,'Your product.|One missing image.','An existing welcome screen. A space for one illustration.'],
- [4,8,'Describe the image.|Keep your style.','A small green seedling for this welcome screen.'],
- [8,16,'A few words.|An image to use.','Generate an illustration for the product you already have.'],
- [16,23,'Your image.|In your project.','Save the PNG alongside the code that uses it.'],
- [23,29,'The missing piece.|Now in place.','Use the same image in the existing welcome screen.']
+ [0,3,'Your product.|One missing image.','An existing welcome screen. A space for one illustration.'],
+ [3,6.2,'Describe the image.|Keep your style.','A small green seedling for this welcome screen.'],
+ [6.2,12,'A few words.|An image to use.','Generate an illustration for the product you already have.'],
+ [12,17.5,'Your image.|In your project.','Save the PNG alongside the code that uses it.'],
+ [17.5,23.5,'The missing piece.|Now in place.','Use the same image in the existing welcome screen.']
 ];
 let frozen=null,start=performance.now(),active='';window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};window.restart=()=>{start=performance.now();frozen=null};
 function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
-function render(t){window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1),end=P(t,28.9,29.8),closing=1-end;
+function render(t){window.filmTime=t;const beat=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1),end=P(t,23.5,24.4),closing=1-end;
  if(active!==beat[2]){active=beat[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=beat[3]}
  document.querySelectorAll('.word').forEach((el,i)=>{const p=P(t,beat[0]+i*.05,beat[0]+i*.05+.6),out=P(t,beat[1]-.24,beat[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*9}px) rotateX(${(1-p)*32}deg)`});show($('.copy'),closing);show($('.source'),closing);show($('.caption'),closing*P(t,beat[0],beat[0]+.3)*(1-P(t,beat[1]-.24,beat[1])));
- const arrive=P(t,0,1.2),lift=P(t,3.8,6),settle=P(t,7.8,9),reveal=P(t,9.4,11.4),save=P(t,16,17.5),ret=P(t,23,25.8),free=lift*(1-ret);
+ const arrive=P(t,0,.95),lift=P(t,2.8,4.5),settle=P(t,6,6.9),reveal=P(t,7.3,8.9),save=P(t,12,13.2),ret=P(t,17.5,19.8),free=lift*(1-ret);
  pose(hero,-27*free,24*free,-100*free,.08*(1-arrive)+free*.03,-.26*(1-arrive)-.28*free,.94-.21*free,(1-arrive)*-.035);
  // Interpolate from the frame's exact app-local pose into its foreground pose, then back.
  const appLocal=new THREE.Vector3(0,-27,8).multiplyScalar(hero.scale.x).applyQuaternion(hero.quaternion).add(hero.position);
  const foreground=new THREE.Vector3(0,31+save*13,50+save*7);media.position.copy(appLocal).lerp(foreground,free);const q=new THREE.Quaternion().setFromEuler(new THREE.Euler(-.06+arc(settle)*.07,-.23+save*.13,-.025*(1-settle)));media.quaternion.copy(hero.quaternion).slerp(q,free);media.scale.setScalar(mix(hero.scale.x,1.06,free));
  const w=mix(282,294,free),h=mix(192,288,free);rails[0].scale.x=rails[1].scale.x=w/282;rails[0].position.set(0,h/2,0);rails[1].position.set(0,-h/2,0);rails[2].scale.y=rails[3].scale.y=h/192;rails[2].position.set(-w/2,0,0);rails[3].position.set(w/2,0,0);backing.scale.set((w-6)/276,(h-6)/186,1);
- picture.scale.set(mix(168,253,free),mix(168,253,free),1);opacity(picture,reveal);opacity(placeholder,1-P(t,8.3,9.4));
- const ask=P(t,4.3,5.2)*(1-P(t,7.5,8.6));pose(prompt,0,-164+(1-P(t,4.3,5.2))*18,43,(1-ask)*-.22,-.06,ask);pose(waiting,0,-151,15,0,0,1);opacity(waiting,P(t,8,8.5)*(1-P(t,10.4,11.2)));
- const fileIn=save*(1-P(t,22.8,24));pose(file,0,-152+(1-save)*23,33,arc(save)*-.22,-.04,fileIn);
+ picture.scale.set(mix(168,253,free),mix(168,253,free),1);opacity(picture,reveal);opacity(placeholder,1-P(t,6.5,7.3));
+ const ask=P(t,3.25,3.95)*(1-P(t,5.85,6.7));pose(prompt,0,-164+(1-P(t,3.25,3.95))*18,43,(1-ask)*-.22,-.06,ask);pose(waiting,0,-151,15,0,0,1);opacity(waiting,P(t,6.2,6.6)*(1-P(t,8.1,8.8)));
+ const fileIn=save*(1-P(t,17.3,18.3));pose(file,0,-152+(1-save)*23,33,arc(save)*-.22,-.04,fileIn);
  // Hide only zero-scale objects. Fixed transparency modes and separated depth layers prevent flicker.
- prompt.visible=ask>0;file.visible=fileIn>0;rig.visible=t<29.8;shadow.visible=t<29.8;
+ prompt.visible=ask>0;file.visible=fileIn>0;rig.visible=t<24.4;shadow.visible=t<24.4;
  camera.position.set(-arc(lift)*9+arc(ret)*8,arc(lift)*4,850-arc(lift)*20+arc(ret)*12);camera.lookAt(0,0,0);renderer.render(scene,camera);
  window.motionState={heroId:hero.uuid,heroScale:hero.scale.x,frameId:media.uuid,imageId:picture.uuid,frameScale:media.scale.x,reveal,imageWidth:picture.scale.x,objects:3};
- show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,29.5,30.2);
+ show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,24.05,24.75);
 }
-window.episodeReady=true;function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
+window.episodeDuration=duration;window.episodeReady=true;function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
 
 </script></body></html>
