@@ -1,5 +1,11 @@
 # EP12 · Message Anywhere
 
+## v004 · faster rhythm and stronger depth
+
+User feedback: more 3D and a quicker pace. Runtime drops from 21 to 18 seconds. Phone body/back shell total depth grows to about 54 units, workspace body to 44 and message card to 26. Stronger oblique poses, darker side materials, camera parallax and deeper curved travel make the physical separation visible. The message rises clear of the workspace before turning; the returning reply travels in front of the moving phone. Phone movement waits for the returning card rather than crossing its face.
+
+Send/expand, completion/turn and return/phone movement overlap more closely. The project-stage hold is shorter, while the final result keeps a readable hold before the logo. Title/caption timing removes the previous double-text overlap. All spatial curves remain continuous and all moving anchors remain exact. The v003 snapshot remains unchanged. Review v004 individually; EP09 remains skipped.
+
 v003 is the individual 21-second film following the user's approval of EP11 v003. EP09 remains explicitly skipped. EP12 v001 and v002 preserve earlier unapproved batch drafts.
 
 ## Feature and story
@@ -16,6 +22,6 @@ White/green materials, real extruded bodies, phone rear shell and side buttons, 
 
 The task well is raised clear of the workspace label plane to eliminate coplanar depth flicker. Task check marks use explicit transparent-layer ordering. The date/calendar story from EP11 is not reused.
 
-`tests/ep12-verify.cjs` checks three viewport sizes, text overflow, persistent identities, drawing bounds, both device docks, velocity joins, adjacent-frame differences, deterministic repeated frames, complete 21-second playback and logo hold. Screenshots are manually reviewed at request, send, task, turn, return and final phone states. Browser timing statistics are diagnostic and machine-specific.
+`tests/ep12-verify.cjs` checks three viewport sizes, text overflow, persistent identities, drawing bounds, both device docks, velocity joins, adjacent-frame differences, deterministic repeated frames, complete playback (18 seconds in v004) and logo hold. Screenshots are manually reviewed at request, send, task, turn, return and final phone states. Browser timing statistics are diagnostic and machine-specific.
 
 All messages, project progress and UI are authored illustrations. No message was sent to an actual account, no external channel was connected, and no real project was changed. UI turnaround and task execution are compressed for the film.

@@ -96,3 +96,8 @@ After EP10 v005 the user requested the next episode. EP11 v003 is rebuilt indivi
 The user explicitly accepted EP11 v003 (“OK 不错”), then requested the next episode. Preserve EP11 v003 as an approved reference alongside the original series baseline. The user reiterated that EP09 video generation must not be made; it remains skipped.
 
 EP12 v003 is the individual 21-second Message Anywhere film: already paired Telegram bot → specific homepage wording request → same physical message unfolds into a Manager task → completion on its reverse → reply returns to the original conversation. Bot pairing is shown as a prerequisite. Real geometry, continuous velocity tracks and exact moving anchors retain the approved motion direction; the physical message journey gives this feature its own choreography. EP12 v003 is for individual review, not approved. EP13 remains paused.
+
+
+## Message Anywhere depth and pace revision
+
+The user asked for stronger 3D and faster rhythm after EP12 v003. EP12 v004 is 18 seconds with thicker device/card bodies, stronger side materials and oblique poses, deeper curved foreground travel and a lifted card turn that clears the workspace. Task holds are shortened and return/phone movement overlap. Title/caption handoffs avoid double text. v004 is for review; v003 remains immutable. No work advances to EP13 and EP09 stays skipped.

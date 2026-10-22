@@ -14,7 +14,7 @@
 </main><script type="module">
 import * as THREE from './assets/three.module.min.js';
 const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
-const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=21;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=18;
 const film=$('.film');function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}addEventListener('resize',fit);fit();
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;$('.volume').append(renderer.domElement);
 const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,850);camera.lookAt(0,0,0);
@@ -26,7 +26,7 @@ function line(c,x,y,x2,y2,color='#dce7df'){c.strokeStyle=color;c.lineWidth=1;c.b
 function texture(w,h,paint){const el=document.createElement('canvas');el.width=w*3;el.height=h*3;const c=el.getContext('2d');c.scale(3,3);paint(c);const map=new THREE.CanvasTexture(el);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
 function shape(w,h,r=7){r=Math.min(r,w/2,h/2);const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
 // Geometry ends at z=1. Text and image faces sit at z>=3, with an explicit depth gap.
-function slab(w,h,d=16,color=0xffffff){const g=new THREE.ExtrudeGeometry(shape(w,h),{depth:d,bevelEnabled:true,bevelSize:1,bevelThickness:1,bevelSegments:4,curveSegments:12});g.translate(0,0,-d);const body=new THREE.Mesh(g,[new THREE.MeshStandardMaterial({color,roughness:.36,metalness:.035}),new THREE.MeshStandardMaterial({color:new THREE.Color(color).multiplyScalar(.74),roughness:.31,metalness:.16})]);body.castShadow=true;body.receiveShadow=true;return body}
+function slab(w,h,d=16,color=0xffffff){const g=new THREE.ExtrudeGeometry(shape(w,h),{depth:d,bevelEnabled:true,bevelSize:1,bevelThickness:1,bevelSegments:4,curveSegments:12});g.translate(0,0,-d);const body=new THREE.Mesh(g,[new THREE.MeshStandardMaterial({color,roughness:.36,metalness:.035}),new THREE.MeshStandardMaterial({color:new THREE.Color(color).multiplyScalar(.65),roughness:.31,metalness:.23})]);body.castShadow=true;body.receiveShadow=true;return body}
 function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
 function panel(w,h,paint,color=0xffffff,depth=16){const g=new THREE.Group(),body=slab(w,h,depth,color),face=label(w,h,paint);face.position.z=3;g.add(body,face);g.userData={body,face};rig.add(g);return g}
 function pose(g,x,y,z,rx,ry,s=1,rz=0){g.position.set(x,y,z);g.rotation.set(rx,ry,rz);g.scale.setScalar(s)}
@@ -35,27 +35,27 @@ function opacity(mesh,a){mesh.material.opacity=clamp(a)}
 
 
 // One physical message carries the request into Manager, then brings the result back.
-const hero=panel(208,362,c=>{rect(c,0,0,208,362,'#153c2b',12);rect(c,5,5,198,352,'#ffffff',10);rect(c,71,10,66,10,'#153c2b');text(c,'TELEGRAM',18,43,9,'#1f9d6c');text(c,'Manager',18,72,24);text(c,'● Connected bot',18,93,11,'#1f9d6c');line(c,18,109,190,109);text(c,'DAYLIGHT PROJECT',18,135,9,'#617568');rect(c,15,310,178,28,'#eff5f0');text(c,'Message your Manager',24,328,10,'#617568');rect(c,78,347,52,3,'#153c2b',1)},0x153c2b,30);
+const hero=panel(208,362,c=>{rect(c,0,0,208,362,'#153c2b',12);rect(c,5,5,198,352,'#ffffff',10);rect(c,71,10,66,10,'#153c2b');text(c,'TELEGRAM',18,43,9,'#1f9d6c');text(c,'Manager',18,72,24);text(c,'● Connected bot',18,93,11,'#1f9d6c');line(c,18,109,190,109);text(c,'DAYLIGHT PROJECT',18,135,9,'#617568');rect(c,15,310,178,28,'#eff5f0');text(c,'Message your Manager',24,328,10,'#617568');rect(c,78,347,52,3,'#153c2b',1)},0x153c2b,38);
 // Physical buttons and rear shell make the phone read as a solid object in turns.
-const phoneBack=slab(204,356,12,0x1b4b35);phoneBack.position.z=-29;hero.add(phoneBack);for(const y of [57,22]){const button=new THREE.Mesh(new THREE.BoxGeometry(4,22,7),new THREE.MeshStandardMaterial({color:0x1f9d6c,roughness:.3,metalness:.2}));button.position.set(-105,y,-14);button.castShadow=true;hero.add(button)}
-const desk=panel(302,342,c=>{rect(c,0,0,302,342,'#ffffff');text(c,'VERDENT / MANAGER',20,29,10,'#1f9d6c');text(c,'Daylight',20,62,29);line(c,20,78,282,78);text(c,'● Connected',206,29,10,'#1f9d6c');text(c,'A task from your conversation.',20,321,12,'#617568')},0xffffff,30);
+const phoneBack=slab(204,356,16,0x1b4b35);phoneBack.position.z=-37;hero.add(phoneBack);for(const y of [57,22]){const button=new THREE.Mesh(new THREE.BoxGeometry(5,22,10),new THREE.MeshStandardMaterial({color:0x1f9d6c,roughness:.3,metalness:.2}));button.position.set(-105,y,-20);button.castShadow=true;hero.add(button)}
+const desk=panel(302,342,c=>{rect(c,0,0,302,342,'#ffffff');text(c,'VERDENT / MANAGER',20,29,10,'#1f9d6c');text(c,'Daylight',20,62,29);line(c,20,78,282,78);text(c,'● Connected',206,29,10,'#1f9d6c');text(c,'A task from your conversation.',20,321,12,'#617568')},0xffffff,44);
 // Raised green channel strip, inset task well and status underline share the workspace.
 const channel=slab(5,299,7,0x1f9d6c);channel.position.set(-144,-1,5);desk.add(channel);
 const well=slab(270,119,8,0xeff5f0);well.position.set(0,-48,6);desk.add(well);
 const idle=label(244,50,c=>{text(c,'Waiting for your message.',6,22,15,'#617568');text(c,'One connected conversation.',6,43,11,'#617568')});idle.position.set(0,-48,10);desk.add(idle);
 const received=label(244,50,c=>{text(c,'Message received.',6,22,18);text(c,'Homepage wording / in progress',6,43,12,'#1f9d6c')});received.position.set(0,-48,11);desk.add(received);
 const done=label(244,50,c=>{text(c,'✓ Task completed.',6,22,18);text(c,'Result sent to your conversation.',6,43,12,'#1f9d6c')});done.position.set(0,-48,12);desk.add(done);
-const ticket=new THREE.Group();rig.add(ticket);const body=slab(250,112,14,0xe3efe6);ticket.add(body);
+const ticket=new THREE.Group();rig.add(ticket);const body=slab(250,112,26,0xe3efe6);ticket.add(body);
 const request=label(250,112,c=>{rect(c,0,0,250,112,'#e3efe6');text(c,'YOU / TELEGRAM',17,23,10,'#1f9d6c');text(c,'Update the homepage:',17,49,17);text(c,'“Make room for calm.”',17,77,20);text(c,'Daylight project',17,98,10,'#617568')});ticket.add(request);
 const task=label(290,224,c=>{rect(c,0,0,290,224,'#ffffff');text(c,'DAYLIGHT / TASK',19,24,10,'#1f9d6c');text(c,'Make room',19,61,29);text(c,'for calm.',19,93,29);line(c,19,109,271,109);['Open the project','Update the headline','Prepare the reply'].forEach((s,i)=>{rect(c,20,123+i*30,12,12,'#edf3ef',3);text(c,s,44,134+i*30,14,'#617568')})});ticket.add(task);
 const checks=[0,1,2].map(i=>{const f=label(18,18,c=>{rect(c,2,2,14,14,'#1f9d6c',3);c.strokeStyle='#ffffff';c.lineWidth=2;c.beginPath();c.moveTo(5,9);c.lineTo(8,12);c.lineTo(13,6);c.stroke()});f.renderOrder=3;ticket.add(f);return f});
 const reply=label(250,156,c=>{rect(c,0,0,250,156,'#ffffff');text(c,'MANAGER / COMPLETE',17,25,10,'#1f9d6c');text(c,'Headline updated.',17,58,23);text(c,'“Make room for calm.”',17,88,18);line(c,17,105,233,105);text(c,'Ready for your review.',17,133,13,'#1f9d6c')});reply.rotation.y=Math.PI;ticket.add(reply);
 const beats=[
- [0,3.2,'Away from|your desk?','Send a task through your connected Telegram bot.'],
- [3.2,6.6,'Send a thought.|Start the work.','Your message becomes a task for Manager.'],
- [6.6,10.5,'Into the project.|Into action.','Manager applies the requested headline change.'],
- [10.5,14.2,'Work done.|Reply ready.','The result is prepared for the same conversation.'],
- [14.2,18,'Back in chat.|Ready to review.','The update comes back to where you asked.']
+ [0,2.8,'Away from|your desk?','Send a task through your connected Telegram bot.'],
+ [2.8,5.8,'Send a thought.|Start the work.','Your message becomes a task for Manager.'],
+ [5.8,9.7,'Into the project.|Into action.','Manager applies the requested headline change.'],
+ [9.7,13.3,'Work done.|Reply ready.','The result is prepared for the same conversation.'],
+ [13.3,18,'Back in chat.|Ready to review.','The update comes back to where you asked.']
 ];
 // Stable title/caption layers overlap; changing a beat never replaces a moving DOM tree.
 $('.copy h1').remove();$('.caption').remove();
@@ -64,28 +64,29 @@ const captions=beats.map(b=>{const c=document.createElement('div');c.className='
 function track(keys,t){let i=0;while(i<keys.length-2&&t>keys[i+1][0])i++;const a=keys[i],b=keys[i+1],u=clamp((t-a[0])/(b[0]-a[0])),dt=b[0]-a[0],prev=keys[Math.max(0,i-1)],next=keys[Math.min(keys.length-1,i+2)];return a.slice(1).map((v,j)=>{const k=j+1,m0=i===0?0:(b[k]-prev[k])/(b[0]-prev[0]),m1=i+1===keys.length-1?0:(next[k]-a[k])/(next[0]-a[0]);return (2*u*u*u-3*u*u+1)*v+(u*u*u-2*u*u+u)*dt*m0+(-2*u*u*u+3*u*u)*b[k]+(u*u*u-u*u)*dt*m1})}
 
 
-const phoneKeys=[[0,0,0,15,.13,-.48,.98,-.025],[1.5,0,0,15,.04,-.14,.98,0],[3,0,0,15,.04,-.15,.98,0],[5.5,-122,-3,-60,.08,.24,.65,-.015],[7.4,-128,-3,-70,.08,.27,.63,0],[10.5,-128,-3,-70,.08,.27,.63,0],[12.8,-115,-3,-55,.08,.23,.66,0],[15.6,0,0,20,.04,-.12,.99,0],[17.5,0,0,20,.04,-.12,.99,0],[21,0,0,20,.04,-.12,.99,0]];
-const deskKeys=[[0,0,12,-180,.08,-.78,.80,0],[2.7,0,12,-180,.08,-.78,.80,0],[5.5,52,8,-35,.07,-.27,.88,0],[7.5,38,5,-25,.04,-.14,.92,0],[10.5,38,5,-25,.04,-.14,.92,0],[12.5,45,10,-45,.07,-.24,.88,0],[15.6,0,12,-180,.08,-.78,.80,0],[21,0,12,-180,.08,-.78,.80,0]];
+const phoneKeys=[[0,0,-2,24,.22,-.72,.98,-.045],[1.3,0,0,24,.11,-.32,.98,0],[2.6,0,0,24,.11,-.32,.98,0],[4.8,-125,-5,-95,.15,.46,.65,-.025],[6.6,-130,-5,-105,.13,.43,.63,0],[9.7,-130,-5,-105,.13,.43,.63,0],[12.0,-116,-5,-80,.14,.39,.66,0],[14.8,0,0,28,.10,-.29,.99,0],[17.5,0,0,28,.10,-.29,.99,0],[22,0,0,28,.10,-.29,.99,0]];
+const deskKeys=[[0,0,14,-230,.13,-.98,.78,0],[2.3,0,14,-230,.13,-.98,.78,0],[4.8,57,12,-65,.14,-.43,.88,.018],[6.8,42,10,-55,.13,-.29,.92,.012],[9.7,42,10,-55,.13,-.29,.92,.012],[11.2,48,12,-80,.15,-.43,.88,.02],[14.8,0,14,-230,.13,-.98,.78,0],[22,0,14,-230,.13,-.98,.78,0]];
 function point(g,x,y,z){g.updateMatrixWorld(true);return g.localToWorld(new THREE.Vector3(x,y,z))}
 function bezier(a,b,p,lift){const c=a.clone().lerp(b,.35).add(new THREE.Vector3(0,45,lift)),d=a.clone().lerp(b,.75).add(new THREE.Vector3(0,35,lift));return a.clone().multiplyScalar((1-p)**3).addScaledVector(c,3*(1-p)**2*p).addScaledVector(d,3*(1-p)*p*p).addScaledVector(b,p*p*p)}
 let frozen=null,start=performance.now(),lastRaf=null;window.playbackStats={intervals:[]};window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null;lastRaf=null};window.restart=()=>{start=performance.now();frozen=null;lastRaf=null;window.playbackStats={intervals:[]}};
 function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
-function render(t){window.filmTime=t;const end=P(t,18,18.85),closing=1-end;
- titles.forEach((h,k)=>{const b=beats[k],out=P(t,b[1]-.12,b[1]+.18);h.querySelectorAll('.word').forEach((el,i)=>{const a=k===0?0:b[0]-.10,p=P(t,a+i*.025,a+i*.025+.40);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*21-out*13}px) rotateX(${(1-p)*20}deg)`});show(captions[k],closing*P(t,b[0]-.08,b[0]+.24)*(1-P(t,b[1]-.10,b[1]+.14)))});show($('.copy'),closing);show($('.source'),closing);
+function render(time){window.filmTime=time;const t=time/.84;const end=P(t,18,18.85),closing=1-end;
+ titles.forEach((h,k)=>{const b=beats[k],out=P(t,b[1]-.23,b[1]-.02);h.querySelectorAll('.word').forEach((el,i)=>{const a=k===0?0:b[0]-.02,p=P(t,a+i*.020,a+i*.020+.28);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*21-out*13}px) rotateX(${(1-p)*20}deg)`});show(captions[k],closing*P(t,b[0]+.02,b[0]+.20)*(1-P(t,b[1]-.15,b[1]-.01)))});show($('.copy'),closing);show($('.source'),closing);
 
  const pp=track(phoneKeys,t),dp=track(deskKeys,t);pose(hero,...pp);pose(desk,...dp);
- const send=P(t,3.4,6.2),expand=P(t,5.8,7.5),flip=P(t,11.1,12.7),returning=P(t,13.2,15.9);
- const a=point(hero,0,17,9),b=point(desk,0,-35,27),out=bezier(a,b,send,105),pos=bezier(out,a,returning,115);
- const sc=mix(mix(hero.scale.x*.66,desk.scale.x,send),hero.scale.x*.66,returning),rx=mix(mix(pp[3],dp[3],send),pp[3],returning),ry=mix(mix(pp[4],dp[4],send),pp[4],returning)+flip*Math.PI;
+ const send=P(t,2.8,5.4),expand=P(t,4.9,6.8),flip=P(t,9.7,11.3),returning=P(t,11.4,14.8);
+ const a=point(hero,0,17,25),b=point(desk,0,-35,47),out=bezier(a,b,send,175),pos=bezier(out,a,returning,300);
+ pos.add(new THREE.Vector3(0,0,Math.sin(flip*Math.PI)*170*(1-returning)).applyEuler(desk.rotation));
+ const sc=mix(mix(hero.scale.x*.66,desk.scale.x,send),hero.scale.x*.66,returning),rx=mix(mix(pp[3],dp[3],send),pp[3],returning)+Math.sin(send*Math.PI)*.19-Math.sin(returning*Math.PI)*.17,ry=mix(mix(pp[4],dp[4],send),pp[4],returning)+flip*Math.PI-Math.sin(send*Math.PI)*.30+Math.sin(returning*Math.PI)*.26;
  const w=mix(mix(250,290,expand),250,flip),h=mix(mix(112,224,expand),156,flip);
  pose(ticket,pos.x,pos.y,pos.z,rx,ry,sc,-Math.sin(send*Math.PI)*.055+Math.sin(returning*Math.PI)*.04);body.scale.set(w/250,h/112,1);
  request.position.z=3;request.scale.set((w-6)/250,(h-6)/112,1);opacity(request,1-P(expand,.28,.67));
  task.position.z=4;task.scale.set((w-6)/290,(h-6)/224,1);opacity(task,P(expand,.28,.67));
- reply.position.z=-17;reply.scale.set((w-6)/250,(h-6)/156,1);opacity(reply,1);
- checks.forEach((f,i)=>{f.position.set((-119)*(w-6)/290,(-17-i*30)*(h-6)/224,5);f.scale.set((w-6)/290,(h-6)/224,1);opacity(f,P(expand,.28,.67)*P(t,7.7+i*.9,8.2+i*.9))});
- const receive=P(t,5.6,6.4),complete=P(t,10.2,11.1);opacity(idle,1-receive);opacity(received,receive*(1-complete));opacity(done,complete);
- const cam=track([[0,0,0,850],[3,-4,2,840],[6,0,3,870],[9,6,2,870],[12,0,3,855],[15,0,0,850],[21,0,0,850]],t);camera.position.set(...cam);camera.lookAt(0,0,0);rig.visible=t<18.85;shadow.visible=t<18.85;renderer.render(scene,camera);
- window.motionState={heroId:hero.uuid,deskId:desk.uuid,ticketId:ticket.uuid,heroScale:hero.scale.x,ticketScale:ticket.scale.x,heroPosition:hero.position.toArray(),deskPosition:desk.position.toArray(),ticketPosition:ticket.position.toArray(),send,expand,flip,returning,phoneAnchor:a.toArray(),deskAnchor:b.toArray(),dockError:ticket.position.distanceTo(returning===1||send===0?a:b),width:w,height:h};show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,18.5,19.2);
+ reply.position.z=-29;reply.scale.set((w-6)/250,(h-6)/156,1);opacity(reply,1);
+ checks.forEach((f,i)=>{f.position.set((-119)*(w-6)/290,(-17-i*30)*(h-6)/224,5);f.scale.set((w-6)/290,(h-6)/224,1);opacity(f,P(expand,.28,.67)*P(t,7.1+i*.7,7.5+i*.7))});
+ const receive=P(t,5.0,5.7),complete=P(t,9.2,9.8);opacity(idle,1-receive);opacity(received,receive*(1-complete));opacity(done,complete);
+ const cam=track([[0,-12,4,850],[2.6,-10,5,842],[5,12,12,875],[7.5,10,8,875],[10.5,-6,14,850],[14.8,-10,4,850],[22,-10,4,850]],t);camera.position.set(...cam);camera.lookAt(0,0,0);rig.visible=t<18.85;shadow.visible=t<18.85;renderer.render(scene,camera);
+ window.motionState={heroId:hero.uuid,deskId:desk.uuid,ticketId:ticket.uuid,phoneDepth:54,deskDepth:44,ticketDepth:26,heroRotation:hero.rotation.toArray().slice(0,3),deskRotation:desk.rotation.toArray().slice(0,3),ticketRotation:ticket.rotation.toArray().slice(0,3),heroScale:hero.scale.x,ticketScale:ticket.scale.x,heroPosition:hero.position.toArray(),deskPosition:desk.position.toArray(),ticketPosition:ticket.position.toArray(),send,expand,flip,returning,phoneAnchor:a.toArray(),deskAnchor:b.toArray(),dockError:ticket.position.distanceTo(returning===1||send===0?a:b),width:w,height:h};show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,18.5,19.2);
 }
 window.episodeDuration=duration;window.episodeReady=true;function tick(now){if(frozen===null){if(lastRaf!==null&&window.filmTime<duration)window.playbackStats.intervals.push(now-lastRaf);lastRaf=now;render(Math.min(duration,(now-start)/1000))}requestAnimationFrame(tick)}requestAnimationFrame(tick);
 </script></body></html>
