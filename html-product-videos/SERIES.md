@@ -106,3 +106,8 @@ The user asked for stronger 3D and faster rhythm after EP12 v003. EP12 v004 is 1
 ## Message Anywhere v005 rebuild
 
 The user rejected EP12 v004 as insufficiently engaging and requested a full optimization pass. v005 retains 18 seconds but replaces the checklist wall with a visible homepage edit. A persistent message compacts into a task strip; two physical headline rails flip to the requested wording; the same strip opens into the reply and returns to the phone. Foreground scale and camera movement follow the task rather than holding two parallel panels. Opaque screen depth handling fixes a triangular surface dropout found during review. v005 is for review; v004 is preserved, not approved. EP11 v003 remains approved, EP09 skipped, EP13 paused.
+
+
+## Message Anywhere v006 pace
+
+The user said v005 was still too slow. v006 is 13 seconds, shortening send/edit/return and final reading holds with a smooth time map while preserving the visible-edit story. The packet rises during its turn to avoid lower-edge clipping in newly sampled intermediate frames. v006 is for review; v005 remains preserved. EP09 remains skipped.

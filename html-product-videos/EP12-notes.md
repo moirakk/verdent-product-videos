@@ -1,5 +1,11 @@
 # EP12 · Message Anywhere
 
+## v006 · 13-second timing pass
+
+The user still found v005 too slow. v006 keeps its visual story but compresses 18 seconds to 13 with a velocity-continuous time map. Phone/send: roughly 0–1.25s; delivery by 3.1s; visible edit completed around 5.5s; reply returns by 8.4s; final result hold ends at 9.9s, then the logo. Holds are reduced as well as travel time. The turning packet rises vertically to remain inside the frame at intermediate orientations. No feature or topic change; v005 stays immutable.
+
+Continuity checks record both 2ms and 0.2ms pixel differences; the finer interval distinguishes fast motion from a discontinuity while repeated frames still must remain stable. Spatial/time-map velocity joins, headline states, moving anchors and full playback are verified.
+
 ## v005 · visible remote-edit choreography
 
 The user rejected v004 as insufficiently engaging. v005 rebuilds the middle of the film around the actual project change, preserving 18 seconds and the feature scope. A larger foreground phone sends one physical message; the example homepage takes over the frame. The message compacts into a task strip, two solid headline rails lift and flip from “Find a little / time for you.” to “Make room / for calm.”, and a completion status appears. The same message strip opens into a reply and returns to the original conversation. The final phone retains a small copy of the original request above the result.

@@ -14,7 +14,7 @@
 </main><script type="module">
 import * as THREE from './assets/three.module.min.js';
 const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
-const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=18;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=13;
 const film=$('.film');function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}addEventListener('resize',fit);fit();
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;$('.volume').append(renderer.domElement);
 const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,850);camera.lookAt(0,0,0);
@@ -76,13 +76,15 @@ function curve(a,b,p,lift){const c=a.clone().lerp(b,.3).add(new THREE.Vector3(-2
 let frozen=null,start=performance.now(),lastRaf=null;window.playbackStats={intervals:[]};window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null;lastRaf=null};window.restart=()=>{start=performance.now();frozen=null;lastRaf=null;window.playbackStats={intervals:[]}};
 function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
 
-function render(t){window.filmTime=t;const end=P(t,15.2,15.9),closing=1-end;
+// Retimed with shorter holds; preserve smooth velocity through the time map.
+function storyTime(time){return track([[0,0],[1.25,2.0],[3.1,5.4],[5.55,9.0],[8.4,12.8],[9.9,15.2],[10.6,15.9],[13,18]],time)[0]}
+function render(time){window.filmTime=time;const t=storyTime(time);const end=P(t,15.2,15.9),closing=1-end;
  titles.forEach((h,k)=>{const b=beats[k],out=P(t,b[1]-.21,b[1]-.02);h.querySelectorAll('.word').forEach((el,i)=>{const a=k===0?0:b[0]-.02,p=P(t,a+i*.02,a+i*.02+.30);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*25-out*17}px) rotateX(${(1-p)*25}deg)`});show(captions[k],closing*P(t,b[0]+.02,b[0]+.22)*(1-P(t,b[1]-.15,b[1]-.01)))});show($('.copy'),closing);show($('.source'),closing);
  const pp=track(phoneKeys,t),dp=track(deskKeys,t);pose(hero,...pp);pose(desk,...dp);
  const send=P(t,2.0,4.9),flip=P(t,9.0,10.15),returning=P(t,10.05,12.75);
  const a=point(hero,0,mix(6,-40,returning),22),b=point(desk,0,-143,32),out=curve(a,b,send,170),pos=curve(out,a,returning,240);
  // Lift the physical packet before it turns, avoiding intersections with the page.
- pos.add(new THREE.Vector3(0,0,Math.sin(flip*Math.PI)*150*(1-returning)).applyEuler(desk.rotation));
+ pos.add(new THREE.Vector3(0,Math.sin(flip*Math.PI)*85*(1-returning),Math.sin(flip*Math.PI)*150*(1-returning)).applyEuler(desk.rotation));
  const sc=mix(mix(hero.scale.x*.76,desk.scale.x*.86,send),hero.scale.x*.76,returning),rx=mix(mix(pp[3],dp[3],send),pp[3],returning)+Math.sin(send*Math.PI)*.32-Math.sin(returning*Math.PI)*.20,ry=mix(mix(pp[4],dp[4],send),pp[4],returning)+flip*Math.PI-Math.sin(send*Math.PI)*.32+Math.sin(returning*Math.PI)*.20;
  pose(ticket,pos.x,pos.y,pos.z,rx,ry,sc,-Math.sin(send*Math.PI)*.12+Math.sin(returning*Math.PI)*.07);
  const fold=P(t,5.0,5.9)*(1-P(t,8.8,9.2)),h=mix(110,44,fold);ticketBody.scale.y=h/110;request.scale.y=(h-6)/104;opacity(request,1-fold);compact.scale.y=(h-6)/44;opacity(compact,fold);reply.scale.y=(h-6)/104;
