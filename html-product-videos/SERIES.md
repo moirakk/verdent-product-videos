@@ -79,3 +79,8 @@ The user explicitly chose to skip the video-generation topic when the generation
 ## Publish pace and depth revision
 
 The user requested quicker rhythm and more 3D after EP10 v003. v004 is 21 seconds, with thicker solid bodies, a structural browser back shell, stronger turns, deeper phone entry and address travel, and coordinated retiming. It retains the v003 content and same physical address object. Review v004 individually; EP08 v005 remains unchanged.
+
+
+## Publish continuity revision
+
+The user still found the transitions insufficiently fluid after v004. EP10 v005 keeps 21 seconds and replaces isolated poses with velocity-continuous tracks, overlapping status/title handoffs, a full-size phone peeling from behind the browser, and a curved address docking movement. Shadow rendering cost is reduced. It is for review, not approved; v004 remains available for comparison.

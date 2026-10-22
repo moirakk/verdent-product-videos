@@ -18,7 +18,7 @@ const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a
 const film=$('.film');function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}addEventListener('resize',fit);fit();
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;$('.volume').append(renderer.domElement);
 const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,850);camera.lookAt(0,0,0);
-scene.add(new THREE.HemisphereLight(0xffffff,0xa5b8ab,1.2));const key=new THREE.DirectionalLight(0xffffff,2.6);key.position.set(-300,250,430);key.castShadow=true;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-380,right:380,top:380,bottom:-380,near:1,far:1400});key.shadow.bias=-.0002;key.shadow.normalBias=.4;key.shadow.radius=8;key.shadow.blurSamples=8;scene.add(key);const fill=new THREE.DirectionalLight(0xd9f0e4,1);fill.position.set(400,0,300);scene.add(fill);const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(250,180,-200);scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xffffff,0xa5b8ab,1.2));const key=new THREE.DirectionalLight(0xffffff,2.6);key.position.set(-300,250,430);key.castShadow=true;key.shadow.mapSize.set(512,512);Object.assign(key.shadow.camera,{left:-380,right:380,top:380,bottom:-380,near:1,far:1400});key.shadow.bias=-.0002;key.shadow.normalBias=.4;key.shadow.radius=4;key.shadow.blurSamples=6;scene.add(key);const fill=new THREE.DirectionalLight(0xd9f0e4,1);fill.position.set(400,0,300);scene.add(fill);const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(250,180,-200);scene.add(rim);
 const shadow=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.ShadowMaterial({opacity:.045}));shadow.position.z=-160;shadow.receiveShadow=true;scene.add(shadow);
 function rect(c,x,y,w,h,color,r=5){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
 function text(c,s,x,y,size=14,color='#153c2b',weight=600,font='Arial'){c.fillStyle=color;c.font=`${weight} ${size}px ${font}`;c.fillText(s,x,y)}
@@ -53,27 +53,43 @@ const beats=[
  [9,12,'A live link.|Ready to open.','The same application, at a shareable address.'],
  [12,18,'The same app.|Another screen.','Open the link on another device.']
 ];
-let frozen=null,start=performance.now(),active='';window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};window.restart=()=>{start=performance.now();frozen=null};
+// Stable title/caption layers overlap; changing a beat never replaces a moving DOM tree.
+$('.copy h1').remove();$('.caption').remove();
+const titles=beats.map(b=>{const h=document.createElement('h1');h.style.cssText='position:absolute;left:0;right:0;top:29px;margin:0';h.replaceChildren(...b[2].split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.copy').append(h);return h});
+const captions=beats.map(b=>{const c=document.createElement('div');c.className='caption';c.textContent=b[3];$('.film').append(c);return c});
+// Time-aware cubic Hermite tracks preserve velocity through intermediate poses.
+function track(keys,t){let i=0;while(i<keys.length-2&&t>keys[i+1][0])i++;const a=keys[i],b=keys[i+1],u=clamp((t-a[0])/(b[0]-a[0])),dt=b[0]-a[0],prev=keys[Math.max(0,i-1)],next=keys[Math.min(keys.length-1,i+2)];return a.slice(1).map((v,j)=>{const k=j+1,m0=i===0?0:(b[k]-prev[k])/(b[0]-prev[0]),m1=i+1===keys.length-1?0:(next[k]-a[k])/(next[0]-a[0]);return (2*u*u*u-3*u*u+1)*v+(u*u*u-2*u*u+u)*dt*m0+(-2*u*u*u+3*u*u)*b[k]+(u*u*u-u*u)*dt*m1})}
+const heroKeys=[
+ [0,0,-6,-20,.2,-.9,.93,-.065],[.9,0,0,0,0,-.13,.93,0],[1.7,-2,3,-12,.02,-.16,.92,0],
+ [3.25,-28,30,-135,.10,-.55,.77,0],[4.6,-26,28,-126,.08,-.50,.78,0],[6.2,-18,30,-108,.08,-.43,.80,0],
+ [7.6,-12,24,-82,.06,-.35,.83,0],[9.5,0,1,0,0,-.13,.93,0],[10.7,-4,0,-6,.02,-.16,.91,0],
+ [12.4,-43,-2,-24,.04,-.27,.78,0],[14.5,-61,-5,-34,.02,-.35,.72,0],[16.8,-61,-5,-34,.02,-.35,.72,0],[21,-61,-5,-34,.02,-.35,.72,0]
+];
+const stageKeys=[[0,0,152,30],[2,0,149,35],[3.15,0,76,125],[4.6,0,72,110],[5.7,0,137,120],[7.7,0,137,100],[9.5,0,165,30],[21,0,165,30]];
+let frozen=null,start=performance.now(),lastRaf=null;window.playbackStats={intervals:[]};
+window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null;lastRaf=null};window.restart=()=>{start=performance.now();frozen=null;lastRaf=null;window.playbackStats={intervals:[]}};
 function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
-function render(t){window.filmTime=t;const b=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1),end=P(t,18,18.85),closing=1-end;
- if(active!==b[2]){active=b[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=b[3]}
- document.querySelectorAll('.word').forEach((el,i)=>{const p=P(t,b[0]+i*.04,b[0]+i*.04+.45),out=P(t,b[1]-.24,b[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*9}px) rotateX(${(1-p)*32}deg)`});show($('.copy'),closing);show($('.source'),closing);show($('.caption'),closing*P(t,b[0],b[0]+.3)*(1-P(t,b[1]-.24,b[1])));
- const arrive=P(t,0,.8),configure=P(t,2,3.25),launch=P(t,5,5.8),live=P(t,8.4,9.4),devices=P(t,11.7,13.45),transfer=P(t,12.5,14.2),free=configure*(1-live),expand=configure*(1-launch);
- pose(hero,-26*free-61*devices,28*free-5*devices,-130*free-34*devices,.20*(1-arrive)+free*.09,-.90*(1-arrive)-.13*arrive-.42*free-.22*devices,.93-.16*free-.21*devices,-.065*(1-arrive));
- pose(phone,102+(1-devices)*42,-18,80-(1-devices)*280,.065,-.34+(1-devices)*1.65,.94*devices);
- // Start from exact browser-local coordinates; match exact phone-local coordinates at the end.
+function render(t){window.filmTime=t;const end=P(t,18,18.85),closing=1-end;
+ titles.forEach((h,k)=>{const b=beats[k],out=P(t,b[1]-.12,b[1]+.18);h.querySelectorAll('.word').forEach((el,i)=>{const a=k===0?0:b[0]-.10,p=P(t,a+i*.025,a+i*.025+.40);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*21-out*13}px) rotateX(${(1-p)*20}deg)`});show(captions[k],closing*P(t,b[0]-.08,b[0]+.24)*(1-P(t,b[1]-.10,b[1]+.14)))});
+ show($('.copy'),closing);show($('.source'),closing);
+ const configure=P(t,1.8,3.25),launch=P(t,4.8,5.9),live=P(t,8,9.5),devices=P(t,11.1,14.2),transfer=P(t,12,14.2),dock=P(t,12.65,14.2),free=configure*(1-live),expand=configure*(1-launch);
+ const hp=track(heroKeys,t);pose(hero,hp[0],hp[1],hp[2],hp[3],hp[4],hp[5],hp[6]);
+ // The full-size phone peels from behind the browser; it never blooms from a zero-size card.
+ const phonePath=new THREE.CubicBezierCurve3(new THREE.Vector3(0,10,-360),new THREE.Vector3(102,22,-235),new THREE.Vector3(155,-3,85),new THREE.Vector3(102,-18,80));
+ phone.position.copy(phonePath.getPoint(devices));phone.rotation.set(.065+arc(devices)*-.09,mix(1.45,-.34,devices)+arc(devices)*-.12,arc(devices)*-.045);phone.scale.setScalar(.94);
  const browserAnchor=new THREE.Vector3(0,190,8).multiplyScalar(hero.scale.x).applyQuaternion(hero.quaternion).add(hero.position);
- const stageAnchor=new THREE.Vector3(0,72+launch*65,110);const phoneAnchor=new THREE.Vector3(0,122,13).multiplyScalar(phone.scale.x).applyQuaternion(phone.quaternion).add(phone.position);
- address.position.copy(browserAnchor).lerp(stageAnchor,free).lerp(phoneAnchor,transfer);address.position.z+=arc(transfer)*75+arc(configure)*free*24;address.position.x-=arc(transfer)*12;
- const settingQ=new THREE.Quaternion().setFromEuler(new THREE.Euler(-.15,-.30,-.025));address.quaternion.copy(hero.quaternion).slerp(settingQ,free).slerp(phone.quaternion,transfer);address.scale.setScalar(mix(mix(hero.scale.x,1,free),phone.scale.x,transfer));
- const w=mix(mix(284,330,expand),124,transfer),h=mix(mix(38,128,expand),20,transfer);address.userData.body.scale.set(w/284,h/38,1);address.userData.face.scale.set(w/284,h/38,1);config.scale.set(w/330,h/128,1);url.scale.set(w/284,h/38,1);opacity(address.userData.face,1-configure);opacity(config,expand);opacity(url,P(t,5.5,6.1));
+ const sp=track(stageKeys,t),stageAnchor=new THREE.Vector3(...sp),phoneAnchor=new THREE.Vector3(0,122,13).multiplyScalar(phone.scale.x).applyQuaternion(phone.quaternion).add(phone.position);
+ const from=browserAnchor.clone().lerp(stageAnchor,free),c1=from.clone().add(new THREE.Vector3(-15,-60,150)),c2=phoneAnchor.clone().add(new THREE.Vector3(45,38,80));
+ address.position.copy(new THREE.CubicBezierCurve3(from,c1,c2,phoneAnchor).getPoint(transfer));
+ const settingQ=new THREE.Quaternion().setFromEuler(new THREE.Euler(-.15,-.30,-.025));address.quaternion.copy(hero.quaternion).slerp(settingQ,free).slerp(phone.quaternion,transfer);address.rotateZ(-arc(transfer)*.06);address.scale.setScalar(mix(mix(hero.scale.x,1,free),phone.scale.x,dock));
+ const w=mix(mix(284,330,expand),124,dock),h=mix(mix(38,128,expand),20,dock);address.userData.body.scale.set(w/284,h/38,1);address.userData.face.scale.set(w/284,h/38,1);config.scale.set(w/330,h/128,1);url.scale.set(w/284,h/38,1);opacity(address.userData.face,1-configure);opacity(config,expand);opacity(url,P(t,5.5,6.1));
  opacity(liveHeader,live);opacity(printedUrl,transfer);
- const running=P(t,5.2,5.8)*(1-P(t,9,9.6));pose(progress,0,-190+(1-P(t,5.2,5.8))*17,32,arc(launch)*-.14,-.035,running);progress.visible=running>0;checks.forEach((f,i)=>opacity(f,P(t,6+i*.8,6.45+i*.8)));
- const badge=P(t,9.65,10.15)*(1-P(t,12.1,12.8));pose(published,0,-188,26,0,-.035,badge);published.visible=badge>0;
- phone.visible=devices>0;rig.visible=t<18.85;shadow.visible=t<18.85;camera.position.set(-arc(configure)*20+arc(devices)*18,arc(configure)*7,850-arc(configure)*28+arc(devices)*8);camera.lookAt(0,0,0);renderer.render(scene,camera);
- window.motionState={heroId:hero.uuid,heroScale:hero.scale.x,addressId:address.uuid,addressScale:address.scale.x,phoneId:phone.uuid,phoneScale:phone.scale.x,browserError:address.position.distanceTo(browserAnchor),phoneError:address.position.distanceTo(phoneAnchor),transfer,live,objects:4};
+ const progressIn=P(t,4.9,5.8),progressOut=P(t,8.3,9.25),running=progressIn*(1-progressOut);pose(progress,0,-190+(1-progressIn)*42+progressOut*16,32+arc(progressIn)*18,-(1-progressIn)*.45+progressOut*.16,-.035,running);progress.visible=running>0;checks.forEach((f,i)=>opacity(f,P(t,5.75+i*.80,6.25+i*.80)));
+ const badgeIn=P(t,9.0,9.8),badge=badgeIn*(1-P(t,11.65,12.45));pose(published,0,-188+(1-badgeIn)*18,26+arc(badgeIn)*9,-(1-badgeIn)*.17,-.035,badge);published.visible=badge>0;
+ phone.visible=true;rig.visible=t<18.85;shadow.visible=t<18.85;const cp=track([[0,0,0,850],[1.7,-2,1,848],[3.3,-18,7,826],[6,-12,5,835],[9.6,0,0,850],[11.1,2,1,852],[13.2,14,4,858],[15,0,0,850],[21,0,0,850]],t);camera.position.set(...cp);camera.lookAt(0,0,0);renderer.render(scene,camera);
+ window.motionState={heroId:hero.uuid,heroScale:hero.scale.x,addressId:address.uuid,addressScale:address.scale.x,phoneId:phone.uuid,phoneScale:phone.scale.x,browserError:address.position.distanceTo(browserAnchor),phoneError:address.position.distanceTo(phoneAnchor),addressPosition:address.position.toArray(),heroPosition:hero.position.toArray(),phonePosition:phone.position.toArray(),transfer,live,objects:4};
  show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,18.5,19.2);
 }
-window.episodeDuration=duration;window.episodeReady=true;function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
+window.episodeDuration=duration;window.episodeReady=true;function tick(now){if(frozen===null){if(lastRaf!==null&&window.filmTime<duration)window.playbackStats.intervals.push(now-lastRaf);lastRaf=now;render(Math.min(duration,(now-start)/1000))}requestAnimationFrame(tick)}requestAnimationFrame(tick);
 
 </script></body></html>

@@ -1,6 +1,6 @@
 # EP10: Publish — individual episode
 
-Current review revision: v004, 21 seconds. The user explicitly skipped video generation and requested continuing to publishing. EP08 v005 remains unchanged. Other new episodes remain paused.
+Current review revision: v005, 21 seconds. The user explicitly skipped video generation and requested continuing to publishing. EP08 v005 remains unchanged. Other new episodes remain paused.
 
 ## Feature boundary
 
@@ -46,3 +46,18 @@ The browser body grows from 20 to 42 depth units with a structural sage back she
 The final result holds on both devices for approximately 3.8 seconds before the ending. Geometry changes provide the depth, rather than decorative overlays. The content and existing app asset remain unchanged.
 
 Final v004 checks passed: three viewport sizes, persistent app/address/phone identity, browser and phone anchor errors {'startError': 0, 'endError': 2.0097183471152322e-14}, in-bounds canvas, adjacent-frame maximum RGB mean delta 0.808/255 (limit 1), repeated-time delta 0, full 21-second playback and ending hold, and zero browser/asset errors.
+
+
+## v005 — continuous choreography rather than isolated scene poses
+
+The user found v004's frame transitions insufficiently fluid. Runtime remains 21 seconds; this revision changes choreography, title transitions and rendering cost.
+
+- Browser position, orientation and scale follow time-aware cubic Hermite tracks. Intermediate knots preserve velocity; short readable holds remain at the result.
+- The address setting surface follows a moving depth track during reading and collapse. Its original browser anchor and final phone anchor remain exact.
+- The full-size phone peels from behind the opaque browser along a cubic spatial path, with coordinated roll and turn. It no longer grows from zero scale.
+- The same address travels along a cubic Bezier arc toward the moving handset. Width/height contraction is delayed until docking, retaining a readable URL during flight.
+- Publishing progress begins before the settings finish clearing. Its tray and the success badge overlap their anticipation and settling movements.
+- Titles and captions use persistent layers with overlapping exit/entry, avoiding DOM replacement at beat boundaries.
+- Shadow maps are reduced to 512 with matching blur radius and six blur samples, reducing GPU work while preserving the established soft shadow treatment. Shadows still update with geometry, not on a separate low-frequency timer.
+
+Final v005 checks passed: three viewport sizes; permanent object IDs; anchor errors {'startError': 0, 'endError': 0}; maximum finite-difference velocity join delta 0.0275; maximum adjacent-frame mean RGB delta 0.547/255; repeated-time delta 0; full 21-second playback; logo hold; zero asset/browser errors. Test-browser RAF sampling: mean 11.98 ms, 95th percentile 17.30 ms, 0 intervals above 50 ms. These are local test-browser measurements, not a guarantee across hardware or a substitute for user review.
