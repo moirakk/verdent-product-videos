@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdent Create Image</title><style>
+:root{--ink:#0f2a1e;--green:#1f9d6c}*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#e9ecea;font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+.film{position:absolute;left:50%;top:50%;width:430px;height:764px;transform-origin:center;overflow:hidden;background:#fbfdfb;isolation:isolate;perspective:1000px;box-shadow:0 36px 100px #0f2a1e22}
+.copy{position:absolute;left:28px;right:28px;top:34px;height:155px;z-index:20;pointer-events:none}.kicker{font:700 11px/1.2 monospace;color:var(--green)}h1{font-size:40px;line-height:1.07;font-weight:800;letter-spacing:0;margin:16px 0 0;perspective:650px}.line{display:block;white-space:nowrap}.line:last-child{color:var(--green)}.word{display:inline-block;margin-right:.19em;transform-origin:50% 90%}.word:last-child{margin:0}
+.volume{position:absolute;top:192px;width:430px;height:500px}.volume canvas{display:block;width:100%;height:100%}.caption{position:absolute;bottom:28px;left:28px;right:28px;height:32px;display:flex;align-items:flex-end;font-size:12px;line-height:1.4;font-weight:600;color:#526c5e;z-index:10}.source{position:absolute;left:28px;right:28px;bottom:69px;font:9px/1.3 Arial,sans-serif;color:#708176;z-index:10}
+.endcard{position:absolute;inset:0;background:#ffffff;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center}
+</style></head><body>
+<main class="film" aria-label="Verdent Create Image animated product film">
+<header class="copy"><div class="kicker">VERDENT / CREATE IMAGE</div><h1></h1></header>
+<div class="volume" aria-hidden="true"></div><div class="source">Illustrative workflow / artwork created for this film</div><div class="caption"></div>
+<footer class="endcard"><img class="logo" src="assets/verdent-logo.png" alt="Verdent"><div class="endline">One direction.<br>A world of visuals.</div></footer>
+</main><script type="module">
+const beats=[[0, 4, "A few words.|A visual world.", "Start with a visual brief for your product."], [4, 10, "Three takes.|Your direction.", "Compare different treatments of the same idea."], [10, 15, "Pick the feel.|Make it yours.", "Choose a direction and refine it in conversation."], [15, 23, "One look.|Every format.", "Use the chosen image as a reference for more assets."], [23, 29.6, "Made for|your project.", "Save the images alongside the code that uses them."]];
+
+import * as THREE from './assets/three.module.min.js';
+const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI);
+const duration=33,film=$('.film');
+function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}addEventListener('resize',fit);fit();
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;$('.volume').append(renderer.domElement);
+const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,850);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0x91b5a0,1.4));const key=new THREE.DirectionalLight(0xffffff,2.7);key.position.set(-250,300,500);key.castShadow=true;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-400,right:400,top:400,bottom:-400,near:1,far:1600});key.shadow.bias=-.0003;key.shadow.normalBias=.5;key.shadow.radius=8;key.shadow.blurSamples=8;scene.add(key);
+const fill=new THREE.DirectionalLight(0xe3f3e9,1.2);fill.position.set(350,-50,300);scene.add(fill);const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(300,200,-100);scene.add(rim);
+const shadow=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.ShadowMaterial({opacity:.055}));shadow.position.z=-150;shadow.receiveShadow=true;scene.add(shadow);
+function rect(c,x,y,w,h,color,r=6){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+function text(c,s,x,y,size=14,color='#153c2b',weight=600,font='Arial'){c.fillStyle=color;c.font=`${weight} ${size}px ${font}`;c.fillText(s,x,y)}
+function line(c,x,y,x2,y2,color='#dae7df',width=1){c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke()}
+function circle(c,x,y,r,color){c.fillStyle=color;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill()}
+function check(c,x,y,color='#ffffff'){c.strokeStyle=color;c.lineWidth=2.5;c.lineCap='round';c.beginPath();c.moveTo(x-4,y);c.lineTo(x-1,y+3);c.lineTo(x+5,y-4);c.stroke()}
+function texture(w,h,paint){const canvas=document.createElement('canvas');canvas.width=w*3;canvas.height=h*3;const c=canvas.getContext('2d');c.scale(3,3);paint(c);const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
+function shape(w,h,r=7){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+function slab(w,h,d=12,color=0xffffff){const geo=new THREE.ExtrudeGeometry(shape(w,h),{depth:d,bevelEnabled:true,bevelSize:1.8,bevelThickness:1.8,bevelSegments:3,curveSegments:12});geo.translate(0,0,-d);const edge=new THREE.Color(color).multiplyScalar(.81);const m=new THREE.Mesh(geo,[new THREE.MeshStandardMaterial({color,roughness:.32,metalness:.05}),new THREE.MeshStandardMaterial({color:edge,roughness:.35,metalness:.09})]);m.castShadow=true;m.receiveShadow=true;return m}
+function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
+const tracked=[];
+function panel(w,h,paint,color=0xffffff,depth=20){const g=new THREE.Group(),body=slab(w,h,depth,color),face=label(w,h,paint);face.position.z=1.8;g.add(body,face);g.userData={body,face,w,h};rig.add(g);tracked.push(g);return g}
+function addFace(g,w,h,paint,z=2.1){const f=label(w,h,paint);f.position.z=z;g.add(f);return f}
+function pose(g,x=0,y=0,z=0,rx=0,ry=0,s=1,rz=0){g.position.set(x,y,z);g.rotation.set(rx,ry,rz);g.scale.setScalar(Math.max(.000001,s));g.visible=s>.00001}
+function resize(g,w,h){g.userData.body.scale.set(w/g.userData.w,h/g.userData.h,1)}
+function alpha(f,a){f.material.opacity=clamp(a);f.visible=a>.00001}
+function tag(w,s,dark=false){return panel(w,34,c=>{rect(c,0,0,w,34,dark?'#153c2b':'#eff5f0');circle(c,17,17,7,'#1f9d6c');check(c,17,17);text(c,s,32,21,11,dark?'#ffffff':'#153c2b')},dark?0x153c2b:0xeff5f0,7)}
+function paper(c,title,subtitle,w=320){text(c,title,22,29,10,'#1f9d6c',700);text(c,subtitle,22,64,25);line(c,22,83,w-22,83)}
+function leaf(c,x,y,s,angle,color){c.save();c.translate(x,y);c.rotate(angle);c.fillStyle=color;c.beginPath();c.ellipse(0,-s*.45,s*.22,s*.6,0,0,Math.PI*2);c.fill();c.restore()}
+function botanical(c,x,y,w,h,variant=0){c.save();c.beginPath();c.rect(x,y,w,h);c.clip();rect(c,x,y,w,h,['#e7eee0','#f0e7dc','#e1e9e8'][variant],0);circle(c,x+w*.78,y+h*.24,w*.26,['#d4dfbc','#e8cdb2','#c4dcd5'][variant]);const bx=x+w*.50,by=y+h*.88;line(c,bx,by,bx-4,y+h*.18,'#557650',2);for(let i=0;i<6;i++){const yy=by-i*h*.11;leaf(c,bx,yy,w*.26,-.85+(i%2)*1.75,['#66875c','#2f654e','#548577'][variant]);}c.restore()}
+function app(c,w=330,h=280,booked=false){rect(c,0,0,w,h,'#ffffff');rect(c,0,0,w,33,'#edf3ef',0);circle(c,15,16,3,'#b5cbbb');circle(c,26,16,3,'#b5cbbb');text(c,'daylight studio',45,21,10);text(c,'Make time',20,72,28);text(c,'for a little calm.',20,102,28);text(c,'Book your next studio session.',20,125,11,'#617568',400);for(let i=0;i<5;i++){rect(c,20+i*59,149,51,47,i===2?'#153c2b':'#eff5f0');text(c,['MON','TUE','WED','THU','FRI'][i],27+i*59,164,8,i===2?'#ffffff':'#617568');text(c,String(19+i),35+i*59,184,15,i===2?'#ffffff':'#153c2b')}rect(c,20,215,w-40,38,'#1f9d6c');text(c,booked?'Booking confirmed':'Reserve Wednesday',booked?95:90,239,13,'#ffffff');}
+let start=performance.now(),frozen=null,active='';window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};window.restart=()=>{start=performance.now();frozen=null};
+function show(el,a){el.style.visibility=a>.001?'visible':'hidden';el.style.opacity=a}
+function render(t){window.filmTime=t;const b=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1);const ending=P(t,29.4,30.3);show($('.copy'),1-ending);show($('.source'),1-ending);show($('.caption'),(1-ending)*P(t,b[0],b[0]+.35)*(1-P(t,b[1]-.24,b[1])));
+if(active!==b[2]){active=b[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const w=document.createElement('span');w.className='word';w.textContent=s;return w}));return row}));$('.caption').textContent=b[3]}
+document.querySelectorAll('.word').forEach((el,i)=>{const p=P(t,b[0]+i*.055,b[0]+i*.055+.65),out=P(t,b[1]-.24,b[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*10}px) rotateX(${(1-p)*35}deg)`});
+rig.visible=t<30.3;shadow.visible=t<30.3;camera.position.set(0,0,850);camera.lookAt(0,0,0);choreograph(t);
+window.motionState={heroId:hero.uuid,heroScale:hero.scale.x,objects:tracked.filter(g=>g.visible).length};
+show($('.endcard'),ending);$('.logo').style.transform=`translateY(${(1-ending)*16}px)`;$('.endline').style.opacity=P(t,30,30.7);renderer.render(scene,camera);
+}
+function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
+
+
+const hero=panel(260,310,c=>{paper(c,'IMAGE BRIEF','A little more life.',260);text(c,'Botanical visuals for',22,119,19);text(c,'a calm wellness brand.',22,145,19);rect(c,22,180,216,73,'#eff5f0');text(c,'Soft greens',36,204,13);text(c,'Natural shapes',36,226,13);text(c,'Room to breathe',36,247,13);text(c,'DAYLIGHT / VISUAL EXPLORATION',22,288,9,'#617568')});
+const artwork=i=>c=>{botanical(c,0,0,260,310,i);rect(c,15,221,230,74,'#ffffff',3);text(c,'daylight',28,247,22,'#153c2b',600,'Georgia');text(c,['Grow at your pace.','A warmer rhythm.','Find your balance.'][i],28,271,13);text(c,'DIRECTION 0'+(i+1),18,25,9,'#153c2b',700)};
+const art=addFace(hero,260,310,artwork(0));const alternatives=[panel(260,310,artwork(1)),panel(260,310,artwork(2))];
+const plant=new THREE.Group();hero.add(plant);
+const stem=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.5,155,16),new THREE.MeshStandardMaterial({color:0x436d4b,roughness:.55}));stem.position.set(0,20,19);stem.castShadow=true;plant.add(stem);
+const leaves=Array.from({length:6},(_,i)=>{const leaf=new THREE.Mesh(new THREE.SphereGeometry(1,24,16),new THREE.MeshPhysicalMaterial({color:i%2?0x386a4e:0x779561,roughness:.4,clearcoat:.35}));leaf.scale.set(14,29,4.5);leaf.position.set(i%2?19:-19,-35+i*24,23);leaf.rotation.z=i%2?-.72:.72;leaf.rotation.y=i%2?.28:-.28;leaf.castShadow=true;plant.add(leaf);return leaf});
+const selected=tag(150,'Direction selected',true);hero.add(selected);rig.remove(selected);selected.position.set(0,-176,20);
+const banner=panel(300,158,c=>{botanical(c,148,0,152,158);text(c,'daylight',16,35,20,'#153c2b',600,'Georgia');text(c,'Small steps.',16,78,19);text(c,'A little growth.',16,102,19);text(c,'WEBSITE HERO',16,140,9,'#617568')});
+const icon=panel(90,90,c=>{rect(c,0,0,90,90,'#e7eee0');leaf(c,45,70,50,.3,'#2f654e');text(c,'d',32,64,48,'#ffffff',600,'Georgia')});
+const folder=panel(320,82,c=>{text(c,'assets / images',20,27,12,'#1f9d6c');text(c,'illustrations / daylight.png',20,57,17);circle(c,293,43,10,'#1f9d6c');check(c,293,43)});
+function choreograph(t){const enter=P(t,0,1.2),reveal=P(t,3.5,4.6),spread=P(t,5.1,6.6),choose=P(t,9.5,11),refine=P(t,11.9,13.2),family=P(t,15,17),save=P(t,23,24.7);
+pose(hero,mix(0,-86,family)*(1-save),mix(0,59,family)+save*35,(1-enter)*-90+choose*28-save*35,(1-enter)*.25,-.22*(1-choose)+refine*.22-family*.30,enter*mix(.93,.66,family)*mix(1,.78,save),mix(-.06,0,enter));
+alpha(hero.userData.face,1-reveal);alpha(art,reveal);plant.visible=refine>0&&family<1;plant.scale.setScalar(Math.max(.000001,refine*(1-family)));leaves.forEach((leaf,i)=>{const lift=arc(refine);leaf.position.z=23+lift*(12+i*3);leaf.rotation.x=lift*(i%2?.32:-.32)});art.scale.set(1-refine*.055,1-refine*.055,1);selected.visible=choose>0&&family<1;selected.scale.setScalar(choose*(1-family));
+alternatives.forEach((g,i)=>{const side=i?1:-1,open=spread*(1-choose);pose(g,side*128*open,10*open,-55-choose*60,.04,-side*.36*open,spread*.64*(1-choose),side*.04*open)});
+pose(banner,32*family,mix(-40,-126,family)+save*56,10+arc(family)*28,arc(family)*-.28,-.08,family*(1-save*.15));pose(icon,mix(0,104,family),mix(45,86,family),45,-.04,-.14,family*(1-save*.15));
+pose(folder,0,-185+(1-save)*-25,40,(1-save)*-.22,0,save*.95);camera.position.x=arc(spread)*12-arc(choose)*10;
+}
+
+</script></body></html>

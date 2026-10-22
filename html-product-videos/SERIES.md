@@ -26,7 +26,11 @@ Reference: `versions/v009/EP01-manager.html`. Preserve this snapshot unchanged.
 6. Document Analysis: source documents to summaries and extracted information; avoid promises of exhaustive risk detection. Initial 32-second launch-plan film: `versions/EP06/v001/EP06-document-analysis.html`. Source excerpts become referenced findings, an open item, and a concise brief. Example provenance and verified scope in `EP06-notes.md`.
 7. Deep Research: research question to a sourced report. Initial 33-second fictional scheduling-tool comparison: `versions/EP07/v001/EP07-deep-research.html`. Source pages become normalized comparison rows, an unresolved cost, and a referenced research brief. Capability boundaries and example data in `EP07-notes.md`.
 8. Create Image: visual brief to generated image.
-9. Generate Video: prompt to generated video preview and download, subject to verified product behavior.
+9. Generate Video: prompt to generated video preview and download.
+10. Publish: working Cloud preview to live app, cross-device access, and publishing changes.
+11. Automations: recurring request to a weekly schedule and updated PR brief; app must remain active.
+12. Message Anywhere: connected Telegram message to project update and result returned to chat.
+13. Skills: brand instructions, references, and checks packaged into a reusable skill and applied to new assets.
 
 These are topic directions, not verified feature specifications. Before producing each episode, check official Verdent documentation and the user's product references. Confirm the actual supported workflow and show a concrete example. Do not reuse Manager's content in other episodes merely to match its visual style.
 
@@ -43,3 +47,21 @@ The user provisionally accepted EP06 v003 on 2026-09-21. Preserve it unchanged. 
 The user subsequently rejected repetitive choreography across episodes. Consistency means shared brand, materials, typography, and quality, not identical entrances or scene structure. EP07 v003 replaces the book/card queue with orbital source browsing, accordion comparison, reverse-side evidence reveal, and an unrolling report. Future episodes should have their own feature-specific visual metaphor and varied transition mechanisms; increasing rotation on the previous template is not enough.
 
 EP07 v003 was not accepted: the user found its animation weaker and its transitions disconnected. Novel mechanisms alone are insufficient. Prioritize a visible object carrying the action into the next scene; avoid unrelated effects that reset the composition. EP07 v004 tests persistent input-to-source and question-to-report surfaces, with tighter motion handoffs. It remains subject to user review.
+
+
+## Individual review — 2026-10-22
+
+The user rejected the batch quality as weaker than earlier episodes and explicitly requested one episode at a time. Only EP08 is being rebuilt and reviewed now. EP09–EP13 remain paused local drafts, not completed deliverables or approved baselines. Do not advance to another episode until the user reviews the current one and requests continuation.
+
+EP08 v001 and v002 preserve the rejected batch studies. EP08 v003 is an individual rebuild based on rendered references from Manager v009 and EP06 v003: a large lit sculpture, continuous front/back surface rotation, geometry-to-image transition, variation proofs, and the same image entering a product page. It is for review, not approved.
+
+REVIEW.html opens only EP08 with pause, replay and scrubbing. Use an HTTP server for ES modules. All existing EP01–EP07 and their historical versions remain unchanged.
+
+## Planning reset
+
+The user then identified feature overlap and asked for careful replanning. All new-episode production is paused, including EP08. See `planning/next-episodes-audit.md`. Do not continue from the rejected 3D sculpture/image story without first resolving its product meaning and reviewing a single episode's storyboard.
+
+
+## EP08 revised storyboard implementation
+
+The user authorized continuing with the PNG storyboard and reiterated style consistency. EP08 v004 implements only the existing-page → image brief → PNG → project asset → existing-page sequence, with Manager v009 / EP06 v003 visual references. The previous sculpture story and direction-comparison story are rejected. Other new episodes remain paused. v004 is for individual user review, not approved. The illustration provenance and exact built-in image generation prompt are retained in assets/ep08-image-provenance.md.
