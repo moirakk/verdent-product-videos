@@ -74,3 +74,8 @@ The user liked EP08 v004 and asked for a quicker pace with continuous frames. v0
 ## Skip video generation; continue Publish
 
 The user explicitly chose to skip the video-generation topic when the generation service required account linking. No generated video was run and no Weave credits were spent. EP09 stays skipped, not completed. On the user's instruction, EP10 Publish is rebuilt individually as a 27-second film: existing Cloud preview → address/settings → publishing progress → live URL → another device. It follows EP08 v005's visual direction, reuses EP02's booking preview asset, and has feature-specific address-bar handoffs. v003 is for review; EP08 v005 remains unchanged. Do not advance to Automations without the user's next instruction.
+
+
+## Publish pace and depth revision
+
+The user requested quicker rhythm and more 3D after EP10 v003. v004 is 21 seconds, with thicker solid bodies, a structural browser back shell, stronger turns, deeper phone entry and address travel, and coordinated retiming. It retains the v003 content and same physical address object. Review v004 individually; EP08 v005 remains unchanged.

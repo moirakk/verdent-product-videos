@@ -14,7 +14,7 @@
 </main><script type="module">
 import * as THREE from './assets/three.module.min.js';
 const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
-const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=27;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=21;
 const film=$('.film');function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}addEventListener('resize',fit);fit();
 const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;$('.volume').append(renderer.domElement);
 const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,850);camera.lookAt(0,0,0);
@@ -26,52 +26,53 @@ function line(c,x,y,x2,y2,color='#dce7df'){c.strokeStyle=color;c.lineWidth=1;c.b
 function texture(w,h,paint){const el=document.createElement('canvas');el.width=w*3;el.height=h*3;const c=el.getContext('2d');c.scale(3,3);paint(c);const map=new THREE.CanvasTexture(el);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
 function shape(w,h,r=7){r=Math.min(r,w/2,h/2);const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
 // Geometry ends at z=1. Text and image faces sit at z>=3, with an explicit depth gap.
-function slab(w,h,d=16,color=0xffffff){const g=new THREE.ExtrudeGeometry(shape(w,h),{depth:d,bevelEnabled:true,bevelSize:1,bevelThickness:1,bevelSegments:4,curveSegments:12});g.translate(0,0,-d);const body=new THREE.Mesh(g,[new THREE.MeshStandardMaterial({color,roughness:.36,metalness:.035}),new THREE.MeshStandardMaterial({color:new THREE.Color(color).multiplyScalar(.79),roughness:.38,metalness:.08})]);body.castShadow=true;body.receiveShadow=true;return body}
+function slab(w,h,d=16,color=0xffffff){const g=new THREE.ExtrudeGeometry(shape(w,h),{depth:d,bevelEnabled:true,bevelSize:1,bevelThickness:1,bevelSegments:4,curveSegments:12});g.translate(0,0,-d);const body=new THREE.Mesh(g,[new THREE.MeshStandardMaterial({color,roughness:.36,metalness:.035}),new THREE.MeshStandardMaterial({color:new THREE.Color(color).multiplyScalar(.74),roughness:.31,metalness:.16})]);body.castShadow=true;body.receiveShadow=true;return body}
 function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
 function panel(w,h,paint,color=0xffffff,depth=16){const g=new THREE.Group(),body=slab(w,h,depth,color),face=label(w,h,paint);face.position.z=3;g.add(body,face);g.userData={body,face};rig.add(g);return g}
 function pose(g,x,y,z,rx,ry,s=1,rz=0){g.position.set(x,y,z);g.rotation.set(rx,ry,rz);g.scale.setScalar(s)}
 function opacity(mesh,a){mesh.material.opacity=clamp(a)}
 
 const booking=new Image();booking.src='./assets/ep02-booking-preview.png';await booking.decode();
-const hero=panel(330,434,c=>{rect(c,0,0,330,434,'#ffffff');rect(c,0,0,330,41,'#eef4ef',6);c.drawImage(booking,15,45,300,376);rect(c,235,45,80,35,'#ffffff',0);text(c,'Preview',252,68,10,'#1f9d6c');},0xffffff,20);
+const hero=panel(330,434,c=>{rect(c,0,0,330,434,'#ffffff');rect(c,0,0,330,41,'#eef4ef',6);c.drawImage(booking,15,45,300,376);rect(c,235,45,80,35,'#ffffff',0);text(c,'Preview',252,68,10,'#1f9d6c');},0xffffff,42);
+const backShell=slab(334,438,6,0xd9e6dc);backShell.position.z=-45;hero.add(backShell);
 const liveHeader=label(80,35,c=>{rect(c,0,0,80,35,'#ffffff',0);text(c,'Live app',18,23,10,'#1f9d6c')});liveHeader.position.set(110,154.5,3.6);hero.add(liveHeader);
 const printedUrl=label(284,38,c=>text(c,'studio-demo.verdent.app',32,25,16,'#153c2b'));printedUrl.position.set(0,190,4);hero.add(printedUrl);
 // A single address object becomes settings, returns to the browser, then travels to the phone.
-const address=panel(284,38,c=>{rect(c,0,0,284,38,'#ffffff',5);text(c,'Cloud project / Studio',28,25,16,'#153c2b')},0xffffff,9);
+const address=panel(284,38,c=>{rect(c,0,0,284,38,'#ffffff',5);text(c,'Cloud project / Studio',28,25,16,'#153c2b')},0xffffff,19);
 const config=label(330,128,c=>{text(c,'PUBLISH CLOUD APP',20,25,10,'#1f9d6c');text(c,'studio-demo',20,64,29);text(c,'.verdent.app',20,91,18,'#617568');text(c,'PUBLIC',20,116,10,'#617568');rect(c,233,96,77,23,'#153c2b');text(c,'Publish',251,112,10,'#ffffff')});config.position.z=4;address.add(config);
 const url=label(284,38,c=>{rect(c,0,0,284,38,'#ffffff',5);text(c,'studio-demo.verdent.app',28,25,17,'#153c2b')});url.position.z=4.7;address.add(url);
 const progress=panel(330,72,c=>{text(c,'PUBLISHING',18,20,9,'#1f9d6c');['Scan','Build','Publish'].forEach((s,i)=>{text(c,s,42+i*108,49,13);if(i<2)line(c,91+i*108,44,119+i*108,44,'#cadbd0')})},0xffffff,10);
 const checks=[0,1,2].map(i=>{const f=label(20,20,c=>{rect(c,0,0,20,20,'#1f9d6c',10);text(c,'✓',4,15,14,'#ffffff')});f.position.set(-143+i*108,-7,4);progress.add(f);return f});
 const published=panel(168,34,c=>{rect(c,0,0,168,34,'#153c2b');text(c,'✓',15,23,16,'#a6d8b7');text(c,'Published',40,23,14,'#ffffff')},0x153c2b,7);
-const phone=new THREE.Group();rig.add(phone);const chassis=slab(150,300,25,0x153c2b),bezel=slab(138,288,5,0xffffff);bezel.position.z=4;phone.add(chassis,bezel);
+const phone=new THREE.Group();rig.add(phone);const chassis=slab(150,300,38,0x153c2b),bezel=slab(138,288,5,0xffffff);bezel.position.z=4;phone.add(chassis,bezel);const sideButton=slab(4,30,4,0x48735a);sideButton.position.set(76,36,-17);phone.add(sideButton);
 const phoneUI=label(128,278,c=>{rect(c,0,0,128,278,'#ffffff');line(c,6,37,122,37);text(c,'STUDIO / BOOKING',9,57,8,'#153c2b',750);text(c,'Make time',9,84,18);text(c,'for you.',9,105,18);text(c,'Book your next session.',9,123,8,'#617568',400);rect(c,8,139,112,67,'#eff5f0');text(c,'Choose a date',15,155,9);['18','19','20'].forEach((s,i)=>{rect(c,15+i*33,166,28,29,'#ffffff');text(c,s,22+i*33,185,11)});text(c,'09:00     10:30     14:00',10,224,9,'#617568');rect(c,8,237,112,27,'#153c2b');text(c,'Book session',33,254,10,'#ffffff')});phoneUI.position.set(0,0,8);phone.add(phoneUI);const home=slab(35,3,2,0x153c2b);home.position.set(0,-137,9);phone.add(home);
 const beats=[
- [0,3,'Ready in preview.|Ready to share.','Start with a working Cloud project.'],
- [3,7,'Your app.|Your address.','Choose the address and visibility for your app.'],
- [7,12,'Publish it.|Watch it go live.','Follow the scan, build, and publishing progress.'],
- [12,16,'A live link.|Ready to open.','The same application, at a shareable address.'],
- [16,23.5,'The same app.|Another screen.','Open the link on another device.']
+ [0,2.2,'Ready in preview.|Ready to share.','Start with a working Cloud project.'],
+ [2.2,5.2,'Your app.|Your address.','Choose the address and visibility for your app.'],
+ [5.2,9,'Publish it.|Watch it go live.','Follow the scan, build, and publishing progress.'],
+ [9,12,'A live link.|Ready to open.','The same application, at a shareable address.'],
+ [12,18,'The same app.|Another screen.','Open the link on another device.']
 ];
 let frozen=null,start=performance.now(),active='';window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null};window.restart=()=>{start=performance.now();frozen=null};
 function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
-function render(t){window.filmTime=t;const b=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1),end=P(t,23.5,24.4),closing=1-end;
+function render(t){window.filmTime=t;const b=beats.find(b=>t>=b[0]&&t<b[1])||beats.at(-1),end=P(t,18,18.85),closing=1-end;
  if(active!==b[2]){active=b[2];$('h1').replaceChildren(...active.split('|').map(s=>{const row=document.createElement('span');row.className='line';row.replaceChildren(...s.split(' ').map(s=>{const word=document.createElement('span');word.className='word';word.textContent=s;return word}));return row}));$('.caption').textContent=b[3]}
- document.querySelectorAll('.word').forEach((el,i)=>{const p=P(t,b[0]+i*.05,b[0]+i*.05+.6),out=P(t,b[1]-.24,b[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*9}px) rotateX(${(1-p)*32}deg)`});show($('.copy'),closing);show($('.source'),closing);show($('.caption'),closing*P(t,b[0],b[0]+.3)*(1-P(t,b[1]-.24,b[1])));
- const arrive=P(t,0,.95),configure=P(t,2.8,4.4),launch=P(t,6.7,7.7),live=P(t,11.3,12.7),devices=P(t,15.3,17.8),transfer=P(t,16.5,18.5),free=configure*(1-live),expand=configure*(1-launch);
- pose(hero,-20*free-61*devices,28*free-5*devices,-85*free-22*devices,.06*(1-arrive)+free*.04,-.27*(1-arrive)-.23*free-.12*devices,.93-.18*free-.21*devices,-.025*(1-arrive));
- pose(phone,102+(1-devices)*42,-18,70-(1-devices)*155,.035,-.19+(1-devices)*1.15,.94*devices);
+ document.querySelectorAll('.word').forEach((el,i)=>{const p=P(t,b[0]+i*.04,b[0]+i*.04+.45),out=P(t,b[1]-.24,b[1]);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*24-out*9}px) rotateX(${(1-p)*32}deg)`});show($('.copy'),closing);show($('.source'),closing);show($('.caption'),closing*P(t,b[0],b[0]+.3)*(1-P(t,b[1]-.24,b[1])));
+ const arrive=P(t,0,.8),configure=P(t,2,3.25),launch=P(t,5,5.8),live=P(t,8.4,9.4),devices=P(t,11.7,13.45),transfer=P(t,12.5,14.2),free=configure*(1-live),expand=configure*(1-launch);
+ pose(hero,-26*free-61*devices,28*free-5*devices,-130*free-34*devices,.20*(1-arrive)+free*.09,-.90*(1-arrive)-.13*arrive-.42*free-.22*devices,.93-.16*free-.21*devices,-.065*(1-arrive));
+ pose(phone,102+(1-devices)*42,-18,80-(1-devices)*280,.065,-.34+(1-devices)*1.65,.94*devices);
  // Start from exact browser-local coordinates; match exact phone-local coordinates at the end.
  const browserAnchor=new THREE.Vector3(0,190,8).multiplyScalar(hero.scale.x).applyQuaternion(hero.quaternion).add(hero.position);
- const stageAnchor=new THREE.Vector3(0,72+launch*65,70);const phoneAnchor=new THREE.Vector3(0,122,13).multiplyScalar(phone.scale.x).applyQuaternion(phone.quaternion).add(phone.position);
- address.position.copy(browserAnchor).lerp(stageAnchor,free).lerp(phoneAnchor,transfer);address.position.z+=arc(transfer)*32;
- const settingQ=new THREE.Quaternion().setFromEuler(new THREE.Euler(-.08,-.16,0));address.quaternion.copy(hero.quaternion).slerp(settingQ,free).slerp(phone.quaternion,transfer);address.scale.setScalar(mix(mix(hero.scale.x,1,free),phone.scale.x,transfer));
- const w=mix(mix(284,330,expand),124,transfer),h=mix(mix(38,128,expand),20,transfer);address.userData.body.scale.set(w/284,h/38,1);address.userData.face.scale.set(w/284,h/38,1);config.scale.set(w/330,h/128,1);url.scale.set(w/284,h/38,1);opacity(address.userData.face,1-configure);opacity(config,expand);opacity(url,P(t,7.3,8.1));
+ const stageAnchor=new THREE.Vector3(0,72+launch*65,110);const phoneAnchor=new THREE.Vector3(0,122,13).multiplyScalar(phone.scale.x).applyQuaternion(phone.quaternion).add(phone.position);
+ address.position.copy(browserAnchor).lerp(stageAnchor,free).lerp(phoneAnchor,transfer);address.position.z+=arc(transfer)*75+arc(configure)*free*24;address.position.x-=arc(transfer)*12;
+ const settingQ=new THREE.Quaternion().setFromEuler(new THREE.Euler(-.15,-.30,-.025));address.quaternion.copy(hero.quaternion).slerp(settingQ,free).slerp(phone.quaternion,transfer);address.scale.setScalar(mix(mix(hero.scale.x,1,free),phone.scale.x,transfer));
+ const w=mix(mix(284,330,expand),124,transfer),h=mix(mix(38,128,expand),20,transfer);address.userData.body.scale.set(w/284,h/38,1);address.userData.face.scale.set(w/284,h/38,1);config.scale.set(w/330,h/128,1);url.scale.set(w/284,h/38,1);opacity(address.userData.face,1-configure);opacity(config,expand);opacity(url,P(t,5.5,6.1));
  opacity(liveHeader,live);opacity(printedUrl,transfer);
- const running=P(t,7,7.7)*(1-P(t,12,13));pose(progress,0,-190+(1-P(t,7,7.7))*17,32,arc(launch)*-.14,-.035,running);progress.visible=running>0;checks.forEach((f,i)=>opacity(f,P(t,8+i*1.1,8.55+i*1.1)));
- const badge=P(t,12.85,13.5)*(1-P(t,15.8,16.7));pose(published,0,-188,26,0,-.035,badge);published.visible=badge>0;
- phone.visible=devices>0;rig.visible=t<24.4;shadow.visible=t<24.4;camera.position.set(-arc(configure)*9+arc(devices)*8,arc(configure)*3,850-arc(configure)*17+arc(devices)*15);camera.lookAt(0,0,0);renderer.render(scene,camera);
+ const running=P(t,5.2,5.8)*(1-P(t,9,9.6));pose(progress,0,-190+(1-P(t,5.2,5.8))*17,32,arc(launch)*-.14,-.035,running);progress.visible=running>0;checks.forEach((f,i)=>opacity(f,P(t,6+i*.8,6.45+i*.8)));
+ const badge=P(t,9.65,10.15)*(1-P(t,12.1,12.8));pose(published,0,-188,26,0,-.035,badge);published.visible=badge>0;
+ phone.visible=devices>0;rig.visible=t<18.85;shadow.visible=t<18.85;camera.position.set(-arc(configure)*20+arc(devices)*18,arc(configure)*7,850-arc(configure)*28+arc(devices)*8);camera.lookAt(0,0,0);renderer.render(scene,camera);
  window.motionState={heroId:hero.uuid,heroScale:hero.scale.x,addressId:address.uuid,addressScale:address.scale.x,phoneId:phone.uuid,phoneScale:phone.scale.x,browserError:address.position.distanceTo(browserAnchor),phoneError:address.position.distanceTo(phoneAnchor),transfer,live,objects:4};
- show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,24.05,24.75);
+ show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,18.5,19.2);
 }
 window.episodeDuration=duration;window.episodeReady=true;function tick(now){if(frozen===null)render(Math.min(duration,(now-start)/1000));requestAnimationFrame(tick)}requestAnimationFrame(tick);
 
