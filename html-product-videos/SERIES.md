@@ -120,3 +120,7 @@ The user explicitly requested that the entire EP12 section be torn down and rebu
 ## EP12 direction accepted; v008 final polish
 
 The user accepted v007 (“可以 再优化一下 就用这个”). Keep this fixed-set, camera-led direction. v008 makes only local motion refinements: shape-preserving camera tangents prevent arrival rebound and target drift; caret row completion/return is coordinated; reply timing follows signal arrival; channel signals travel by arc length. Runtime remains 13 seconds and composition/content stay unchanged. v007 remains the accepted reference snapshot. EP09 stays skipped; do not start EP13 without instruction.
+
+## EP13 individual Skills film authorized
+
+After EP12 v008, the user asked whether any topics remained and accepted the proposal to make one final Skills episode about packaging a delivery-check workflow and reusing it in a new project. EP13 v003 is the individual 14-second film: instructions/reference/script components gather into one physical case; the same saved case docks beside @delivery-check in a new project; pages/links/assets checks yield concrete results plus an open contact-link item. It preserves the current series material and continuous-motion direction without reusing the remote-message journey. All checks are authored illustrations of a custom Skill, not real executions or a built-in product guarantee. v001/v002 remain unapproved batch archives; v003 is for single-episode review. EP09 remains skipped and EP12 v008 stays unchanged.
