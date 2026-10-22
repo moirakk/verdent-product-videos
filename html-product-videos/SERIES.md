@@ -70,3 +70,7 @@ The user authorized continuing with the PNG storyboard and reiterated style cons
 ## EP08 pacing feedback
 
 The user liked EP08 v004 and asked for a quicker pace with continuous frames. v005 retains its visual treatment and asset while compressing 32 seconds to 27, retiming scene boundaries and motion together. Review v005 individually; v004 stays preserved. Other new episodes remain paused.
+
+## Skip video generation; continue Publish
+
+The user explicitly chose to skip the video-generation topic when the generation service required account linking. No generated video was run and no Weave credits were spent. EP09 stays skipped, not completed. On the user's instruction, EP10 Publish is rebuilt individually as a 27-second film: existing Cloud preview → address/settings → publishing progress → live URL → another device. It follows EP08 v005's visual direction, reuses EP02's booking preview asset, and has feature-specific address-bar handoffs. v003 is for review; EP08 v005 remains unchanged. Do not advance to Automations without the user's next instruction.
