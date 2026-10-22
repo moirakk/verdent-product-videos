@@ -1,4 +1,12 @@
-# EP13 · Skills — v003
+# EP13 · Skills
+
+## v004 · stronger physical depth
+
+The user accepted the direction and requested stronger 3D. v004 keeps the 14-second story and timing, deepens the hollow case rails from 52 to 76 units, thickens the cover from 8 to 14 and the file bodies from 5 to 9, and increases the files’ exploded depth separation. The hinge and cover positions preserve actual contact/clearance after the depth change. A green cover rim, metal pins and edge latch clarify the casing structure.
+
+Stronger oblique case/project poses, a small lateral camera offset, darker side materials and sharper edge highlights expose the volume while the result remains readable. The same package still docks to the exact project anchor. v003 remains unchanged; v004 is the review version.
+
+## v003 · individual story
 
 Individual 14-second film, made after the user authorized the final Skills episode. EP12 v008 supplies the current white/green material, typography and motion-quality reference. EP13 v001/v002 preserve earlier unapproved batch drafts. v003 is for individual review, not approved.
 

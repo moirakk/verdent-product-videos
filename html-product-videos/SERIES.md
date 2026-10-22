@@ -124,3 +124,8 @@ The user accepted v007 (“可以 再优化一下 就用这个”). Keep this fi
 ## EP13 individual Skills film authorized
 
 After EP12 v008, the user asked whether any topics remained and accepted the proposal to make one final Skills episode about packaging a delivery-check workflow and reusing it in a new project. EP13 v003 is the individual 14-second film: instructions/reference/script components gather into one physical case; the same saved case docks beside @delivery-check in a new project; pages/links/assets checks yield concrete results plus an open contact-link item. It preserves the current series material and continuous-motion direction without reusing the remote-message journey. All checks are authored illustrations of a custom Skill, not real executions or a built-in product guarantee. v001/v002 remain unapproved batch archives; v003 is for single-episode review. EP09 remains skipped and EP12 v008 stays unchanged.
+
+
+## EP13 v004 depth refinement
+
+The user said the EP13 direction worked and requested more 3D. v004 keeps the story, layout and 14-second timing, with a deeper case, thicker cover and files, greater exploded depth spacing, stronger oblique poses and an edge rim/latch with metal highlights. Physical clearances and the final project anchor are retained. v003 remains archived unchanged; review v004 individually.

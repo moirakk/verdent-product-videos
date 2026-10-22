@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdent Skills</title><style>
+:root{--ink:#0f2a1e;--green:#1f9d6c}*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#e9ecea;font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+.film{position:absolute;left:50%;top:50%;width:430px;height:764px;transform-origin:center;overflow:hidden;background:#fbfdfb;isolation:isolate;perspective:1000px;box-shadow:0 36px 100px #0f2a1e22}
+.copy{position:absolute;left:28px;right:28px;top:34px;height:155px;z-index:20;pointer-events:none}.kicker{font:700 11px/1.2 monospace;color:var(--green)}h1{font-size:40px;line-height:1.07;font-weight:800;letter-spacing:0;margin:16px 0 0;perspective:650px}.line{display:block;white-space:nowrap}.line:last-child{color:var(--green)}.word{display:inline-block;margin-right:.19em;transform-origin:50% 90%}.word:last-child{margin:0}
+.volume{position:absolute;top:192px;width:430px;height:500px}.volume canvas{display:block;width:100%;height:100%}.caption{position:absolute;bottom:28px;left:28px;right:28px;height:32px;display:flex;align-items:flex-end;font-size:12px;line-height:1.4;font-weight:600;color:#526c5e;z-index:10}.source{position:absolute;left:28px;right:28px;bottom:69px;font:9px/1.3 Arial,sans-serif;color:#708176;z-index:10}
+.endcard{position:absolute;inset:0;background:#ffffff;z-index:30;display:grid;place-content:center;justify-items:center;gap:26px;visibility:hidden}.logo{width:240px;height:auto}.endline{font:25px/1.16 Georgia,serif;text-align:center}
+</style></head><body>
+<main class="film" aria-label="Verdent Skills animated product film">
+<header class="copy"><div class="kicker">VERDENT / SKILLS</div><h1></h1></header>
+<div class="volume" aria-hidden="true"></div><div class="source">Illustrative custom skill / delivery-check workflow</div><div class="caption"></div>
+<footer class="endcard"><img class="logo" src="assets/verdent-logo.png" alt="Verdent"><div class="endline">Your method.<br>Ready for what’s next.</div></footer>
+</main><script type="module">
+import * as THREE from './assets/three.module.min.js';
+const $=s=>document.querySelector(s),clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,p)=>a+(b-a)*p;
+const smooth=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)},P=(t,a,b)=>smooth((t-a)/(b-a)),arc=p=>Math.sin(p*Math.PI),duration=14;
+const film=$('.film');function fit(){film.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/430,innerHeight/764,1)})`}addEventListener('resize',fit);fit();
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(430,500);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0xffffff,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;$('.volume').append(renderer.domElement);
+const scene=new THREE.Scene(),rig=new THREE.Group();scene.add(rig);const camera=new THREE.PerspectiveCamera(35,430/500,1,2500);camera.position.set(0,0,960);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0xa5b8ab,1.0));const key=new THREE.DirectionalLight(0xffffff,2.9);key.position.set(-300,250,430);key.castShadow=true;key.shadow.mapSize.set(512,512);Object.assign(key.shadow.camera,{left:-380,right:380,top:380,bottom:-380,near:1,far:1400});key.shadow.bias=-.0002;key.shadow.normalBias=.4;key.shadow.radius=4;key.shadow.blurSamples=6;scene.add(key);const fill=new THREE.DirectionalLight(0xd9f0e4,.8);fill.position.set(400,0,300);scene.add(fill);const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(250,180,-200);scene.add(rim);
+const shadow=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.ShadowMaterial({opacity:.055}));shadow.position.z=-160;shadow.receiveShadow=true;scene.add(shadow);
+function rect(c,x,y,w,h,color,r=5){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+function text(c,s,x,y,size=14,color='#153c2b',weight=600,font='Arial'){c.fillStyle=color;c.font=`${weight} ${size}px ${font}`;c.fillText(s,x,y)}
+function line(c,x,y,x2,y2,color='#dce7df'){c.strokeStyle=color;c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke()}
+function texture(w,h,paint){const el=document.createElement('canvas');el.width=w*3;el.height=h*3;const c=el.getContext('2d');c.scale(3,3);paint(c);const map=new THREE.CanvasTexture(el);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=renderer.capabilities.getMaxAnisotropy();return map}
+function shape(w,h,r=7){r=Math.min(r,w/2,h/2);const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+// Geometry ends at z=1. Text and image faces sit at z>=3, with an explicit depth gap.
+function slab(w,h,d=16,color=0xffffff){const g=new THREE.ExtrudeGeometry(shape(w,h),{depth:d,bevelEnabled:true,bevelSize:1,bevelThickness:1,bevelSegments:4,curveSegments:12});g.translate(0,0,-d);const body=new THREE.Mesh(g,[new THREE.MeshStandardMaterial({color,roughness:.36,metalness:.035}),new THREE.MeshStandardMaterial({color:new THREE.Color(color).multiplyScalar(.60),roughness:.24,metalness:.28})]);body.castShadow=true;body.receiveShadow=true;return body}
+function label(w,h,paint){return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture(w,h,paint),transparent:true,depthWrite:false}))}
+function panel(w,h,paint,color=0xffffff,depth=16){const g=new THREE.Group(),body=slab(w,h,depth,color),face=label(w,h,paint);face.position.z=3;g.add(body,face);g.userData={body,face};rig.add(g);return g}
+function pose(g,x,y,z,rx,ry,s=1,rz=0){g.position.set(x,y,z);g.rotation.set(rx,ry,rz);g.scale.setScalar(s)}
+function opacity(mesh,a){mesh.material.opacity=clamp(a)}
+
+
+
+
+
+
+function opaque(f){f.material.transparent=false;f.material.depthWrite=true;f.material.alphaTest=.5}
+// A single persistent physical workflow case. Its components remain inside after closing.
+const pack=new THREE.Group();rig.add(pack);const rear=slab(240,210,10,0x153c2b);rear.position.z=-69;pack.add(rear);const railMat=new THREE.MeshStandardMaterial({color:0x1f734f,roughness:.28,metalness:.18});for(const [w,h,x,y] of [[240,10,0,100],[240,10,0,-100],[10,200,-115,0],[10,200,115,0]]){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,76),railMat);m.position.set(x,y,-32);m.castShadow=true;pack.add(m)}
+const files=[['SKILL.md','Pages · Links · Assets',54,64,16,145],['references/','Release checklist',48,0,8,105],['scripts/check-links.js','Check project links',48,-60,24,72]].map(([a,b,h,y,x,z],i)=>{const g=panel(200,h,c=>{rect(c,0,0,200,h,'#ffffff');rect(c,0,0,5,h,'#1f9d6c',0);text(c,a,15,23,i===2?14:18);text(c,b,15,h-10,11,'#617568')},0xffffff,9);rig.remove(g);pack.add(g);opaque(g.userData.face);g.userData.home={y,x,z};return g});
+const lid=new THREE.Group();lid.position.set(-120,0,21);pack.add(lid);const cover=panel(240,210,c=>{rect(c,0,0,240,210,'#ffffff');text(c,'CUSTOM SKILL',20,28,10,'#1f9d6c');text(c,'Delivery',20,74,33);text(c,'Check',20,111,33);line(c,20,130,220,130);text(c,'Pages · Links · Assets',20,155,14,'#617568');rect(c,20,172,200,23,'#edf6ed');text(c,'Saved workflow / ready to reuse',27,188,11,'#1f9d6c')},0xffffff,14);rig.remove(cover);lid.add(cover);cover.position.x=120;opaque(cover.userData.face);
+const coverRim=slab(246,216,6,0x85b69a);coverRim.position.set(120,0,-3);lid.add(coverRim);const latch=new THREE.Mesh(new THREE.BoxGeometry(8,23,6),new THREE.MeshStandardMaterial({color:0xa7c5b1,roughness:.20,metalness:.70}));latch.position.set(117,0,5);latch.castShadow=true;cover.add(latch);
+for(const y of [-63,63]){const pin=new THREE.Mesh(new THREE.CylinderGeometry(5,5,29,24),new THREE.MeshStandardMaterial({color:0xa3bca9,roughness:.24,metalness:.65}));pin.position.set(-120,y,15);pack.add(pin)}
+// New-project invocation stays visibly separate from saving the workflow.
+const project=panel(330,356,c=>{rect(c,0,0,330,356,'#ffffff');text(c,'NEW PROJECT / DAYLIGHT',20,28,10,'#1f9d6c');rect(c,18,48,227,48,'#edf5ef');text(c,'@delivery-check',28,80,23);text(c,'Check this project before delivery.',20,121,15);line(c,20,139,310,139);text(c,'SAVED WORKFLOW',20,163,10,'#617568');line(c,20,299,310,299)},0xffffff,40);opaque(project.userData.face);const projectEdge=slab(336,362,7,0x80aa90);projectEdge.position.z=-3;project.add(projectEdge);
+const waiting=['Pages','Links','Assets'].map((name,i)=>{const f=label(290,32,c=>{text(c,name,10,22,17,'#91a297');text(c,'Queued',147,22,13,'#91a297')});f.position.set(0,-8-i*38,6);f.renderOrder=2;project.add(f);return f});
+const results=[['Pages','4 / 4 checked'],['Links','1 needs a fix'],['Assets','Ready']].map(([a,b],i)=>{const f=label(290,32,c=>{rect(c,0,0,290,32,i===1?'#f1f4f1':'#edf6ed');text(c,a,10,22,17);text(c,b,147,22,14,i===1?'#526c5e':'#1f9d6c')});f.position.set(0,-8-i*38,7);f.renderOrder=3;project.add(f);return f});
+const openItem=label(290,33,c=>{text(c,'OPEN ITEM',0,11,9,'#617568');text(c,'Fix the /contact link.',0,31,18)});openItem.position.set(0,-151,6);openItem.renderOrder=3;project.add(openItem);
+const scanning=slab(4,27,4,0x1f9d6c);scanning.castShadow=false;project.add(scanning);
+const beats=[
+[0,3.4,'Save the steps.|Reuse the skill.','Instructions, references and scripts, in one workflow.'],
+[3.4,5.8,'New project.|Same workflow.','Invoke your saved delivery-check skill by name.'],
+[5.8,8.9,'Call it once.|Run the method.','Follow the same checks for pages, links and assets.'],
+[8.9,11.4,'Clear results.|Open items, too.','See what is ready and what still needs a fix.']];
+$('.copy h1').remove();$('.caption').remove();const titles=beats.map(b=>{const h=document.createElement('h1');h.style.cssText='position:absolute;left:0;right:0;top:29px;margin:0';h.innerHTML=b[2].split('|').map(s=>'<span class="line">'+s.split(' ').map(s=>'<span class="word">'+s+'</span>').join('')+'</span>').join('');$('.copy').append(h);return h});const captions=beats.map(b=>{const c=document.createElement('div');c.className='caption';c.textContent=b[3];$('.film').append(c);return c});
+const packKeys=[[0,12,26,10,.24,-.60,.86,-.045],[1.3,12,26,10,.24,-.60,.86,-.045],[3.3,0,25,50,.18,-.43,.94,0],[4.1,0,25,50,.18,-.43,.94,0],[5.9,0,25,50,.18,-.43,.94,0],[14,0,25,50,.18,-.43,.94,0]];
+const projectKeys=[[0,12,26,-400,.16,-.82,.64,0],[3.5,12,26,-400,.16,-.82,.64,0],[5.8,0,-12,10,.10,-.28,.97,0],[8.8,0,-12,10,.10,-.28,.97,0],[11.4,0,-12,10,.10,-.28,.97,0],[14,0,-12,10,.10,-.28,.97,0]];
+const cameraKeys=[[0,20,28,1040,0,0,0],[1.4,20,28,1040,0,0,0],[3.3,30,25,940,0,10,0],[4.1,20,18,850,0,10,0],[5.8,0,0,850,0,-4,0],[11.4,0,0,850,0,-4,0],[14,0,0,850,0,-4,0]];
+// Shape-preserving shared tangents keep camera holds still and avoid rebound at arrivals.
+function track(keys,t){let i=0;while(i<keys.length-2&&t>keys[i+1][0])i++;const a=keys[i],b=keys[i+1],dt=b[0]-a[0],u=clamp((t-a[0])/dt);const slope=(n,k)=>{if(n===0||n===keys.length-1)return 0;const p=keys[n-1],c=keys[n],q=keys[n+1],h0=c[0]-p[0],h1=q[0]-c[0],d0=(c[k]-p[k])/h0,d1=(q[k]-c[k])/h1;if(d0*d1<=0)return 0;const w0=2*h1+h0,w1=h1+2*h0;return(w0+w1)/(w0/d0+w1/d1)};return a.slice(1).map((v,j)=>{const k=j+1,m0=slope(i,k),m1=slope(i+1,k);return(2*u*u*u-3*u*u+1)*v+(u*u*u-2*u*u+u)*dt*m0+(-2*u*u*u+3*u*u)*b[k]+(u*u*u-u*u)*dt*m1})}
+
+
+
+let frozen=null,start=performance.now(),lastRaf=null;window.playbackStats={intervals:[]};window.seek=t=>{frozen=Math.max(0,Math.min(duration,t));render(frozen)};window.play=()=>{if(frozen!==null)start=performance.now()-frozen*1000;frozen=null;lastRaf=null};window.restart=()=>{start=performance.now();frozen=null;lastRaf=null;window.playbackStats={intervals:[]}};
+function show(el,a){el.style.opacity=a;el.style.visibility=a>0?'visible':'hidden'}
+
+
+
+function render(t){window.filmTime=t;const end=P(t,11.4,12),closing=1-end;const cam=track(cameraKeys,t);camera.position.set(...cam.slice(0,3));camera.lookAt(...cam.slice(3));
+titles.forEach((h,k)=>{const b=beats[k],out=P(t,b[1]-.20,b[1]-.01);h.querySelectorAll('.word').forEach((el,i)=>{const p=P(t,b[0]+i*.018,b[0]+i*.018+.25);el.style.opacity=p*(1-out);el.style.transform=`translateY(${(1-p)*22-out*16}px) rotateX(${(1-p)*22}deg)`});show(captions[k],closing*P(t,b[0]+.04,b[0]+.23)*(1-P(t,b[1]-.15,b[1]-.01)))});show($('.copy'),closing);show($('.source'),closing);
+const pv=track(projectKeys,t);pose(project,...pv);project.updateMatrixWorld(true);const kv=track(packKeys,t),dock=P(t,4.15,5.85),anchor=project.localToWorld(new THREE.Vector3(116,123,32));pose(pack,mix(kv[0],anchor.x,dock),mix(kv[1],anchor.y,dock)+Math.sin(dock*Math.PI)*22,mix(kv[2],anchor.z,dock)+Math.sin(dock*Math.PI)*90,mix(kv[3],pv[3],dock),mix(kv[4],pv[4],dock),mix(kv[5],project.scale.x*.23,dock),mix(kv[6],pv[6],dock));
+const gathered=P(t,1.1,2.8),closed=P(t,2.65,3.55);files.forEach((g,i)=>{const p=P(t,1.1+i*.16,2.45+i*.16),h=g.userData.home;pose(g,mix(h.x,0,p),h.y,mix(h.z,-5-i*9,p),0,mix((i-1)*.10,0,p),1)});lid.rotation.y=mix(-1.4,0,closed);
+const run=P(t,5.9,8.5);results.forEach((f,i)=>opacity(f,P(t,6.05+i*.85,6.45+i*.85)));waiting.forEach((f,i)=>opacity(f,1-P(t,6.05+i*.85,6.45+i*.85)));opacity(openItem,P(t,8.5,8.9));const scanA=P(t,5.9,6.1)*(1-P(t,8.3,8.5));scanning.position.set(-150,mix(-8,-84,run),10);scanning.material.forEach(m=>{m.transparent=true;m.opacity=scanA});
+rig.visible=t<12;shadow.visible=t<12;renderer.render(scene,camera);const bounds=(g,w,h)=>{g.updateMatrixWorld(true);const a=[[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]].map(([x,y])=>{const p=g.localToWorld(new THREE.Vector3(x,y,4)).project(camera);return[(p.x+1)*215,(1-p.y)*250]});return{x0:Math.min(...a.map(p=>p[0])),x1:Math.max(...a.map(p=>p[0])),y0:Math.min(...a.map(p=>p[1])),y1:Math.max(...a.map(p=>p[1]))}};window.motionState={packId:pack.uuid,lidId:lid.uuid,fileIds:files.map(g=>g.uuid),projectId:project.uuid,resultIds:results.map(f=>f.uuid),packPosition:pack.position.toArray(),projectPosition:project.position.toArray(),cameraPosition:camera.position.toArray(),cameraTarget:cam.slice(3),coverBounds:bounds(cover,240,210),packBounds:bounds(pack,240,210),projectBounds:bounds(project,330,356),gathered,closed,dock,dockError:pack.position.distanceTo(anchor),run,resultAlphas:results.map(f=>f.material.opacity),openItem:openItem.material.opacity};show($('.endcard'),end);$('.logo').style.transform=`translateY(${(1-end)*16}px)`;$('.endline').style.opacity=P(t,11.8,12.35);
+}
+window.episodeDuration=duration;window.episodeReady=true;function tick(now){if(frozen===null){if(lastRaf!==null&&window.filmTime<duration)window.playbackStats.intervals.push(now-lastRaf);lastRaf=now;render(Math.min(duration,(now-start)/1000))}requestAnimationFrame(tick)}requestAnimationFrame(tick);
+</script></body></html>
