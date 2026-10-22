@@ -115,3 +115,8 @@ The user said v005 was still too slow. v006 is 13 seconds, shortening send/edit/
 ## EP12 v007 — full restart authorized
 
 The user explicitly requested that the entire EP12 section be torn down and rebuilt, then confirmed “OK”. All earlier EP12 schemes are superseded, not approved references. v007 uses a newly constructed fixed 3D set: phone and project remain in place while the camera pulls out, follows the connected channel to the project, observes a selection/caret edit, and returns to a locally appearing chat result. It removes the previous flying message card, task-wall, word-flip and card-morph choreography. Runtime stays 13 seconds. Feature scope and paired-bot prerequisite are unchanged. v007 is for individual review; EP11 v003 stays approved, EP09 skipped, EP13 paused.
+
+
+## EP12 direction accepted; v008 final polish
+
+The user accepted v007 (“可以 再优化一下 就用这个”). Keep this fixed-set, camera-led direction. v008 makes only local motion refinements: shape-preserving camera tangents prevent arrival rebound and target drift; caret row completion/return is coordinated; reply timing follows signal arrival; channel signals travel by arc length. Runtime remains 13 seconds and composition/content stay unchanged. v007 remains the accepted reference snapshot. EP09 stays skipped; do not start EP13 without instruction.

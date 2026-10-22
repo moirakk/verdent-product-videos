@@ -1,8 +1,14 @@
 # EP12 · Message Anywhere
 
+## v008 — polish of the accepted direction
+
+The user accepted v007 (“可以 再优化一下 就用这个”) and requested refinement within that direction. v008 keeps the same set, composition, feature story and 13-second runtime. Camera tracks now use shared shape-preserving tangents so holds remain still and arrivals do not rebound. Headline typing completes the first row before the caret moves to the second; the reply begins after the returning signal reaches the phone. Signals use arc-length sampling for even travel along the same route.
+
+Verification adds an exact fixed-target check during reading holds, alongside the existing continuity, viewport and full-playback checks. v007 is retained as the accepted directional reference; v008 is its final polish pass.
+
 ## v007 — full scene and direction reset
 
-The user explicitly rejected the previous section and authorized a complete restart. v007 replaces the scene construction, composition, motion and middle narrative; it retains only the series brand/material utilities and the verified instant-messaging feature. Runtime: 13 seconds. This version is for individual review, not approved. EP09 remains skipped; EP13 remains paused.
+The user explicitly rejected the previous section and authorized a complete restart. v007 replaces the scene construction, composition, motion and middle narrative; it retains only the series brand/material utilities and the verified instant-messaging feature. Runtime: 13 seconds. The user subsequently accepted this direction and requested the v008 polish above. EP09 remains skipped; EP13 remains paused.
 
 ## Current story
 
