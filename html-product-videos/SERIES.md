@@ -84,3 +84,8 @@ The user requested quicker rhythm and more 3D after EP10 v003. v004 is 21 second
 ## Publish continuity revision
 
 The user still found the transitions insufficiently fluid after v004. EP10 v005 keeps 21 seconds and replaces isolated poses with velocity-continuous tracks, overlapping status/title handoffs, a full-size phone peeling from behind the browser, and a curved address docking movement. Shadow rendering cost is reduced. It is for review, not approved; v004 remains available for comparison.
+
+
+## Automations individual episode
+
+After EP10 v005 the user requested the next episode. EP11 v003 is rebuilt individually as a 21-second recurring-task story: one schedule, two Monday runs, one persistent calendar/result object with a physical turn between weeks. The app-active condition is visible. It retains continuous tracks and the white/green solid-material style. Previous EP11 drafts remain archived; v003 is for individual review. EP09 is skipped and EP12/13 remain paused.
